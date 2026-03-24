@@ -1,0 +1,233 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+enum TipoUsuario {
+  profissional
+  paciente
+}
+
+enum StatusRanqueado {
+  normal
+  faltas_frequentes
+  inadimplente
+  intensivo
+}
+
+enum StatusSessao {
+  agendada
+  confirmada
+  realizada
+  cancelada
+  faltou
+}
+
+enum StatusPagamento {
+  pendente
+  pago
+  cancelado
+}
+
+enum StatusServicoContratado {
+  ativo
+  encerrado
+  suspenso
+}
+
+model Usuario {
+  id              String   @id @default(uuid())
+  email           String   @unique
+  senhaHash       String   @map("senha_hash")
+  tipo            TipoUsuario
+  idiomaPreferido String   @default("pt") @map("idioma_preferido")
+  emailVerificado Boolean  @default(false) @map("email_verificado")
+  criadoEm        DateTime @default(now()) @map("criado_em")
+
+  profissionais Profissional[]
+  pacientes     Paciente[]
+  emailTokens   EmailVerificationToken[]
+  resetTokens   PasswordResetToken[]
+
+  @@map("usuarios")
+}
+
+model Profissional {
+  id            String   @id @default(uuid())
+  userId        String?  @map("user_id")
+  nome          String
+  crp           String?
+  especialidade String?
+  criadoEm      DateTime @default(now()) @map("criado_em")
+
+  usuario Usuario? @relation(fields: [userId], references: [id])
+  sessoes Sessao[]
+
+  @@map("profissionais")
+  @@index([userId])
+}
+
+model Paciente {
+  id              String           @id @default(uuid())
+  userId          String?          @map("user_id")
+  nome            String
+  email           String?
+  telefone        String?
+  dataNascimento  DateTime?        @map("data_nascimento")
+  genero          String?
+  cpf             String?
+  endereco        String?
+  observacoes     String?
+  statusRanqueado StatusRanqueado  @default(normal) @map("status_ranqueado")
+  totalFaltas     Int              @default(0) @map("total_faltas")
+  fotoPerfil      String?          @map("foto_perfil")
+  criadoEm        DateTime         @default(now()) @map("criado_em")
+  atualizadoEm    DateTime         @updatedAt @map("atualizado_em")
+
+  usuario             Usuario?             @relation(fields: [userId], references: [id])
+  sessoes             Sessao[]
+  servicosContratados ServicoContratado[]
+  recibos             Recibo[]
+  alertas             AlertaClinico[]
+  diarios             DiarioSentimento[]
+
+  @@map("pacientes")
+  @@index([userId])
+}
+
+model Servico {
+  id                 String                @id @default(uuid())
+  nome               String
+  descricao          String?
+  modalidade         String?
+  tipoCobranca       String?               @map("tipo_cobranca")
+  valor              Decimal?              @db.Decimal(10, 2)
+  createdAt          DateTime              @default(now()) @map("created_at")
+  servicosContratados ServicoContratado[]
+
+  @@map("servicos")
+}
+
+model ServicoContratado {
+  id                   String                 @id @default(uuid())
+  pacienteId           String                 @map("paciente_id")
+  servicoId            String                 @map("servico_id")
+  dataInicio           DateTime               @map("data_inicio")
+  qtdTotalSessoes      Int?                   @map("qtd_total_sessoes")
+  qtdSessoesRealizadas Int                    @default(0) @map("qtd_sessoes_realizadas")
+  status               StatusServicoContratado @default(ativo)
+  createdAt            DateTime               @default(now()) @map("created_at")
+
+  paciente Paciente @relation(fields: [pacienteId], references: [id])
+  servico  Servico  @relation(fields: [servicoId], references: [id])
+
+  @@map("servicos_contratados")
+  @@index([pacienteId])
+  @@index([servicoId])
+}
+
+model Sessao {
+  id              String           @id @default(uuid())
+  pacienteId      String?          @map("paciente_id")
+  profissionalId  String?          @map("profissional_id")
+  data            DateTime?
+  duracao         Int?
+  status          StatusSessao?
+  anotacoes       String?
+  valor           Decimal?         @db.Decimal(10, 2)
+  statusPagamento StatusPagamento? @default(pendente) @map("status_pagamento")
+  modalidade      String?
+  pacote          String?
+  scoreClinico    Int?             @map("score_clinico")
+  reagendadaEm    DateTime?        @map("reagendada_em")
+  createdAt       DateTime         @default(now()) @map("created_at")
+
+  paciente     Paciente?    @relation(fields: [pacienteId], references: [id])
+  profissional Profissional? @relation(fields: [profissionalId], references: [id])
+  recibos      Recibo[]
+
+  @@map("sessoes")
+  @@index([pacienteId])
+  @@index([profissionalId])
+}
+
+model Recibo {
+  id         String   @id @default(uuid())
+  sessaoId   String   @map("sessao_id")
+  pacienteId String   @map("paciente_id")
+  enviado    Boolean  @default(false)
+  dataSessao DateTime? @map("data_sessao")
+  createdAt  DateTime @default(now()) @map("created_at")
+
+  sessao   Sessao   @relation(fields: [sessaoId], references: [id])
+  paciente Paciente @relation(fields: [pacienteId], references: [id])
+
+  @@map("recibos")
+  @@index([sessaoId])
+  @@index([pacienteId])
+}
+
+model AlertaClinico {
+  id                 String  @id @default(uuid())
+  pacienteId         String  @map("paciente_id")
+  tipoAlerta         String  @map("tipo_alerta")
+  descricao          String?
+  nivelUrgencia      String? @map("nivel_urgencia")
+  status             String?
+  termosRelacionados Json?   @map("termos_relacionados")
+  dataCriacao        DateTime @default(now()) @map("data_criacao")
+
+  paciente Paciente @relation(fields: [pacienteId], references: [id])
+
+  @@map("alertas_clinicos")
+  @@index([pacienteId])
+}
+
+model DiarioSentimento {
+  id                    String   @id @default(uuid())
+  pacienteId            String   @map("paciente_id")
+  texto                 String
+  sentimento            String?
+  tags                  Json?
+  palavrasDisfuncionais Json?    @map("palavras_disfuncionais")
+  dataRegistro          DateTime @default(now()) @map("data_registro")
+
+  paciente Paciente @relation(fields: [pacienteId], references: [id])
+
+  @@map("diario_sentimentos")
+  @@index([pacienteId])
+}
+
+model Traducao {
+  chave   String @id
+  textoPt String @map("texto_pt")
+  textoEn String @map("texto_en")
+
+  @@map("traducoes")
+}
+
+model EmailVerificationToken {
+  userId    String   @map("user_id")
+  token     String   @id
+  expiresAt DateTime @map("expires_at")
+
+  usuario Usuario @relation(fields: [userId], references: [id])
+
+  @@map("email_verification_tokens")
+  @@index([userId])
+}
+
+model PasswordResetToken {
+  userId    String   @map("user_id")
+  token     String   @id
+  expiresAt DateTime @map("expires_at")
+
+  usuario Usuario @relation(fields: [userId], references: [id])
+
+  @@map("password_reset_tokens")
+  @@index([userId])
+}
