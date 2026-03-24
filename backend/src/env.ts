@@ -13,4 +13,5 @@ export const env = {
   port: Number(process.env.PORT || 4000),
   databaseUrl: process.env.DATABASE_URL as string,
   jwtSecret: process.env.JWT_SECRET as string,
+  enableAnalyticsRoutes: process.env.ENABLE_ANALYTICS_ROUTES === "true",
 };

@@ -1,14 +1,16 @@
-# PersonaClinic – Migração sem Supabase
+# PersonaClinic - Roteiro Pós-Migração
 
-Objetivo: remover dependência do Supabase e entregar backend próprio com MySQL gerenciado, mantendo as features atuais (auth, pacientes, sessões, financeiro, alertas, traduções, PWA).
+O backend Fastify + Prisma já roda exclusivamente sobre PostgreSQL (veja `backend/README.md`). O objetivo agora é consolidar esse stack, garantir que os dashboards clínicos, agenda e financeiro consomem corretamente as rotas atuais e preparar o terreno para observabilidade, docs e PWA estáveis.
 
-## Stack proposta
-- Backend: Fastify + TypeScript + Prisma (MySQL). Alternativa: NestJS se preferir DI mais estruturada.
-- Banco: MySQL gerenciado (PlanetScale/RDS). Prisma para migrações e tipos.
-- Auth: Fastify JWT com refresh tokens, senhas com argon2, e-mails de verificação/recuperação via provider (Resend/SendGrid). Alternativa plugável: Auth0/Clerk se preferir 3rd party.
-- Infra: CI para lint/test/build, Dockerfile para backend, ambientes dev/stage/prod com variáveis seguras.
+## Stack atual
+- **Backend:** Fastify + TypeScript + plugins customizados (`auth`, `prisma`, `mailer`); `backend/src/routes` cobre auth, pacientes, sessões, financeiro, alertas, recibos e traduções.
+- **Banco:** PostgreSQL (local via `docker compose up -d postgres` ou serviço externo) com Prisma, migrações (`npm run prisma:migrate`) e seed (`npm run seed`) para popular usuários/pacientes/sessões.
+- **Autenticação:** JWT (`backend/src/plugins/auth.ts`), tokens de reset/verify regenerados a cada solicitação e bastidores de contexto para rotas públicas e privadas.
+- **Infra:** Dino `docs/backend-postgres.md` e `docs/frontend.md` descrevem os scripts principais (`npm run dev`, `npm run build`, `backend/npm run dev`), variáveis obrigatórias (`VITE_API_URL`, `DATABASE_URL`, `JWT_SECRET`, `SMTP_*`) e os contratos usados pelos hooks React Query.
 
-## Modelo de dados (DDL inicial)
+## Modelo de dados (referência)
+O schema em `backend/prisma/schema.prisma` materializa uma estrutura consolidada de pacientes, profissionais, sessões, alertas clínicos, diário de sentimentos, traduções e tokens. O trecho abaixo resume as tabelas principais:
+
 ```sql
 create table usuarios (
   id uuid primary key default gen_random_uuid(),
@@ -134,40 +136,22 @@ create table password_reset_tokens (
 );
 ```
 
-## API substituta (mapa rápido)
-- Auth: `POST /auth/signup`, `POST /auth/login`, `POST /auth/verify-email`, `POST /auth/request-reset`, `POST /auth/reset`, `POST /auth/refresh`, `POST /auth/logout`.
-- Usuário: `GET /me`.
-- Pacientes: `GET /pacientes`, `GET /pacientes/:id`, `POST/PUT/DELETE`.
-- Sessões: `GET /sessoes?pacienteId&status`, `POST /sessoes`, `PATCH /sessoes/:id` (status/pagamento/reagendamento).
-- Agenda inteligente/ocupação: substituir funções `ObterAgendaInteligente`/`ObterOcupacaoFutura` por `GET /analytics/agenda?periodo=30` e `GET /analytics/ocupacao?periodo=30`.
-- Dashboard: `GET /analytics/dashboard` (retorna totais de sessões, ausências, recebidos/pendentes, alertas recentes).
-- Financeiro: `GET /financeiro/resumo?period=...`, `POST /financeiro/charges/:id/pay`, `POST /financeiro/charges/:id/send`.
-- Serviços: `GET /servicos`, `POST/PUT/DELETE /servicos/:id`.
-- Serviços contratados: `GET /servicos-contratados?pacienteId`, `POST /servicos-contratados`, `POST /servicos-contratados/:id/incrementar`, `PATCH /servicos-contratados/:id/status`.
-- Recibos: `GET /recibos?paciente=...`, `POST /recibos`, `POST /recibos/:id/send`, `DELETE /recibos/:id`.
-- Alertas clínicos: `GET /alertas`, `POST /alertas`, `PATCH /alertas/:id`.
-- Traduções: `GET /traducoes` (cacheável).
+## API atual
+- **Auth:** `POST /auth/signup`, `POST /auth/login`, `/auth/me`, `/auth/refresh`, `/auth/request-reset`, `/auth/reset` e `/auth/verify-email` com tokens atômicos e e-mails via nodemailer.
+- **Pacientes:** `GET /pacientes`, `GET /pacientes/:id`, `POST/PUT/DELETE` alimentam as telas de lista, perfil e agenda.
+- **Sessões:** `GET /sessoes?pacienteId&status`, `POST /sessoes`, `PATCH /sessoes/:id` (status/pagamento/reagendamento) mantêm agenda, histórico e cobranças sincronizadas.
+- **Agenda inteligente:** `GET /analytics/agenda?periodo=30`, `GET /analytics/ocupacao?periodo=30`, `GET /analytics/risco-faltas` e `GET /analytics/dashboard` servem os gráficos do painel profissional/paciente.
+- **Financeiro:** `GET /financeiro/resumo`, `POST /financeiro/charges/:id/pay`, `POST /financeiro/charges/:id/send` para pagamentos e recibos do paciente ou profissional.
+- **Serviços e contratos:** `GET/POST/PUT/DELETE /servicos`, `GET /servicos-contratados`, `POST /servicos-contratados`, `PATCH /servicos-contratados/:id/status` etc.
+- **Alertas e traduções:** `GET /alertas`, `POST /alertas`, `PATCH /alertas/:id` e `GET /traducoes`, exclusivos para alimentar o LocalizacaoContext e o gráfico de alertas clínicos.
 
-## Plano de execução (curto → médio prazo)
-1) Backend bootstrap
-   - Criar projeto Fastify + Prisma + Postgres; configurar Docker/Neon; criar migrações Prisma com o DDL acima.
-   - Implementar auth (signup/login/refresh/reset/verify) + mailer.
-   - Publicar OpenAPI para front e testes.
-2) Camada API no frontend
-   - Adicionar client HTTP (fetch/axios) + zod para validar respostas.
-   - Criar hooks React Query para auth, pacientes, sessões, financeiro, alertas (um por endpoint).
-   - Substituir `supabase`/`createSafeQuery`/`functions.invoke` pelos novos hooks em telas: login/signup/reset, dashboards, pacientes, financeiro, agenda.
-3) Limpeza de mocks e rotas
-   - Remover `mockData` e alinhar rotas com o layout `/profissional/*` (ex.: `/profissional/pacientes`).
-   - Corrigir encoding/textos e placeholders de senha.
-4) PWA/infra
-   - Gerar service worker compilado (JS) e ajustar registro.
-   - Configurar CI (lint/test/build) e variáveis de ambiente seguras (sem fallbacks hardcoded).
-5) Qualidade
-   - Testes unitários dos hooks e utils; e2e mínimo (login, criar sessão, marcar pagamento).
-   - Observabilidade: logs estruturados + captura de erros no front (Sentry) e backend.
+## Próximas prioridades
+1. **Confiança e QA:** validar manualmente login, dashboards profissional/paciente, agenda, financeiro e preferências multilíngues com o backend local, garantir que os fluxos de alertas/clínicos sejam alimentados pelas rotas `analytics` atuais e cobrir `backend/src/tests/registerRoutes.test.ts`.
+2. **Infraestrutura e automações:** automatizar `docker compose up -d postgres`, `npm run prisma:migrate && npm run seed`, `backend/npm run dev` e `npm run dev` (podemos documentar esse combo em scripts ou um `npm run bootstrap` depois), além de manter o `browserslist` atualizado e CI com lint/test/build.
+3. **Experiência e PWA:** fortalecer o service worker, garantir fallback offline limpinho e continuar aprimorando o `AuthProvider`/hooks (`useRecibos`, `useAgendaInteligente`, `useServicosContratados`) para que o front reflita fielmente o backend Fastify.
+4. **Documentação e onboarding:** manter `docs/frontend.md`, `docs/backend-postgres.md` e `docs/SETUP_SUMMARY.md` sincronizados, deixando claro que `VITE_API_URL` aponta para `http://localhost:4000` em dev e que o backend usa PostgreSQL + JWT.
 
 ## Decisões pendentes
-- Provider de e-mail (Resend/SendGrid) e domínio de envio.
-- Se preferir auth 3rd party (Auth0/Clerk), ajustar fluxo de e-mail e mapeamento de tipos de usuário.
-- Infra de deploy (Railway/Fly/Render) e domínio.
+- Escolher o SMTP definitivo (Resend/SendGrid, Mailgun etc.) para produção e alinhar domínios/assinatura das mensagens.
+- Mapear hosting/infra final (Railway, Fly, Render, Render, etc.) e automatizar o deploy com variáveis seguras.
+- Monitorar e incrementar observabilidade (logs estruturados, métricas no backend e Sentry/LogRocket no front) antes de habilitar o app em produção.

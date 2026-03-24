@@ -85,10 +85,11 @@ export async function authRoutes(app: FastifyInstance) {
 
     const token = crypto.randomBytes(32).toString("hex");
     const expires = new Date(Date.now() + 1000 * 60 * 30); // 30 min
-    await app.prisma.passwordResetToken.upsert({
+    await app.prisma.passwordResetToken.deleteMany({
       where: { userId: user.id },
-      update: { token, expiresAt: expires },
-      create: { userId: user.id, token, expiresAt: expires },
+    });
+    await app.prisma.passwordResetToken.create({
+      data: { userId: user.id, token, expiresAt: expires },
     });
 
     void sendMail(

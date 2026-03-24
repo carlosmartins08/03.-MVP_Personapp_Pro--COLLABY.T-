@@ -1,5 +1,5 @@
 import fp from "fastify-plugin";
-import jwt from "jsonwebtoken";
+import jwt, { type SignOptions, type Secret } from "jsonwebtoken";
 import { env } from "../env";
 
 type TokenPayload = {
@@ -8,8 +8,12 @@ type TokenPayload = {
 };
 
 declare module "fastify" {
+  interface FastifyContextConfig {
+    auth?: boolean;
+  }
+
   interface FastifyInstance {
-    signAccessToken(payload: TokenPayload, expiresIn?: string): string;
+    signAccessToken(payload: TokenPayload, expiresIn?: SignOptions["expiresIn"]): string;
     verifyAccessToken<T = TokenPayload>(token: string): T;
   }
 
@@ -19,8 +23,10 @@ declare module "fastify" {
 }
 
 export default fp(async (app) => {
-  app.decorate("signAccessToken", (payload: TokenPayload, expiresIn = "15m") =>
-    jwt.sign(payload, env.jwtSecret, { expiresIn })
+  app.decorate(
+    "signAccessToken",
+    (payload: TokenPayload, expiresIn: SignOptions["expiresIn"] = "15m") =>
+      jwt.sign(payload, env.jwtSecret as Secret, { expiresIn })
   );
 
   app.decorate("verifyAccessToken", <T = TokenPayload>(token: string): T =>
@@ -45,4 +51,3 @@ export default fp(async (app) => {
     }
   });
 });
-

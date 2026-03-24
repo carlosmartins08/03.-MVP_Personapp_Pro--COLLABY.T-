@@ -1,103 +1,76 @@
 # PersonaApp Pro
 
-Painel web para psicólogos e pacientes, construído com Vite, React, TypeScript, Tailwind e Supabase. Este guia explica como rodar o frontend, configurar variáveis de ambiente e subir o backend opcional usando Fastify + Prisma.
+PersonaApp Pro é um painel para psicólogos e pacientes construído com Vite, React, TypeScript, Tailwind e um backend Fastify + Prisma conectado ao PostgreSQL. Este README dá uma visão geral rápida; os detalhes de frontend/back-end estão em `docs/frontend.md`, `docs/backend-postgres.md` e o resumo `docs/SETUP_SUMMARY.md`.
 
----
-
-## Rodar o Frontend
-
-Pré‑requisitos:
-
-- Node.js 18.18+ ou 20.x (recomendado instalar via [nvm-windows](https://github.com/coreybutler/nvm-windows))
-- npm 9+ (instalado junto com o Node)
-
-Passos (executar na raiz do projeto):
+## Quickstart
 
 ```bash
-cp .env.example .env.local   # ajuste os valores antes de iniciar
-npm install                 # instala dependências do frontend
-npm run dev                 # inicia o Vite em http://localhost:8080
+# 1. Frontend setup
+cp .env.example .env.local
+npm install
+
+# 2. Bootstrap backend (Postgres, Prisma migrations/seeds)
+npm run bootstrap
+
+# 3. In one terminal, run the backend dev server
+npm run backend:dev
+
+# 4. In another terminal, run the frontend dev server
+npm run dev
 ```
 
-> **Dica:** o servidor fica acessível em `http://localhost:8080` (configurado em `vite.config.ts`). Pressione `Ctrl + C` para encerrar.
+Abra o frontend em `http://localhost:8080` e o backend em `http://localhost:4000/health`.
 
-### Comandos úteis
-
-| Comando          | Descrição                                               |
-| ---------------- | ------------------------------------------------------- |
-| `npm run dev`    | Ambiente local com hot reload                           |
-| `npm run build`  | Build de produção (gera saída em `dist/`)               |
-| `npm run preview`| Sobe o build localmente para checar antes de publicar   |
-| `npm run lint`   | Executa ESLint                                          |
-
-O `npm run build` agora usa o plugin oficial `@vitejs/plugin-react`, evitando erros do SWC em ambientes Windows.
-
----
-
-## Variáveis de Ambiente
+## Variáveis de ambiente
 
 ### Frontend
 
-Crie um arquivo `.env.local` (Git ignora automaticamente) com base no `.env.example`:
+| Variável                              | Obrigatória | Descrição                                         |
+| ------------------------------------- | ----------- | ------------------------------------------------- |
+| `VITE_DEFAULT_LANGUAGE`               | Não         | `pt` ou `en` (padrão `pt`)                         |
+| `VITE_FRONTEND_URL`                   | Não         | URL pública do app (usado em e-mails)             |
+| `VITE_EMAIL_VERIFICATION_REDIRECT_URL`| Não         | URL usada após confirmação de e-mail              |
+| `VITE_API_URL`                        | Sim         | URL do backend Fastify (ex.: `http://localhost:4000`) |
 
-| Variável                              | Obrigatória | Descrição                                                |
-| ------------------------------------- | ----------- | -------------------------------------------------------- |
-| `VITE_SUPABASE_URL`                   | ✅          | URL do seu projeto no Supabase                           |
-| `VITE_SUPABASE_ANON_KEY`              | ✅          | Chave anon pública do Supabase                           |
-| `VITE_DEFAULT_LANGUAGE`               | ⛔️          | `pt` ou `en` (padrão `pt`)                               |
-| `VITE_FRONTEND_URL`                   | ⛔️          | URL pública onde o app roda (usado em e-mails/links)     |
-| `VITE_EMAIL_VERIFICATION_REDIRECT_URL`| ⛔️          | URL para onde o usuário vai após confirmar o e-mail      |
+### Backend
 
-> O app valida `SUPABASE_URL` e `SUPABASE_ANON_KEY` logo no boot (`src/main.tsx`). Se estiverem faltando, o Vite exibirá um erro claro.
+O backend usa PostgreSQL (via `docker-compose.yml` ou instalação local). A string padrão é `postgresql://personapp:personapp-dev@localhost:5432/personaclinic`. Configure também `PORT`, `JWT_SECRET` e as credenciais `SMTP_*` conforme explicado em `backend/README.md`.
 
-### Backend (opcional)
+## Backend (Fastify + Prisma + PostgreSQL)
 
-No diretório `backend/` há outro `.env.example`. Duplique para `.env` e preencha:
+O backend expõe rotas de auth, pacientes, sessões, financeiro, alertas, recibos e traduções (veja `backend/src/routes`). Ele usa JWT para autenticação (`backend/src/plugins/auth.ts`) e Prisma com seed (`backend/prisma/seed.ts`). Em produção, rode `npm run build` + `npm start` após `prisma:migrate`.
 
-| Variável        | Descrição                                                                 |
-| --------------- | ------------------------------------------------------------------------- |
-| `DATABASE_URL`  | URL de conexão MySQL (ex.: `mysql://user:pass@localhost:3306/db`)|
-| `PORT`          | Porta do servidor Fastify (padrão `4000`)                                 |
-| `JWT_SECRET`    | Segredo para assinar tokens                                               |
+## DocumentaÇõÇœo
 
----
+- `docs/frontend.md` – setup completo do frontend (envs, scripts, boas práticas).
+- `docs/backend-postgres.md` – fluxo do backend PostgreSQL, incluindo Docker, Prisma e seeds.
+- `docs/DB_CONNECTION.md` – passo a passo da conexão local com PostgreSQL e preparo do `.env`.
+- `docs/SEED_DATA.md` – credenciais/dados criados pelo script `backend/prisma/seed.ts`.
+- `docs/QA_SUMMARY.md` – resumo rápido dos scripts QA (`qa:validate-env`, `qa:prep`, `qa:start`, `qa:checklist`).
+- `docs/SETUP_SUMMARY.md` – mapa com links rápidos para os dois guias acima e o `docker-compose`.
+- `docs/ROADMAP.md` – visão futura sobre migração e prioridade de features.
 
-## Backend opcional (Fastify + Prisma)
+## PWA e alertas
 
-O frontend ainda usa Supabase para persistência, mas já existe um backend Fastify/Prisma pronto para testes e migração gradual.
+- `public/service-worker.ts` junto com `src/components/pwa/InstallPrompt.tsx`/`usePWA` entregam o fallback offline e o prompt “Add to Home Screen”; durante o desenvolvimento rode `npm run dev` e veja o cache em `Application > Service Workers`; para testar o build execute `npm run build` seguido de `npm run preview`.
+- Alertas e dashboards consomem `/alertas`, `/analytics/*` e `/traducoes`. Mantenha `ENABLE_ANALYTICS_ROUTES=true` no `.env` e `VITE_API_URL=http://localhost:4000` para o `LocalizacaoContext`, os hooks de alertas/analytics e o painel clínico receberem dados reais durante a validação dos fluxos com o Fastify.
 
-Passos básicos:
+## Manual QA rápido
 
-```bash
-cd backend
-cp .env.example .env             # ajuste DATABASE_URL / JWT_SECRET
-npm install                      # ou pnpm/yarn, se preferir
-npm run prisma:generate          # gera o client Prisma
-npm run prisma:migrate           # cria o schema no banco configurado
-npm run dev                      # sobe em http://localhost:4000 (rota /health)
-```
+- Configure `.env` + `.env.local`: defina `VITE_API_URL=http://localhost:4000`, `DATABASE_URL=postgresql://personapp:personapp-dev@localhost:5432/personaclinic`, `JWT_SECRET`, `SMTP_*` e `ENABLE_ANALYTICS_ROUTES=true`.
+- Rode os servidores em paralelo (`npm run bootstrap`, depois `npm run backend:dev` em uma aba e `npm run dev` na outra) e use as contas seedadas para confirmar login de paciente e profissional.
+- Navegue pelos fluxos principais: dashboards profissional/paciente, agenda semanal, financeiro (charges/recibos), alertas clínicos multilíngues e cartões do `LocalizacaoContext`.
+- Use o DevTools > Application para inspecionar o service worker/cache e o `InstallPrompt` ou execute `npm run build && npm run preview` para validar o bundle final.
+- Ao alterar rotas (`registerRoutes`) ou o flag `ENABLE_ANALYTICS_ROUTES`, reexecute `npm --prefix backend run test` para garantir que filtros/overrides/comum options continuam funcionando.
 
-### Rotas disponíveis
+## Fluxo QA e scripts úteis
 
-- `GET /health` – verificação rápida
-- Demais rotas REST estão em `backend/src/routes/` (auth, pacientes, sessões, financeiro, etc.).
+- Consulte `docs/QA_CHECKLIST.md` para a sequência completa após o bootstrap (mesmos fluxos mencionados acima).
+- `docs/DB_CONNECTION.md` mostra como levantar o Postgres, preparar `.env`/`.env.local` e manter o Prisma/migrations/seed alinhados com a URL `postgresql://personapp:personapp-dev@localhost:5432/personaclinic`.
+- Os scripts do `package.json` (`npm run db:up`/`db:down`/`db:logs`, `npm run backend:bootstrap`, `npm run bootstrap`, `npm run backend:dev`, `npm run backend:test`) automatizam o banco, Prisma e os testes antes de rodar o frontend (`npm run dev`).
 
-### Integração com o Frontend
+- Use `npm run qa:validate-env` para verificar `.env.local` + `backend/.env`, `npm run qa:prep` para executar o bootstrap completo, `npm run qa:start` para abrir backend + frontend (concurrently) e `npm run qa:checklist` para caminhar pelo QA interativo.
 
-No momento o frontend conversa diretamente com o Supabase. Para migrar para o backend:
+## Docker
 
-1. Exponha endpoints equivalentes no Fastify (já existem stubs principais).
-2. Crie hooks/services no frontend consumindo o backend (ex.: via `fetch` ou `react-query`).
-3. Garanta que as mesmas variáveis (URLs, tokens) estejam configuradas no `.env.local`.
-
----
-
-## Fluxo sugerido para novos ambientes
-
-1. **Configurar variáveis** – copie `.env.example` para `.env.local` e `.env` e ajuste.
-2. **Instalar dependências** – `npm install` na raiz (frontend) e em `backend/` se necessário.
-3. **Validar build** – rode `npm run build` para garantir que o código compila limpo.
-4. **Subir serviços** – `npm run dev` para o frontend e `npm run dev` em `backend/` caso precise da API.
-5. **Rodar checks** – `npm run lint` e `npm run prisma:migrate` sempre que alterar schema.
-
-Com isso você consegue “ver a aplicação” rapidamente e ter clareza sobre quais variáveis e serviços precisam estar ativos.
+Use `npm run db:up` (ou `npm run bootstrap` para subir o Postgres + preparar o Prisma/seed) antes de rodar os servidores. Pare com `npm run db:down` e acompanhe logs com `npm run db:logs`.
