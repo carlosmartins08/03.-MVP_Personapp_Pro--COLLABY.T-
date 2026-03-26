@@ -82,7 +82,7 @@ const MoodFace = ({
   return (
     <section
       className={cn(
-        "w-full transition-colors duration-[400ms]",
+        "w-full transition-colors duration-300",
         className
       )}
       style={{ backgroundColor: current.background }}

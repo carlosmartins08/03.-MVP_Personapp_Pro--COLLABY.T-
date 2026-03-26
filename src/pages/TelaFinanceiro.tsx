@@ -1,4 +1,4 @@
-﻿import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button } from '@/design-system/components';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Calendar } from 'lucide-react';
@@ -12,7 +12,7 @@ import { FinancialSummaryCards } from '@/components/financeiro/FinancialSummaryC
 import { TransactionList } from '@/components/financeiro/TransactionList';
 
 const TelaFinanceiro = () => {
-  const [periodoSelecionado, setPeriodoSelecionado] = useState<string>('Este mÃªs');
+  const [periodoSelecionado, setPeriodoSelecionado] = useState<string>('Este mês');
   const {
     summary,
     periodLabel,
@@ -54,7 +54,7 @@ const TelaFinanceiro = () => {
     <div className="container pb-16">
       <PageHeader
         title="Financeiro"
-        subtitle="Controle financeiro das sessÃµes"
+        subtitle="Controle financeiro das sessões"
         rightContent={
           <ExportFinanceiroButton
             financialData={allTransactions}
@@ -129,7 +129,7 @@ const TelaFinanceiro = () => {
                 className="w-full flex items-center justify-center"
               >
                 <Calendar size={16} className="mr-2" />
-                Gerar RelatÃ³rio
+                Gerar Relatório
               </Button>
             </div>
           </TabsContent>

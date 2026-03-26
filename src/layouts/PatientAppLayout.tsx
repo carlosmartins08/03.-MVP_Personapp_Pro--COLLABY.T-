@@ -24,4 +24,4 @@ const PatientAppLayout = () => {
   )
 }
 
-export { PatientAppLayout }
+export default PatientAppLayout

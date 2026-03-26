@@ -202,7 +202,7 @@ const ProfessionalListPage = () => {
                 </div>
               </div>
             </Card>
-          )}
+          )
         })}
       </div>
     </div>

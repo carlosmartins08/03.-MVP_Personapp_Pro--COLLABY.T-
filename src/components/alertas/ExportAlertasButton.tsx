@@ -8,8 +8,6 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '
 import { Textarea } from '@/components/ui/textarea';
 import { Calendar } from '@/components/ui/calendar';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import AlertasPDF from './AlertasPDF';
-import { pdf } from '@react-pdf/renderer';
 import { cn } from '@/lib/utils';
 
 export interface ExportAlertasButtonProps {
@@ -41,6 +39,11 @@ export const ExportAlertasButton: React.FC<ExportAlertasButtonProps> = ({
         dateRange.to,
         'dd-MM-yyyy'
       )}.pdf`;
+
+      const [{ pdf }, { default: AlertasPDF }] = await Promise.all([
+        import('@react-pdf/renderer'),
+        import('./AlertasPDF'),
+      ]);
 
       const blob = await pdf(
         <AlertasPDF

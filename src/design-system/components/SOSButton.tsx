@@ -82,12 +82,12 @@ const SOSButton = ({
                 onClick={() => setOpen(false)}
                 className="h-8 w-8 rounded-full text-gray-500 hover:bg-gray-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ds-primary focus-visible:ring-offset-2"
               >
-                �
+                ×
               </button>
             </div>
 
-            <p className="mt-3 text-sm font-medium text-gray-900">
-              Voce nao esta sozinho. Estamos aqui.
+            <p className="text-center text-sm text-gray-600 mt-4 px-4">
+              Você não está sozinho. Estamos aqui.
             </p>
 
             <div className="mt-6 space-y-4">

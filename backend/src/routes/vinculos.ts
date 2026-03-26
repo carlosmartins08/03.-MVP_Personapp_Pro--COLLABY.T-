@@ -2,21 +2,38 @@
 import { z } from "zod";
 
 const vinculoBodySchema = z.object({
-  pacienteId: z.string().uuid(),
-  profissionalId: z.string().uuid(),
+  pacienteId: z.string(),
+  profissionalId: z.string(),
 });
 
 const vinculoQuerySchema = z.object({
-  pacienteId: z.string().uuid().optional(),
-  profissionalId: z.string().uuid().optional(),
+  pacienteId: z.string().optional(),
+  profissionalId: z.string().optional(),
 });
 
 export async function vinculosRoutes(app: FastifyInstance) {
   app.post("/vinculos", async (request, reply) => {
     const body = vinculoBodySchema.parse(request.body);
 
+    const existing = await app.prisma.vinculo.findFirst({
+      where: {
+        pacienteId: body.pacienteId,
+        profissionalId: body.profissionalId,
+        status: "ATIVO",
+      },
+      orderBy: { criadoEm: "desc" },
+    });
+
+    if (existing) {
+      return reply.send(existing);
+    }
+
     const vinculo = await app.prisma.vinculo.create({
-      data: body,
+      data: {
+        pacienteId: body.pacienteId,
+        profissionalId: body.profissionalId,
+        status: "ATIVO",
+      },
     });
 
     return reply.code(201).send(vinculo);
@@ -27,8 +44,8 @@ export async function vinculosRoutes(app: FastifyInstance) {
 
     const vinculos = await app.prisma.vinculo.findMany({
       where: {
-        pacienteId,
-        profissionalId,
+        ...(pacienteId ? { pacienteId } : {}),
+        ...(profissionalId ? { profissionalId } : {}),
       },
       orderBy: { criadoEm: "desc" },
     });

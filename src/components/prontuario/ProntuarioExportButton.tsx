@@ -6,8 +6,6 @@ import { useToast } from '@/hooks/use-toast';
 import { Paciente, Sessao } from '@/types';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
-import { pdf } from '@react-pdf/renderer';
-import ProntuarioPDF from './ProntuarioPDF';
 
 interface ProntuarioExportButtonProps {
   paciente: Paciente;
@@ -22,6 +20,11 @@ const ProntuarioExportButton = ({ paciente, sessoes }: ProntuarioExportButtonPro
       const nomeArquivo = `Prontuario_${paciente.nome.replace(/\s+/g, '_')}_${format(new Date(), 'yyyyMM')}.pdf`;
       
       // Gerar o PDF
+      const [{ pdf }, { default: ProntuarioPDF }] = await Promise.all([
+        import('@react-pdf/renderer'),
+        import('./ProntuarioPDF'),
+      ]);
+
       const blob = await pdf(
         <ProntuarioPDF paciente={paciente} sessoes={sessoes} />
       ).toBlob();

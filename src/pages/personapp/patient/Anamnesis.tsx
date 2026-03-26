@@ -393,7 +393,7 @@ const AnamnesisPage = () => {
                     >
                       {option}
                     </button>
-                  )}
+                  )
                 })}
               </div>
               {errors.disponibilidadeDias && (
@@ -420,7 +420,7 @@ const AnamnesisPage = () => {
                     >
                       {option}
                     </button>
-                  )}
+                  )
                 })}
               </div>
               {errors.disponibilidadePeriodo && (
@@ -447,7 +447,7 @@ const AnamnesisPage = () => {
                     >
                       {option}
                     </button>
-                  )}
+                  )
                 })}
               </div>
               {errors.modalidade && (

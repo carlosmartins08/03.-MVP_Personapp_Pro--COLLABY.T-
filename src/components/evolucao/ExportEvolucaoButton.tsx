@@ -6,8 +6,6 @@ import { useToast } from '@/hooks/use-toast';
 import { Paciente, Sessao } from '@/types';
 import { format, subWeeks } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
-import { pdf } from '@react-pdf/renderer';
-import EvolucaoPDF from './EvolucaoPDF';
 
 interface ExportEvolucaoButtonProps {
   paciente: Paciente;
@@ -30,6 +28,11 @@ const ExportEvolucaoButton = ({
       const nomeArquivo = `Relatorio_Evolucao_${paciente.nome.replace(/\s+/g, '_')}_${format(new Date(), 'yyyyMM')}.pdf`;
       
       // Gerar o PDF
+      const [{ pdf }, { default: EvolucaoPDF }] = await Promise.all([
+        import('@react-pdf/renderer'),
+        import('./EvolucaoPDF'),
+      ]);
+
       const blob = await pdf(
         <EvolucaoPDF 
           paciente={paciente}
