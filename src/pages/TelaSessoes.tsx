@@ -1,10 +1,8 @@
-
 import React, { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Card } from '@/components/ui/card';
+import { Badge, Card, Input } from '@/design-system/components';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import PageHeader from '@/components/ui/PageHeader';
 import EmptyState from '@/components/ui/EmptyState';
@@ -14,6 +12,42 @@ import { ptBR } from 'date-fns/locale';
 import { StatusSessao } from '@/types';
 import { api } from '@/lib/api';
 import type { PacienteApi, SessaoApi } from '@/types/api';
+
+type StatusBadgeVariant = 'primary' | 'success' | 'warning' | 'error' | 'neutral';
+
+type StatusInfo = {
+  label: string;
+  badgeVariant: StatusBadgeVariant;
+  timeClassName: string;
+};
+
+const statusInfoMap: Record<StatusSessao, StatusInfo> = {
+  agendada: {
+    label: 'Agendada',
+    badgeVariant: 'primary',
+    timeClassName: 'bg-ds-primary-light text-ds-primary',
+  },
+  confirmada: {
+    label: 'Confirmada',
+    badgeVariant: 'success',
+    timeClassName: 'bg-emerald-100 text-emerald-700',
+  },
+  realizada: {
+    label: 'Realizada',
+    badgeVariant: 'neutral',
+    timeClassName: 'bg-gray-200 text-gray-700',
+  },
+  cancelada: {
+    label: 'Cancelada',
+    badgeVariant: 'error',
+    timeClassName: 'bg-red-100 text-red-500',
+  },
+  faltou: {
+    label: 'Faltou',
+    badgeVariant: 'error',
+    timeClassName: 'bg-red-100 text-red-500',
+  },
+};
 
 const TelaSessoes = () => {
   const navigate = useNavigate();
@@ -81,56 +115,33 @@ const TelaSessoes = () => {
     const dataFormatada = dataSessao ? format(dataSessao, "dd/MM/yyyy", { locale: ptBR }) : 'Sem data';
     const horaFormatada = dataSessao ? format(dataSessao, "HH:mm", { locale: ptBR }) : '--:--';
     
-    // Definir cor do indicador de status
-    const getStatusColor = (status: StatusSessao) => {
-      switch (status) {
-        case 'agendada': return 'bg-azul-light text-azul';
-        case 'confirmada': return 'bg-menta-light text-menta-dark';
-        case 'realizada': return 'bg-lavanda-light text-lavanda-dark';
-        case 'cancelada': 
-        case 'faltou': 
-          return 'bg-red-100 text-red-500';
-      }
-    };
-    
     // Definir texto do status
-    const getStatusText = (status: StatusSessao) => {
-      switch (status) {
-        case 'agendada': return 'Agendada';
-        case 'confirmada': return 'Confirmada';
-        case 'realizada': return 'Realizada';
-        case 'cancelada': return 'Cancelada';
-        case 'faltou': return 'Faltou';
-        default: return 'Agendada';
-      }
-    };
-
     const status = (sessao.status ?? 'agendada') as StatusSessao;
+    const statusInfo = statusInfoMap[status];
     
     return (
-      <Card 
-        key={sessao.id} 
-        className="persona-card hover:shadow-lg transition-shadow cursor-pointer"
-        onClick={() => navigate(`/sessoes/${sessao.id}`)}
-      >
-        <div className="flex items-center p-3">
-          <div className="flex-shrink-0 mr-3">
-            <div className={`w-12 h-12 rounded-full flex items-center justify-center font-bold ${getStatusColor(status)}`}>
+      <Link key={sessao.id} to={`/sessoes/${sessao.id}`} className="block">
+        <Card variant="default" className="hover:shadow-lg transition-shadow">
+          <div className="flex items-center gap-3">
+            <div className={`flex h-12 w-12 items-center justify-center rounded-full text-xs font-bold ${statusInfo.timeClassName}`}>
               {horaFormatada}
             </div>
-          </div>
-          <div className="flex-grow">
-            <h3 className="font-semibold">{paciente.nome}</h3>
-            <div className="flex flex-col sm:flex-row sm:space-x-2 text-sm text-muted-foreground">
-              <span>{dataFormatada}</span>
-              <span className="hidden sm:inline">•</span>
-              <span>{sessao.duracao} min</span>
-              <span className="hidden sm:inline">•</span>
-              <span>{getStatusText(status)}</span>
+            <div className="flex-grow">
+              <div className="flex items-center justify-between gap-2">
+                <h3 className="font-semibold">{paciente.nome}</h3>
+                <Badge variant={statusInfo.badgeVariant} size="sm">
+                  {statusInfo.label}
+                </Badge>
+              </div>
+              <div className="flex flex-col sm:flex-row sm:space-x-2 text-sm text-muted-foreground">
+                <span>{dataFormatada}</span>
+                <span className="hidden sm:inline">â€¢</span>
+                <span>{sessao.duracao} min</span>
+              </div>
             </div>
           </div>
-        </div>
-      </Card>
+        </Card>
+      </Link>
     );
   };
 
@@ -152,12 +163,17 @@ const TelaSessoes = () => {
 
       <div className="p-4">
         <div className="mb-4 relative">
+          <label htmlFor="busca-sessoes" className="sr-only">
+            Buscar paciente
+          </label>
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground" size={18} />
           <Input
+            id="busca-sessoes"
+            type="search"
             placeholder="Buscar paciente..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="pl-10 persona-input"
+            className="pl-10"
           />
         </div>
 
@@ -235,3 +251,4 @@ const TelaSessoes = () => {
 };
 
 export default TelaSessoes;
+

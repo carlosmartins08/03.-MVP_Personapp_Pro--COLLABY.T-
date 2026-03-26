@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -14,7 +14,6 @@ import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { Sessao, StatusSessao, StatusPagamento } from '@/types';
 import { toast } from '@/components/ui/use-toast';
-import { useNavigate as useReactRouterNavigate } from 'react-router-dom';
 
 const TelaSessaoDetalhada = () => {
   const { id } = useParams<{ id: string }>();
@@ -23,6 +22,15 @@ const TelaSessaoDetalhada = () => {
   // Encontrar a sessão com o ID especificado
   const sessaoOriginal = sessoesMock.find(s => s.id === id);
   
+  // State para controlar os dados da sessão (para edição)
+  const [sessao, setSessao] = useState<Sessao | null>(sessaoOriginal ?? null);
+  const [editMode, setEditMode] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
+
+  useEffect(() => {
+    setSessao(sessaoOriginal ?? null);
+  }, [sessaoOriginal]);
+
   if (!sessaoOriginal) {
     return (
       <EmptyState
@@ -34,11 +42,6 @@ const TelaSessaoDetalhada = () => {
       />
     );
   }
-  
-  // State para controlar os dados da sessão (para edição)
-  const [sessao, setSessao] = useState<Sessao>({...sessaoOriginal});
-  const [editMode, setEditMode] = useState(false);
-  const [isSaving, setIsSaving] = useState(false);
   
   // Encontrar o paciente desta sessão
   const paciente = pacientesMock.find(p => p.id === sessao.pacienteId);

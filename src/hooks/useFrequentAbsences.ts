@@ -1,5 +1,5 @@
 
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import { api } from '@/lib/api';
 
 type FrequentAbsence = {
@@ -11,7 +11,7 @@ type FrequentAbsence = {
 export const useFrequentAbsences = () => {
   const [isLoading, setIsLoading] = useState(false);
   
-  const fetchFrequentAbsences = async (): Promise<FrequentAbsence[]> => {
+  const fetchFrequentAbsences = useCallback(async (): Promise<FrequentAbsence[]> => {
     try {
       setIsLoading(true);
       
@@ -26,7 +26,7 @@ export const useFrequentAbsences = () => {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, []);
 
   return { fetchFrequentAbsences, isLoading };
 };

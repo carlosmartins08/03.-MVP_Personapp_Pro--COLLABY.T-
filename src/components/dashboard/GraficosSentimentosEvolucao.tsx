@@ -1,6 +1,5 @@
-
 import React from 'react';
-import { Card } from '@/components/ui/card';
+import { Card } from '@/design-system/components';
 import {
   ChartContainer,
   ChartTooltip,
@@ -21,35 +20,53 @@ import {
 } from 'recharts';
 import { useQuery } from '@tanstack/react-query';
 import { api } from '@/lib/api';
+import { colors } from '@/design-system';
+
+type SentimentoData = {
+  name: string;
+  value: number;
+};
+
+type EvolucaoScoreData = {
+  semana: string;
+  score: number;
+};
 
 export const GraficosSentimentosEvolucao = () => {
-  const { data: sentimentosData } = useQuery({
+  const { data: sentimentosData = [] } = useQuery<SentimentoData[]>({
     queryKey: ['sentimentos-distribuicao'],
     queryFn: async () => {
-      return api.get('/analytics/sentimentos');
+      return api.get<SentimentoData[]>('/analytics/sentimentos');
     },
   });
 
-  const { data: evolucaoData } = useQuery({
+  const { data: evolucaoData = [] } = useQuery<EvolucaoScoreData[]>({
     queryKey: ['evolucao-scores'],
     queryFn: async () => {
-      return api.get('/analytics/evolucao-score');
+      return api.get<EvolucaoScoreData[]>('/analytics/evolucao-score');
     },
   });
 
-  const COLORS = ['#9b87f5', '#7E69AB', '#6E59A5', '#D6BCFA', '#E5DEFF'];
+  const primary = colors.primary[400];
+  const COLORS = [
+    colors.primary[400],
+    colors.primary[300],
+    colors.primary[200],
+    colors.primary[100],
+    colors.primary[50],
+  ];
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-      <Card className="p-6">
+      <Card variant="default" className="p-6">
         <h3 className="text-lg font-semibold mb-4">Distribuição de Sentimentos</h3>
         <div className="h-[300px]">
           <ChartContainer
             config={{
               value: {
                 theme: {
-                  light: "#9b87f5",
-                  dark: "#9b87f5",
+                  light: primary,
+                  dark: primary,
                 },
               },
             }}
@@ -64,10 +81,10 @@ export const GraficosSentimentosEvolucao = () => {
                   cy="50%"
                   innerRadius={60}
                   outerRadius={80}
-                  fill="#8884d8"
+                  fill={primary}
                   label
                 >
-                  {sentimentosData?.map((entry: any, index: number) => (
+                  {sentimentosData.map((entry, index) => (
                     <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                   ))}
                 </Pie>
@@ -79,15 +96,15 @@ export const GraficosSentimentosEvolucao = () => {
         </div>
       </Card>
 
-      <Card className="p-6">
+      <Card variant="default" className="p-6">
         <h3 className="text-lg font-semibold mb-4">Evolução do Score Clínico</h3>
         <div className="h-[300px]">
           <ChartContainer
             config={{
               score: {
                 theme: {
-                  light: "#9b87f5",
-                  dark: "#9b87f5",
+                  light: primary,
+                  dark: primary,
                 },
               },
             }}
@@ -102,7 +119,7 @@ export const GraficosSentimentosEvolucao = () => {
                 <Line
                   type="monotone"
                   dataKey="score"
-                  stroke="#9b87f5"
+                  stroke={primary}
                   activeDot={{ r: 8 }}
                 />
               </LineChart>

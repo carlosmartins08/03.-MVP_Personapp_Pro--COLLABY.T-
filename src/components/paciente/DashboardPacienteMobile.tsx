@@ -1,8 +1,8 @@
 import { useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
+import { AppHeader } from '@/design-system/components';
 import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
+import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useLocalizacao } from '@/contexts/LocalizacaoContext';
 import { useAuthContext } from '@/contexts/AuthContext';
@@ -10,11 +10,14 @@ import { useRecentDataSummary } from '@/hooks/useRecentDataSummary';
 import { api } from '@/lib/api';
 import { toast } from '@/components/ui/use-toast';
 import DiarioSummaryCard from './DiarioSummaryCard';
-import SessaoSummaryCard from './SessaoSummaryCard';
 import AlertaSummaryCard from './AlertaSummaryCard';
-import { CalendarPlus, BookPlus, AlertCircle, ChevronRight } from 'lucide-react';
+import { CalendarPlus, BookPlus, AlertCircle, ChevronRight, Search } from 'lucide-react';
 
-const DashboardPacienteMobile = () => {
+type DashboardPacienteMobileProps = {
+  allowLegacyHeader?: boolean;
+};
+
+const DashboardPacienteMobile = ({ allowLegacyHeader = false }: DashboardPacienteMobileProps) => {
   const navigate = useNavigate();
   const { getTexto } = useLocalizacao();
   const { user } = useAuthContext();
@@ -41,6 +44,7 @@ const DashboardPacienteMobile = () => {
   });
 
   const userName = paciente?.nome || '';
+  const headerName = userName || getTexto('paciente') || 'Paciente';
 
   const handleNovoDiario = () => {
     navigate('/paciente/diario');
@@ -64,18 +68,43 @@ const DashboardPacienteMobile = () => {
 
   return (
     <div className="flex flex-col space-y-6">
-      <div className="pt-2 pb-4">
-        <h1 className="text-2xl font-bold">
-          {isLoadingUser ? (
-            <Skeleton className="h-8 w-3/4" />
-          ) : (
-            <>
-              {getTexto('ola') || 'Ola'}, {userName || getTexto('paciente') || 'Paciente'}!
-            </>
-          )}
-        </h1>
-        <p className="text-muted-foreground">{getTexto('bem_vindo_dashboard') || 'Bem-vindo ao seu dashboard'}</p>
-      </div>
+      {allowLegacyHeader ? (
+        <div className="pt-2 pb-4">
+          <h1 className="text-2xl font-bold">
+            {isLoadingUser ? (
+              <Skeleton className="h-8 w-3/4" />
+            ) : (
+              <>
+                {getTexto('ola') || 'Ola'}, {userName || getTexto('paciente') || 'Paciente'}!
+              </>
+            )}
+          </h1>
+          <p className="text-muted-foreground">{getTexto('bem_vindo_dashboard') || 'Bem-vindo ao seu dashboard'}</p>
+        </div>
+      ) : (
+        <div className="space-y-4">
+          <AppHeader variant="patient" name={headerName} />
+          <div className="px-4">
+            <div className="flex items-center justify-between mb-4">
+              <p className="text-muted-foreground">
+                {getTexto('bem_vindo_dashboard') || 'Bem-vindo ao seu dashboard'}
+              </p>
+              <button
+                className="p-3 bg-white/80 backdrop-blur-sm rounded-full shadow-sm hover:bg-white transition-colors"
+                aria-label={getTexto('ajuda') || 'Ajuda'}
+              >
+                <Search className="h-5 w-5 text-muted-foreground" />
+              </button>
+            </div>
+            <div className="relative">
+              <div className="flex items-center p-4 pl-5 bg-white/80 backdrop-blur-sm rounded-full shadow-sm text-muted-foreground">
+                <Search className="h-4 w-4 mr-2 text-muted-foreground" />
+                <p className="text-sm">{getTexto('o_que_procura') || 'O que voce procura hoje?'}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       {(ultimaSessao || isLoadingSessao) && (
         <Alert className="bg-blue-50 border-blue-200 text-blue-800">

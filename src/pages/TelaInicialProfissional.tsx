@@ -52,7 +52,7 @@ const TelaInicialProfissional = () => {
 
     loadTodaysSessions();
     loadFrequentAbsences();
-  }, []);
+  }, [fetchTodaysSessions, fetchFrequentAbsences, toast]);
 
   const sessoesAgendadas = todaysSessions.filter(s => ['agendada', 'confirmada'].includes(s.status)).length;
   const valorTotalHoje = 0; // This will be calculated once we have the session values

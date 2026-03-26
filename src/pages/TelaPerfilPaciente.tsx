@@ -1,8 +1,7 @@
 import React, { useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Avatar, Badge, Button, Card } from '@/design-system/components';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import PageHeader from '@/components/ui/PageHeader';
 import EmptyState from '@/components/ui/EmptyState';
@@ -26,6 +25,30 @@ import ListaMensagens from '@/components/mensagens/ListaMensagens';
 import ExportAlertasButton from '@/components/alertas/ExportAlertasButton';
 import InsightsTematicos from '@/components/perfil/insights/InsightsTematicos';
 import type { PacienteApi, SessaoApi } from '@/types/api';
+
+type StatusBadgeVariant = 'primary' | 'success' | 'warning' | 'error' | 'neutral';
+
+const statusLabels: Record<NonNullable<PacienteApi['statusRanqueado']>, string> = {
+  normal: 'Normal',
+  faltas_frequentes: 'Faltas frequentes',
+  inadimplente: 'Inadimplente',
+  intensivo: 'Intensivo',
+};
+
+const statusVariants: Record<NonNullable<PacienteApi['statusRanqueado']>, StatusBadgeVariant> = {
+  normal: 'success',
+  faltas_frequentes: 'warning',
+  inadimplente: 'error',
+  intensivo: 'primary',
+};
+
+const getInitials = (name?: string | null) => {
+  if (!name) return '';
+  const parts = name.trim().split(/\s+/);
+  const first = parts[0]?.[0] ?? '';
+  const last = parts.length > 1 ? parts[parts.length - 1][0] : '';
+  return `${first}${last}`.toUpperCase();
+};
 
 const TelaPerfilPaciente = () => {
   const { id } = useParams<{ id: string }>();
@@ -51,39 +74,14 @@ const TelaPerfilPaciente = () => {
 
   const isLoading = !id || isPacienteLoading || isSessoesLoading;
 
-  if (isLoading) {
-    return (
-      <div className="container py-6">
-        <PageHeader title="Paciente" subtitle="Carregando informações..." />
-        <p className="text-center py-10 text-muted-foreground">Buscando dados do paciente...</p>
-      </div>
-    );
-  }
-
-  if (!paciente) {
-    return (
-      <EmptyState
-        title="Paciente não encontrado"
-        description="O paciente que você está procurando não existe ou foi removido."
-        icon={<User size={48} />}
-        actionLabel="Voltar para Pacientes"
-        onAction={() => navigate('/pacientes')}
-      />
-    );
-  }
-
-  const sessoesPaciente = sessoes.filter((sessao) => sessao.pacienteId === id);
+  const sessoesPaciente = useMemo(
+    () => sessoes.filter((sessao) => (id ? sessao.pacienteId === id : false)),
+    [sessoes, id],
+  );
   const proxSessoes = sessoesPaciente.filter(
     (sessao) => sessao.status && ['agendada', 'confirmada'].includes(sessao.status),
   );
   const sessoesRealizadas = sessoesPaciente.filter((sessao) => sessao.status === 'realizada');
-
-  const dataNascimento = paciente.dataNascimento
-    ? format(new Date(paciente.dataNascimento), 'dd/MM/yyyy')
-    : 'Não informado';
-  const dataCadastro = paciente.criadoEm
-    ? format(new Date(paciente.criadoEm), 'dd/MM/yyyy')
-    : 'Sem registro';
 
   const sessoesPorMes = useMemo(() => {
     const grouped: Record<string, SessaoApi[]> = {};
@@ -113,6 +111,36 @@ const TelaPerfilPaciente = () => {
     return grouped;
   }, [sessoesPaciente]);
 
+  if (isLoading) {
+    return (
+      <div className="container py-6">
+        <PageHeader title="Paciente" subtitle="Carregando informaÃ§Ãµes..." />
+        <p className="text-center py-10 text-muted-foreground">Buscando dados do paciente...</p>
+      </div>
+    );
+  }
+
+  if (!paciente) {
+    return (
+      <EmptyState
+        title="Paciente nÃ£o encontrado"
+        description="O paciente que vocÃª estÃ¡ procurando nÃ£o existe ou foi removido."
+        icon={<User size={48} />}
+        actionLabel="Voltar para Pacientes"
+        onAction={() => navigate('/pacientes')}
+      />
+    );
+  }
+
+  const dataNascimento = paciente.dataNascimento
+    ? format(new Date(paciente.dataNascimento), 'dd/MM/yyyy')
+    : 'NÃ£o informado';
+  const dataCadastro = paciente.criadoEm
+    ? format(new Date(paciente.criadoEm), 'dd/MM/yyyy')
+    : 'Sem registro';
+
+  const status = paciente.statusRanqueado ?? undefined;
+
   return (
     <div className="container pb-16">
       {/* Header */}
@@ -127,14 +155,14 @@ const TelaPerfilPaciente = () => {
               profissionalNome="Dr. Nome do Profissional"
             />
             <Button 
-              variant="outline" 
+              variant="secondary" 
               size="sm"
               onClick={() => navigate(`/pacientes/${id}/insights`)}
             >
               <Brain size={16} className="mr-1" /> Ver Insights
             </Button>
             <Button 
-              variant="outline" 
+              variant="secondary" 
               size="sm"
               onClick={() => navigate('/pacientes')}
             >
@@ -146,18 +174,23 @@ const TelaPerfilPaciente = () => {
       
       {/* Patient Info Card */}
       <div className="p-4">
-        <Card className="mb-6 persona-card">
-          <div className="flex flex-col sm:flex-row p-4 items-center sm:items-start">
-            <div className="w-24 h-24 rounded-full overflow-hidden mb-4 sm:mb-0 sm:mr-6">
-              <img
-                src={paciente.fotoPerfil}
-                alt={paciente.nome}
-                className="w-full h-full object-cover"
-              />
-            </div>
+        <Card variant="default" className="mb-6">
+          <div className="flex flex-col sm:flex-row items-center sm:items-start gap-4">
+            <Avatar
+              size="xl"
+              imageUrl={paciente.fotoPerfil ?? undefined}
+              initials={getInitials(paciente.nome)}
+            />
             
             <div className="flex-grow text-center sm:text-left">
-              <h2 className="text-xl font-bold mb-4">{paciente.nome}</h2>
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-4">
+                <h2 className="text-xl font-bold">{paciente.nome}</h2>
+                {status && (
+                  <Badge variant={statusVariants[status]} size="sm">
+                    {statusLabels[status]}
+                  </Badge>
+                )}
+              </div>
               
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div className="flex items-center text-sm text-muted-foreground">
@@ -186,45 +219,42 @@ const TelaPerfilPaciente = () => {
 
         {/* Main Content Tabs */}
         <Tabs defaultValue="info" className="w-full">
-          <TabsList className="grid grid-cols-5 mb-4">
-            <TabsTrigger value="info">Informações</TabsTrigger>
-            <TabsTrigger value="sessoes">Sessões</TabsTrigger>
-            <TabsTrigger value="prontuario">Prontuário</TabsTrigger>
-            <TabsTrigger value="mensagens">Mensagens</TabsTrigger>
-            <TabsTrigger value="insights">Insights</TabsTrigger>
+          <TabsList className="w-full overflow-x-auto flex gap-1 mb-4">
+            <TabsTrigger value="info" className="flex-shrink-0 min-w-[120px]">InformaÃ§Ãµes</TabsTrigger>
+            <TabsTrigger value="sessoes" className="flex-shrink-0 min-w-[120px]">SessÃµes</TabsTrigger>
+            <TabsTrigger value="prontuario" className="flex-shrink-0 min-w-[120px]">ProntuÃ¡rio</TabsTrigger>
+            <TabsTrigger value="mensagens" className="flex-shrink-0 min-w-[120px]">Mensagens</TabsTrigger>
+            <TabsTrigger value="insights" className="flex-shrink-0 min-w-[120px]">Insights</TabsTrigger>
           </TabsList>
           
           {/* Info Tab */}
           <TabsContent value="info" className="mt-0">
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-lg flex items-center">
-                  <FileText size={18} className="mr-2 text-lavanda" />
-                  Observações
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-sm">
-                  {paciente.observacoes || "Nenhuma observação registrada."}
-                </p>
-              </CardContent>
+            <Card variant="default">
+              <div className="flex items-center gap-2 border-b border-gray-100 pb-3 mb-3">
+                <FileText size={18} className="text-lavanda" />
+                <h3 className="text-lg font-semibold">ObservaÃ§Ãµes</h3>
+              </div>
+              <p className="text-sm">
+                {paciente.observacoes || "Nenhuma observaÃ§Ã£o registrada."}
+              </p>
             </Card>
             
             <div className="mt-4 flex space-x-2">
               <Button 
                 onClick={() => {}} 
-                className="flex-1 persona-button"
+                variant="primary"
+                className="flex-1"
               >
                 <FileEdit size={16} className="mr-2" />
                 Editar Perfil
               </Button>
               <Button 
                 onClick={() => navigate(`/sessoes/cadastro?pacienteId=${paciente.id}`)} 
-                variant="outline"
+                variant="secondary"
                 className="flex-1"
               >
                 <Calendar size={16} className="mr-2" />
-                Nova Sessão
+                Nova SessÃ£o
               </Button>
             </div>
           </TabsContent>
@@ -233,7 +263,7 @@ const TelaPerfilPaciente = () => {
           <TabsContent value="sessoes" className="mt-0">
             <h3 className="text-md font-semibold mb-3 flex items-center">
               <Calendar size={18} className="mr-2 text-lavanda" />
-              Próximas Sessões
+              PrÃ³ximas SessÃµes
             </h3>
             
             {proxSessoes.length > 0 ? (
@@ -244,9 +274,9 @@ const TelaPerfilPaciente = () => {
                   const horaFormatada = format(dataSessao, "HH:mm", { locale: ptBR });
                   
                   return (
-                    <Card key={sessao.id} className="persona-card">
-                      <div className="flex items-center p-3">
-                        <div className="flex-shrink-0 mr-3">
+                    <Card key={sessao.id} variant="default">
+                      <div className="flex items-center gap-3">
+                        <div className="flex-shrink-0">
                           <div className="w-12 h-12 rounded-full bg-azul-light flex items-center justify-center text-azul font-bold">
                             {horaFormatada}
                           </div>
@@ -259,7 +289,7 @@ const TelaPerfilPaciente = () => {
                           </p>
                         </div>
                         <Button 
-                          variant="outline" 
+                          variant="secondary" 
                           size="sm"
                           onClick={() => navigate(`/sessoes/${sessao.id}`)}
                         >
@@ -271,17 +301,18 @@ const TelaPerfilPaciente = () => {
                 })}
               </div>
             ) : (
-              <Card className="p-4 text-center bg-muted/20 border-dashed mb-6">
-                <p className="text-muted-foreground">Nenhuma sessão agendada</p>
+              <Card variant="default" className="text-center bg-muted/20 border-dashed mb-6">
+                <p className="text-muted-foreground">Nenhuma sessÃ£o agendada</p>
               </Card>
             )}
             
             <Button 
               onClick={() => navigate(`/sessoes/cadastro?pacienteId=${paciente.id}`)} 
-              className="w-full persona-button"
+              variant="primary"
+              className="w-full"
             >
               <Calendar size={16} className="mr-2" />
-              Agendar Nova Sessão
+              Agendar Nova SessÃ£o
             </Button>
           </TabsContent>
           
@@ -290,7 +321,7 @@ const TelaPerfilPaciente = () => {
             <div className="flex justify-between items-center mb-4">
               <h3 className="text-md font-semibold flex items-center">
                 <FileText size={18} className="mr-2 text-lavanda" />
-                Histórico Clínico
+                HistÃ³rico ClÃ­nico
               </h3>
               <ProntuarioExportButton paciente={paciente} sessoes={sessoesPaciente} />
             </div>
@@ -328,14 +359,18 @@ const TelaPerfilPaciente = () => {
                     }
                     
                     return (
-                      <Card key={sessao.id} className="relative overflow-hidden border-l-4" 
-                            style={{ borderLeftColor: sessao.status === 'realizada' ? '#88D8B0' : 
-                                                   sessao.status === 'faltou' ? '#ea384c' : '#8E9196' }}>
-                        <CardContent className="p-4">
+                      <Card
+                        key={sessao.id}
+                        variant="default"
+                        className="relative overflow-hidden border-l-4 p-0"
+                        style={{ borderLeftColor: sessao.status === 'realizada' ? '#88D8B0' : 
+                                               sessao.status === 'faltou' ? '#ea384c' : '#8E9196' }}
+                      >
+                        <div className="p-4">
                           <div className="flex items-start justify-between mb-3">
                             <div className="flex items-center space-x-2">
                               <span className="text-lg font-medium">{dataFormatada}</span>
-                              <span className="text-sm text-muted-foreground">às {horaFormatada}</span>
+                              <span className="text-sm text-muted-foreground">Ã s {horaFormatada}</span>
                             </div>
                             <div className="flex items-center space-x-2">
                               {statusIcon}
@@ -359,11 +394,11 @@ const TelaPerfilPaciente = () => {
                               <p className="whitespace-pre-wrap">{sessao.anotacoes}</p>
                             ) : (
                               <p className="text-muted-foreground italic">
-                                Sem anotações clínicas registradas.
+                                Sem anotaÃ§Ãµes clÃ­nicas registradas.
                               </p>
                             )}
                           </div>
-                        </CardContent>
+                        </div>
                       </Card>
                     );
                   })}
@@ -372,9 +407,9 @@ const TelaPerfilPaciente = () => {
             ))}
             
             {Object.keys(sessoesPorMes).length === 0 && (
-              <Card className="p-4 text-center bg-muted/20 border-dashed">
+              <Card variant="default" className="text-center bg-muted/20 border-dashed">
                 <p className="text-muted-foreground">
-                  Nenhuma sessão registrada no prontuário.
+                  Nenhuma sessÃ£o registrada no prontuÃ¡rio.
                 </p>
               </Card>
             )}
@@ -384,7 +419,7 @@ const TelaPerfilPaciente = () => {
           <TabsContent value="mensagens">
             <h3 className="text-md font-semibold mb-3 flex items-center">
               <Mail size={18} className="mr-2 text-lavanda" />
-              Histórico de Mensagens
+              HistÃ³rico de Mensagens
             </h3>
             <ListaMensagens pacienteId={paciente.id} />
           </TabsContent>
@@ -400,3 +435,4 @@ const TelaPerfilPaciente = () => {
 };
 
 export default TelaPerfilPaciente;
+

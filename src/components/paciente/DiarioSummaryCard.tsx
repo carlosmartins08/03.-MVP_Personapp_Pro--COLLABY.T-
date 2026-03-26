@@ -1,9 +1,7 @@
-
 import React from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, Badge } from '@/design-system/components';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Book } from 'lucide-react';
-import { Badge } from '@/components/ui/badge';
 import { useLocalizacao } from '@/contexts/LocalizacaoContext';
 import EmptyState from '@/components/ui/EmptyState';
 import { DiarioSentimento } from '@/types/paciente';
@@ -24,14 +22,14 @@ const DiarioSummaryCard: React.FC<DiarioSummaryCardProps> = ({
   const { getTexto } = useLocalizacao();
 
   return (
-    <Card className="border-none shadow-md rounded-3xl overflow-hidden hover:shadow-lg transition-shadow">
-      <CardHeader className="pb-2 bg-gradient-to-r from-azul-light/40 to-azul-light/20">
-        <CardTitle className="text-base font-medium flex items-center">
+    <Card variant="default" className="border-none shadow-md rounded-3xl overflow-hidden p-0">
+      <div className="pb-2 px-4 pt-4 bg-gradient-to-r from-azul-light/40 to-azul-light/20">
+        <h3 className="text-base font-medium flex items-center">
           <Book className="h-4 w-4 mr-2 text-muted-foreground" />
           {getTexto('ultimo_diario') || 'Último diário'}
-        </CardTitle>
-      </CardHeader>
-      <CardContent className="pt-4">
+        </h3>
+      </div>
+      <div className="pt-4 px-4 pb-4">
         {isLoading ? (
           <div className="space-y-2">
             <Skeleton className="h-4 w-full" />
@@ -47,7 +45,7 @@ const DiarioSummaryCard: React.FC<DiarioSummaryCardProps> = ({
               {diario.texto}
             </div>
             {diario.sentimento && (
-              <Badge variant="outline" className="rounded-full bg-blue-50 border-blue-200 text-blue-700">
+              <Badge variant="primary" size="sm">
                 {diario.sentimento}
               </Badge>
             )}
@@ -61,7 +59,7 @@ const DiarioSummaryCard: React.FC<DiarioSummaryCardProps> = ({
             onAction={() => window.location.href = '/paciente/diario'}
           />
         )}
-      </CardContent>
+      </div>
     </Card>
   );
 };

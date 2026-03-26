@@ -1,5 +1,5 @@
 
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import { api } from '@/lib/api';
 
 type TodaySession = {
@@ -12,7 +12,7 @@ type TodaySession = {
 export const useTodaysSessions = () => {
   const [isLoading, setIsLoading] = useState(false);
   
-  const fetchTodaysSessions = async (): Promise<TodaySession[]> => {
+  const fetchTodaysSessions = useCallback(async (): Promise<TodaySession[]> => {
     try {
       setIsLoading(true);
       
@@ -37,7 +37,7 @@ export const useTodaysSessions = () => {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, []);
 
   return { fetchTodaysSessions, isLoading };
 };

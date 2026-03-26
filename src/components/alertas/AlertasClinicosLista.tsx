@@ -2,11 +2,13 @@ import React from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
-import { Badge } from '@/components/ui/badge';
+import { Badge } from '@/design-system/components';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import type { AlertaClinico } from '@/types/queries';
 import { api } from '@/lib/api';
+
+type StatusBadgeVariant = 'primary' | 'success' | 'warning' | 'error' | 'neutral';
 
 interface AlertasClinicosListaProps {
   defaultPacienteId?: string;
@@ -32,14 +34,20 @@ export const AlertasClinicosLista: React.FC<AlertasClinicosListaProps> = ({ defa
     },
   });
 
-  const getNivelUrgenciaBadge = (nivel: string) => {
-    const styles = {
-      alto: 'bg-red-100 text-red-800 border-red-200',
-      medio: 'bg-yellow-100 text-yellow-800 border-yellow-200',
-      baixo: 'bg-blue-100 text-blue-800 border-blue-200',
-    };
-
-    return styles[nivel as keyof typeof styles] || 'bg-gray-100 text-gray-800';
+  const getNivelUrgenciaVariant = (nivel: string | null | undefined): StatusBadgeVariant => {
+    switch (nivel) {
+      case 'alto':
+      case 'urgent':
+        return 'error';
+      case 'medio':
+      case 'moderado':
+        return 'warning';
+      case 'baixo':
+      case 'leve':
+        return 'success';
+      default:
+        return 'neutral';
+    }
   };
 
   if (isLoading) {
@@ -80,7 +88,7 @@ export const AlertasClinicosLista: React.FC<AlertasClinicosListaProps> = ({ defa
               <TableCell>{alerta.tipoAlerta}</TableCell>
               <TableCell>{alerta.descricao}</TableCell>
               <TableCell>
-                <Badge className={getNivelUrgenciaBadge(alerta.nivelUrgencia || 'baixo')}>
+                <Badge variant={getNivelUrgenciaVariant(alerta.nivelUrgencia)} size="sm">
                   {alerta.nivelUrgencia?.toUpperCase() || 'BAIXO'}
                 </Badge>
               </TableCell>

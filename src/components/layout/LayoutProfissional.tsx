@@ -78,7 +78,7 @@ export const LayoutProfissional = () => {
   const isMobile = useIsMobile();
 
   return (
-    <div className="flex h-screen">
+    <div className="flex min-h-screen min-h-[100dvh]">
       {!isMobile ? (
         <aside className="w-64 border-r bg-background">
           <SidebarContent />
@@ -86,7 +86,12 @@ export const LayoutProfissional = () => {
       ) : (
         <Sheet>
           <SheetTrigger asChild>
-            <Button variant="ghost" size="icon" className="fixed top-4 left-4 z-50">
+            <Button
+              variant="ghost"
+              size="icon"
+              className="fixed top-4 left-4 z-50"
+              aria-label="Abrir menu de navegação"
+            >
               <Menu className="h-5 w-5" />
             </Button>
           </SheetTrigger>

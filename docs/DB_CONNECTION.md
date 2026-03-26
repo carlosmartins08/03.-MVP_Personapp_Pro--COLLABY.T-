@@ -39,8 +39,13 @@ docker compose logs -f postgres
   - `DATABASE_URL=postgresql://personapp:personapp-dev@localhost:5432/personaclinic`
   - `PORT=4000`
   - `JWT_SECRET` (secure secret)
+  - `JWT_REFRESH_SECRET` (secure refresh secret)
   - `SMTP_HOST=localhost`, `SMTP_PORT=1025`, `SMTP_USER=`, `SMTP_PASS=`, `SMTP_FROM=no-reply@personaclinic.local`
   - `ENABLE_ANALYTICS_ROUTES=true`
+  - `DAILY_API_KEY=`
+  - `PAGAR_ME_API_KEY=`
+  - `SENDGRID_API_KEY=`
+  - `FCM_SERVER_KEY=`
 
 Always keep these env vars synchronized so the frontend/ backend talk to the same DB + API host.
 

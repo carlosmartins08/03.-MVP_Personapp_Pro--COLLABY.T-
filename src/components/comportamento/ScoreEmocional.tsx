@@ -14,6 +14,7 @@ import { format, parseISO } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { BarChart2 } from 'lucide-react';
 import type { Sessao } from '@/types/queries';
+import type { TooltipProps } from 'recharts';
 
 interface ScoreEmocionalProps {
   sessoes: Sessao[];
@@ -26,11 +27,12 @@ interface ChartDataPoint {
   score: number;
 }
 
-const customTooltip = ({ active, payload }: any) => {
+const customTooltip = ({ active, payload }: TooltipProps<number, string>) => {
   if (active && payload && payload.length) {
+    const dataPoint = payload[0].payload as ChartDataPoint;
     return (
       <div className="bg-white p-2 border rounded-md shadow-sm text-xs">
-        <p className="font-medium">{payload[0].payload.formattedDate}</p>
+        <p className="font-medium">{dataPoint.formattedDate}</p>
         <p>
           Score: <span className="font-medium">{payload[0].value}</span>
         </p>

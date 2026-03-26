@@ -1,21 +1,26 @@
-
-import { useState } from 'react';
+﻿import { useState } from 'react';
 import { toast } from '@/components/ui/use-toast';
 import { api } from '@/lib/api';
+import { useQueryClient } from '@tanstack/react-query';
 
 export const useMarkChargeAsPaid = () => {
   const [isLoading, setIsLoading] = useState(false);
+  const [activeChargeId, setActiveChargeId] = useState<string | null>(null);
+  const queryClient = useQueryClient();
 
   const markAsPaid = async (chargeId: string) => {
     try {
       setIsLoading(true);
-      
-      const data = await api.post(`/sessoes/${chargeId}/pagar`);
+      setActiveChargeId(chargeId);
+
+      const data = await api.post(`/financeiro/charges/${chargeId}/pay`);
 
       toast({
         title: "Sucesso!",
-        description: "Pagamento registrado com sucesso",
+        description: "Pagamento processado com sucesso",
       });
+
+      await queryClient.invalidateQueries({ queryKey: ['financeiro-resumo'] });
 
       return data;
     } catch (error) {
@@ -23,13 +28,14 @@ export const useMarkChargeAsPaid = () => {
       toast({
         variant: "destructive",
         title: "Erro",
-        description: "Não foi possível registrar o pagamento. Tente novamente.",
+        description: "Nao foi possivel processar o pagamento. Tente novamente.",
       });
       throw error;
     } finally {
       setIsLoading(false);
+      setActiveChargeId(null);
     }
   };
 
-  return { markAsPaid, isLoading };
+  return { markAsPaid, isLoading, activeChargeId };
 };

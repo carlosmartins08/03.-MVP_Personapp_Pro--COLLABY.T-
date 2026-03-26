@@ -1,6 +1,5 @@
-
 import React from 'react';
-import { Card } from '@/components/ui/card';
+import { AppHeader, Card } from '@/design-system/components';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import PageHeader from '@/components/ui/PageHeader';
 import { IndicadoresGerais } from '@/components/dashboard/IndicadoresGerais';
@@ -8,13 +7,21 @@ import { GraficosSentimentosEvolucao } from '@/components/dashboard/GraficosSent
 import { ListaPacientesRisco } from '@/components/dashboard/ListaPacientesRisco';
 import { GraficosFrequencia } from '@/components/dashboard/GraficosFrequencia';
 
-const DashboardPrincipalPsicologo = () => {
+interface DashboardPrincipalPsicologoProps {
+  allowLegacyHeader?: boolean;
+}
+
+const DashboardPrincipalPsicologo = ({ allowLegacyHeader = false }: DashboardPrincipalPsicologoProps) => {
   return (
     <div className="container pb-16">
-      <PageHeader
-        title="Dashboard Principal"
-        subtitle="Visão geral da sua prática clínica"
-      />
+      {allowLegacyHeader ? (
+        <PageHeader
+          title="Dashboard Principal"
+          subtitle="Visão geral da sua prática clínica"
+        />
+      ) : (
+        <AppHeader variant="professional" name="Profissional" />
+      )}
       
       <div className="px-4 space-y-6">
         <IndicadoresGerais />
@@ -34,7 +41,7 @@ const DashboardPrincipalPsicologo = () => {
           </TabsContent>
         </Tabs>
         
-        <Card className="p-6">
+        <Card variant="default" className="p-6">
           <ListaPacientesRisco />
         </Card>
       </div>

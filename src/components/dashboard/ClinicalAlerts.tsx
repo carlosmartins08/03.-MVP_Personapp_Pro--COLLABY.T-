@@ -1,6 +1,5 @@
-
 import React from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card } from '@/design-system/components';
 import { AlertTriangle, Users, Clock } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
@@ -21,14 +20,14 @@ const ClinicalAlerts: React.FC<ClinicalAlertsProps> = ({
   const navigate = useNavigate();
 
   return (
-    <Card className="shadow-sm">
-      <CardHeader>
-        <CardTitle className="text-lg font-semibold flex items-center">
+    <Card variant="default" className="shadow-sm">
+      <div className="border-b border-gray-100 px-6 py-4">
+        <h3 className="text-lg font-semibold flex items-center">
           <AlertTriangle className="mr-2 h-5 w-5 text-orange-500" />
           Alertas Clínicos
-        </CardTitle>
-      </CardHeader>
-      <CardContent>
+        </h3>
+      </div>
+      <div className="px-6 py-4">
         <div className="space-y-4">
           <div className="flex items-center justify-between bg-[#FEF7CD] p-3 rounded-lg">
             <div className="flex items-center">
@@ -90,7 +89,7 @@ const ClinicalAlerts: React.FC<ClinicalAlertsProps> = ({
             </div>
           </div>
         </div>
-      </CardContent>
+      </div>
     </Card>
   );
 };

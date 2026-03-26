@@ -12,9 +12,10 @@ import {
 } from '@/components/ui/table';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
+import type { Recibo } from '@/types/recibos';
 
 interface ReciboTableProps {
-  recibos: any[];
+  recibos: Recibo[];
   isLoading: boolean;
   onSend: (reciboId: string) => void;
   onDelete: (reciboId: string) => void;

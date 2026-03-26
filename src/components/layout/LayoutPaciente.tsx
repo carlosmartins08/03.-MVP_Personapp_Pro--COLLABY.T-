@@ -30,14 +30,14 @@ export const LayoutPaciente = () => {
   };
 
   return (
-    <div className="flex flex-col min-h-screen bg-gray-50">
+    <div className="flex flex-col min-h-screen min-h-[100dvh] bg-gray-50">
       {/* Main Content */}
-      <main className="flex-1 container py-4 pb-20">
+      <main className="flex-1 container py-4 pb-[calc(64px+env(safe-area-inset-bottom,0px))]">
         <Outlet />
       </main>
 
       {/* Bottom Navigation Bar */}
-      <nav className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 z-50">
+      <nav className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 z-50 pb-[env(safe-area-inset-bottom,0px)]">
         <div className="flex justify-around items-center h-16">
           {menuItems.map((item) => (
             <Link

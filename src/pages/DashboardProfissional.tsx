@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { format } from 'date-fns';
 import { ptBR, enUS } from 'date-fns/locale';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { AppHeader, Card } from '@/design-system/components';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useLocalizacao } from '@/contexts/LocalizacaoContext';
 import { api } from '@/lib/api';
@@ -30,7 +30,11 @@ type ResumoProfissional = {
   }>;
 };
 
-const DashboardProfissional = () => {
+interface DashboardProfissionalProps {
+  allowLegacyHeader?: boolean;
+}
+
+const DashboardProfissional = ({ allowLegacyHeader = false }: DashboardProfissionalProps) => {
   const { idioma, getTexto } = useLocalizacao();
   const locale = idioma === 'en' ? enUS : ptBR;
 
@@ -66,14 +70,16 @@ const DashboardProfissional = () => {
 
   return (
     <div className="p-6 space-y-6 max-w-5xl mx-auto">
-      <h1 className="text-2xl font-bold">{getTexto('bem_vindo') || 'Bem-vindo'}!</h1>
+      {allowLegacyHeader ? (
+        <h1 className="text-2xl font-bold">{getTexto('bem_vindo') || 'Bem-vindo'}!</h1>
+      ) : (
+        <AppHeader variant="professional" name="Profissional" />
+      )}
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        <Card>
-          <CardHeader>
-            <CardTitle>{getTexto('diarios_recentes') || 'Ultimos Diarios'}</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
+        <Card variant="default" className="p-6">
+          <h3 className="text-lg font-semibold mb-4">{getTexto('diarios_recentes') || 'Ultimos Diarios'}</h3>
+          <div className="space-y-4">
             {isLoading ? (
               Array(3)
                 .fill(0)
@@ -95,14 +101,12 @@ const DashboardProfissional = () => {
                 </div>
               ))
             )}
-          </CardContent>
+          </div>
         </Card>
 
-        <Card>
-          <CardHeader>
-            <CardTitle>{getTexto('proximas_sessoes') || 'Proximas Sessoes'}</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
+        <Card variant="default" className="p-6">
+          <h3 className="text-lg font-semibold mb-4">{getTexto('proximas_sessoes') || 'Proximas Sessoes'}</h3>
+          <div className="space-y-4">
             {isLoading ? (
               Array(3)
                 .fill(0)
@@ -126,14 +130,12 @@ const DashboardProfissional = () => {
                 </div>
               ))
             )}
-          </CardContent>
+          </div>
         </Card>
 
-        <Card className="md:col-span-2 lg:col-span-1">
-          <CardHeader>
-            <CardTitle>{getTexto('alertas_clinicos') || 'Alertas Clinicos'}</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
+        <Card variant="default" className="p-6 md:col-span-2 lg:col-span-1">
+          <h3 className="text-lg font-semibold mb-4">{getTexto('alertas_clinicos') || 'Alertas Clinicos'}</h3>
+          <div className="space-y-4">
             {isLoading ? (
               Array(3)
                 .fill(0)
@@ -162,7 +164,7 @@ const DashboardProfissional = () => {
                 );
               })
             )}
-          </CardContent>
+          </div>
         </Card>
       </div>
     </div>

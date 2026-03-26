@@ -16,9 +16,10 @@ import { api } from '@/lib/api';
 import { Calendar } from '@/components/ui/calendar';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { cn } from '@/lib/utils';
+import type { ReciboFormValues } from '@/types/recibos';
 
 interface RecibosFormProps {
-  onSubmit: (data: any) => void;
+  onSubmit: (data: ReciboFormValues) => void;
 }
 
 const FORMAS_PAGAMENTO = [
@@ -29,7 +30,7 @@ const FORMAS_PAGAMENTO = [
 ];
 
 export const RecibosForm = ({ onSubmit }: RecibosFormProps) => {
-  const form = useForm({
+  const form = useForm<ReciboFormValues>({
     defaultValues: {
       paciente_id: '',
       data_sessao: new Date(),
@@ -41,7 +42,6 @@ export const RecibosForm = ({ onSubmit }: RecibosFormProps) => {
 
   const { data: pacientes, isLoading: loadingPacientes } = useQuery({
     queryKey: ['pacientes-select'],
-    enabled: !pacienteId,
     queryFn: async () => {
       const data = await api.get<Array<{ id: string; nome: string }>>('/pacientes');
       return data;

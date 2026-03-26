@@ -138,7 +138,7 @@ const AlertasPDF: React.FC<AlertasPDFProps> = ({
                   {alerta.tipo_alerta_principal === 'sentimento' ? 'Emocional' : 'Disfuncional'}
                 </Text>
                 <Text style={styles.tableCell}>
-                  {alerta.termos_relacionados.join(', ')}
+                  {(alerta.termos_relacionados ?? []).join(', ')}
                 </Text>
                 <Text style={styles.tableCell}>
                   {alerta.status}

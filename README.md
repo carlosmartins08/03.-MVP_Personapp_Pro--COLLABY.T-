@@ -9,6 +9,11 @@ PersonaApp Pro é um painel para psicólogos e pacientes construído com Vite, R
 cp .env.example .env.local
 npm install
 
+# 1.1 Ajuste as URLs do frontend
+# VITE_API_URL=http://localhost:4000
+# VITE_FRONTEND_URL=http://localhost:8080
+# VITE_EMAIL_VERIFICATION_REDIRECT_URL=http://localhost:8080/verificar-email
+
 # 2. Bootstrap backend (Postgres, Prisma migrations/seeds)
 npm run bootstrap
 
@@ -20,6 +25,8 @@ npm run dev
 ```
 
 Abra o frontend em `http://localhost:8080` e o backend em `http://localhost:4000/health`.
+Se o `.env.local` estiver ausente ou incompleto, o app mostra uma tela de erro com instruções.
+Por segurança, o dev server do Vite fica restrito a `localhost`.
 
 ## Variáveis de ambiente
 
@@ -28,7 +35,7 @@ Abra o frontend em `http://localhost:8080` e o backend em `http://localhost:4000
 | Variável                              | Obrigatória | Descrição                                         |
 | ------------------------------------- | ----------- | ------------------------------------------------- |
 | `VITE_DEFAULT_LANGUAGE`               | Não         | `pt` ou `en` (padrão `pt`)                         |
-| `VITE_FRONTEND_URL`                   | Não         | URL pública do app (usado em e-mails)             |
+| `VITE_FRONTEND_URL`                   | Não         | URL pública do app (ex.: `http://localhost:8080`) |
 | `VITE_EMAIL_VERIFICATION_REDIRECT_URL`| Não         | URL usada após confirmação de e-mail              |
 | `VITE_API_URL`                        | Sim         | URL do backend Fastify (ex.: `http://localhost:4000`) |
 
@@ -49,6 +56,7 @@ O backend expõe rotas de auth, pacientes, sessões, financeiro, alertas, recibo
 - `docs/QA_SUMMARY.md` – resumo rápido dos scripts QA (`qa:validate-env`, `qa:prep`, `qa:start`, `qa:checklist`).
 - `docs/SETUP_SUMMARY.md` – mapa com links rápidos para os dois guias acima e o `docker-compose`.
 - `docs/ROADMAP.md` – visão futura sobre migração e prioridade de features.
+- `docs/design-system.md` – tokens, tipografia e componentes do Design System da PersonApp.
 
 ## PWA e alertas
 

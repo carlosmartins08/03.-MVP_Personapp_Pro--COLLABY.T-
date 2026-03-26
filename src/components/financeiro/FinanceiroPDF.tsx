@@ -3,6 +3,7 @@ import React from 'react';
 import { Page, Text, View, Document, StyleSheet } from '@react-pdf/renderer';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
+import type { FinancialTransaction } from '@/hooks/useMonthlyFinancialSummary';
 
 const styles = StyleSheet.create({
   page: {
@@ -32,7 +33,7 @@ const styles = StyleSheet.create({
 });
 
 interface FinanceiroPDFProps {
-  financialData: any[];
+  financialData: FinancialTransaction[];
   summary: {
     total_received: number;
     total_pending: number;
@@ -57,11 +58,20 @@ const FinanceiroPDF = ({ financialData, summary, period }: FinanceiroPDFProps) =
 
       {financialData.map((charge, index) => (
         <View key={index} style={styles.chargeItem}>
-          <Text style={styles.text}>Paciente: {charge.paciente}</Text>
+          <Text style={styles.text}>
+            Paciente: {charge.pacienteNome || 'Não informado'}
+          </Text>
           <Text style={styles.text}>Valor: R$ {charge.valor}</Text>
           <Text style={styles.text}>Status: {charge.status}</Text>
           <Text style={styles.text}>
-            Data: {format(new Date(charge.data), 'dd/MM/yyyy', { locale: ptBR })}
+            Data:{' '}
+            {charge.dataSessao || charge.dataPagamento
+              ? format(
+                  new Date(charge.dataSessao ?? charge.dataPagamento ?? new Date()),
+                  'dd/MM/yyyy',
+                  { locale: ptBR }
+                )
+              : 'N/A'}
           </Text>
         </View>
       ))}

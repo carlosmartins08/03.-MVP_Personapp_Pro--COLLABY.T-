@@ -6,7 +6,6 @@ import { useRecentDataSummary } from '@/hooks/useRecentDataSummary';
 import DiarioSummaryCard from './DiarioSummaryCard';
 import SessaoSummaryCard from './SessaoSummaryCard';
 import AlertaSummaryCard from './AlertaSummaryCard';
-import { Card } from '@/components/ui/card';
 
 // New component to handle section titles consistently
 const SectionTitle = ({ title, viewAllPath }: { title: string, viewAllPath?: string }) => {

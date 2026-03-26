@@ -1,6 +1,4 @@
 
-@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;500;600;700&display=swap');
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -92,4 +90,9 @@
   .persona-input {
     @apply rounded-lg border-lavanda-light focus:border-lavanda focus:ring-lavanda-light;
   }
+}
+
+/* PersonApp DS — font base para novas telas */
+.ds-root {
+  font-family: 'Roboto', sans-serif;
 }

@@ -1,5 +1,4 @@
-
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card } from '@/design-system/components';
 import { ArrowUpCircle, ArrowDownCircle } from 'lucide-react';
 
 interface FinancialSummaryCardsProps {
@@ -12,28 +11,28 @@ interface FinancialSummaryCardsProps {
 export const FinancialSummaryCards = ({ summary }: FinancialSummaryCardsProps) => {
   return (
     <div className="grid grid-cols-2 gap-4 mb-6">
-      <Card className="bg-menta-light border-none">
-        <CardHeader className="pb-2 pt-4">
-          <CardTitle className="text-sm font-medium text-gray-600 flex items-center">
+      <Card variant="default" className="bg-menta-light border-none p-4">
+        <div className="pb-2">
+          <h3 className="text-sm font-medium text-gray-600 flex items-center">
             <ArrowUpCircle size={16} className="mr-1" />
             Recebido
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
+          </h3>
+        </div>
+        <div>
           <p className="text-2xl font-bold">R$ {summary.total_received}</p>
-        </CardContent>
+        </div>
       </Card>
       
-      <Card className="bg-lavanda-light border-none">
-        <CardHeader className="pb-2 pt-4">
-          <CardTitle className="text-sm font-medium text-gray-600 flex items-center">
+      <Card variant="default" className="bg-lavanda-light border-none p-4">
+        <div className="pb-2">
+          <h3 className="text-sm font-medium text-gray-600 flex items-center">
             <ArrowDownCircle size={16} className="mr-1" />
             Pendente
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
+          </h3>
+        </div>
+        <div>
           <p className="text-2xl font-bold">R$ {summary.total_pending}</p>
-        </CardContent>
+        </div>
       </Card>
     </div>
   );

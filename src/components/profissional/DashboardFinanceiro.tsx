@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
+import { Card } from '@/design-system/components';
 import { Skeleton } from '@/components/ui/skeleton';
 import { format } from 'date-fns';
 import { ptBR, enUS } from 'date-fns/locale';
@@ -57,31 +57,31 @@ export default function DashboardFinanceiro() {
         </div>
       ) : (
         <div className="grid gap-4 md:grid-cols-3">
-          <Card className="bg-purple-100">
-            <CardHeader>
-              <CardTitle>{getTexto('faturamento_mensal') || 'Faturamento Mensal'}</CardTitle>
-            </CardHeader>
-            <CardContent className="text-2xl font-semibold">
+          <Card variant="default" className="bg-purple-100 p-6">
+            <h3 className="text-sm font-semibold">
+              {getTexto('faturamento_mensal') || 'Faturamento Mensal'}
+            </h3>
+            <div className="mt-2 text-2xl font-semibold">
               R$ {resumo?.faturamentoMensal.toFixed(2)}
-            </CardContent>
+            </div>
           </Card>
 
-          <Card className="bg-green-100">
-            <CardHeader>
-              <CardTitle>{getTexto('total_consultas') || 'Total de Consultas'}</CardTitle>
-            </CardHeader>
-            <CardContent className="text-2xl font-semibold">
+          <Card variant="default" className="bg-green-100 p-6">
+            <h3 className="text-sm font-semibold">
+              {getTexto('total_consultas') || 'Total de Consultas'}
+            </h3>
+            <div className="mt-2 text-2xl font-semibold">
               {resumo?.totalConsultas}
-            </CardContent>
+            </div>
           </Card>
 
-          <Card className="bg-red-100">
-            <CardHeader>
-              <CardTitle>{getTexto('impostos_estimados') || 'Impostos Estimados'}</CardTitle>
-            </CardHeader>
-            <CardContent className="text-2xl font-semibold text-red-600">
+          <Card variant="default" className="bg-red-100 p-6">
+            <h3 className="text-sm font-semibold">
+              {getTexto('impostos_estimados') || 'Impostos Estimados'}
+            </h3>
+            <div className="mt-2 text-2xl font-semibold text-red-600">
               R$ {resumo?.impostosEstimados.toFixed(2)}
-            </CardContent>
+            </div>
           </Card>
         </div>
       )}

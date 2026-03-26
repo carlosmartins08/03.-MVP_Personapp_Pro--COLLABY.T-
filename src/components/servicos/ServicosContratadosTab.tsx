@@ -24,7 +24,7 @@ import { ServicosContratadosTable } from '@/components/servicos/ServicosContrata
 import { ContratarServicoForm } from '@/components/servicos/ContratarServicoForm';
 import { useServicosContratados } from '@/hooks/useServicosContratados';
 import { useServicos } from '@/hooks/useServicos';
-import { StatusServico } from '@/types/servicos';
+import { StatusServico, ContratarServicoPayload } from '@/types/servicos';
 
 interface ServicosContratadosTabProps {
   pacienteId: string;
@@ -46,7 +46,7 @@ export function ServicosContratadosTab({ pacienteId }: ServicosContratadosTabPro
   const [servicoId, setServicoId] = useState<string | null>(null);
   const [novoStatus, setNovoStatus] = useState<StatusServico | null>(null);
 
-  const handleContratarServico = async (data: any) => {
+  const handleContratarServico = async (data: ContratarServicoPayload) => {
     try {
       await criarServicoContratado.mutateAsync({
         ...data,

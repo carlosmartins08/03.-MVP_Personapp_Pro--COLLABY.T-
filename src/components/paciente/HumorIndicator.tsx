@@ -1,5 +1,5 @@
 import React from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card } from '@/design-system/components';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Smile, Frown, ArrowRight } from 'lucide-react';
 import { useLocalizacao } from '@/contexts/LocalizacaoContext';
@@ -75,14 +75,14 @@ const HumorIndicator: React.FC<HumorIndicatorProps> = ({ diarios, isLoading }) =
   };
 
   return (
-    <Card className="overflow-hidden border-none shadow-lg rounded-3xl bg-gradient-to-br from-white to-menta-light">
-      <CardHeader className="pb-2">
-        <CardTitle className="text-base font-medium flex items-center">
+    <Card variant="default" className="overflow-hidden border-none shadow-lg rounded-3xl bg-gradient-to-br from-white to-menta-light p-0">
+      <div className="pb-2 px-4 pt-4">
+        <h3 className="text-base font-medium flex items-center">
           <Smile className="h-4 w-4 mr-2 text-muted-foreground" />
           {getTexto('humor_medio_semana') || 'Humor médio da semana'}
-        </CardTitle>
-      </CardHeader>
-      <CardContent>
+        </h3>
+      </div>
+      <div className="px-4 pb-4">
         {isLoading ? (
           <Skeleton className="h-[200px] w-full rounded-2xl" />
         ) : diarios && diarios.length > 0 ? (
@@ -131,7 +131,7 @@ const HumorIndicator: React.FC<HumorIndicatorProps> = ({ diarios, isLoading }) =
             </button>
           </div>
         )}
-      </CardContent>
+      </div>
     </Card>
   );
 };

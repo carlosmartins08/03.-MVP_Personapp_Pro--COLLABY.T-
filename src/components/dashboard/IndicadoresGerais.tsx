@@ -1,6 +1,5 @@
-
 import React from 'react';
-import { Card } from '@/components/ui/card';
+import { Card } from '@/design-system/components';
 import { Brain, AlertTriangle, TrendingDown, MessageSquare } from 'lucide-react';
 import { useDashboardData } from '@/hooks/useDashboardData';
 
@@ -12,7 +11,7 @@ export const IndicadoresGerais = () => {
     return (
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         {[...Array(4)].map((_, i) => (
-          <Card key={i} className="p-6 animate-pulse">
+          <Card key={i} variant="default" className="p-6 animate-pulse">
             <div className="h-20 bg-muted rounded" />
           </Card>
         ))}
@@ -46,7 +45,7 @@ export const IndicadoresGerais = () => {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
       {indicadores.map((indicador, index) => (
-        <Card key={index} className="p-6">
+        <Card key={index} variant="default" className="p-6">
           <div className="flex items-center gap-4">
             <div className="p-3 rounded-lg bg-background">{indicador.icon}</div>
             <div>

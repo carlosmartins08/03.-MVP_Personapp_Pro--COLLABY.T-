@@ -36,3 +36,65 @@ Copie `.env.example` para `.env.local` e configure:
 2. Use o `VITE_API_URL` apontando para o backend Fastify (`http://localhost:4000` localmente) enquanto testa as rotas.
 3. A autenticação usa `src/services/auth-service.ts` + `src/lib/api.ts`, então garanta que o backend esteja ativo antes de testar login, dashboards, agenda e financeiro.
 4. O `InstallPrompt`/PWA (`src/components/pwa/InstallPrompt.tsx` + `usePWA`) já está preparado para dispositivos móveis.
+
+## Encoding
+Todos os arquivos do projeto devem ser salvos em UTF-8.
+O index.html deve ter <meta charset="UTF-8" /> como primeira tag do <head>.
+Nunca usar @import de fontes em CSS — usar <link> no HTML.
+
+## iOS / Safari
+- Usar min-h-[100dvh] em vez de h-screen para evitar corte em Safari iOS
+- nav inferior precisa de pb-[env(safe-area-inset-bottom,0px)]
+- input type="date" tem suporte limitado no Safari — considerar datepicker custom
+
+## Migracao para DS PersonApp
+Telas migradas para usar src/design-system/components:
+- [x] AuthForm / Login / Cadastro (Marco 4.1)
+- [x] TelaPacientes (Marco 4.2)
+- [x] TelaSessoes (Marco 4.2)
+- [x] TelaPerfilPaciente (Marco 4.3)
+- [x] TelaCadastroPaciente (Marco 4.3)
+- [x] DashboardProfissional (componente /profissional/dashboard) (Marco 4.4)
+- [x] DashboardProfissional (pagina) (Marco 4.4)
+- [x] DashboardFinanceiro (componente /profissional/dashboard-financeiro) (Marco 4.4)
+- [x] DashboardPrincipalPsicologo (Marco 4.4)
+- [x] DashboardPaciente (pagina) (Marco 4.4)
+- [x] DashboardPacienteMobile (componente /paciente/dashboard) (Marco 4.4)
+- [x] TelaDashboardResumo (Marco 4.4)
+- [x] TelaDashboardPaciente (Marco 4.4)
+- [x] TelaAlertasClinicos (Marco 4.5)
+- [x] TelaFinanceiro (Marco 4.5)
+- [x] PersonApp ProfessionalList (/app/paciente/profissionais) (Marco 4.6)
+- [x] PersonApp Anamnesis (/app/paciente/anamnese) (Marco 4.7)
+- [x] PersonApp Professional Dashboard (/app/profissional/dashboard) (Marco 4.8)
+
+Telas pendentes de migracao:
+- Index
+- RecuperarSenha
+- RedefinirSenha
+- VerificarEmail
+- NotFound
+- TelaAgendaSemanal
+- TelaComparativoPacientes
+- TelaComportamentoPaciente
+- TelaConfigConta
+- TelaEvolucaoPaciente
+- TelaInicialProfissional
+- TelaInsightsPaciente
+- TelaPerfilProfissional
+- TelaPrevisaoAgendaClinica
+- TelaRecibos
+- TelaServicos
+- TelaSessaoDetalhada
+- TelaResumoPaciente
+- TelaSessoesPaciente
+- TelaDiarioPaciente
+- TelaPagamentosPaciente
+- TelaRecibosPaciente
+- TelaPerfilPacienteAutenticado
+
+## Hooks PersonApp
+Localizacao: src/hooks/personapp/
+- usePatientDashboard: proxima sessao, humor hoje
+- useMoodCheckIn: salvar entrada de humor
+- useProfessionalDashboard: metricas, agenda, lista pacientes

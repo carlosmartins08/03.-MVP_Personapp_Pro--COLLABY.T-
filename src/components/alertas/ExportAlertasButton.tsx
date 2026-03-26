@@ -1,6 +1,5 @@
-
 import React, { useState } from 'react';
-import { Button } from '@/components/ui/button';
+import { Button } from '@/design-system/components';
 import { File, CalendarIcon } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { format } from 'date-fns';
@@ -91,7 +90,7 @@ export const ExportAlertasButton: React.FC<ExportAlertasButtonProps> = ({
     <>
       <Button
         onClick={() => isFromCentral ? setOpen(true) : handleExport()}
-        variant="outline"
+        variant="secondary"
         className="bg-azul-light text-azul-dark hover:bg-azul-light/80"
       >
         <File className="mr-2 h-4 w-4" />
@@ -112,7 +111,7 @@ export const ExportAlertasButton: React.FC<ExportAlertasButtonProps> = ({
                   <Popover>
                     <PopoverTrigger asChild>
                       <Button
-                        variant={"outline"}
+                        variant="secondary"
                         className={cn(
                           "w-[240px] justify-start text-left font-normal",
                           !dateRange.from && "text-muted-foreground"
@@ -136,7 +135,7 @@ export const ExportAlertasButton: React.FC<ExportAlertasButtonProps> = ({
                   <Popover>
                     <PopoverTrigger asChild>
                       <Button
-                        variant={"outline"}
+                        variant="secondary"
                         className={cn(
                           "w-[240px] justify-start text-left font-normal",
                           !dateRange.to && "text-muted-foreground"
@@ -171,7 +170,7 @@ export const ExportAlertasButton: React.FC<ExportAlertasButtonProps> = ({
             </div>
 
             <DialogFooter>
-              <Button onClick={handleExport}>Gerar PDF</Button>
+              <Button variant="primary" onClick={handleExport}>Gerar PDF</Button>
             </DialogFooter>
           </DialogContent>
         </Dialog>

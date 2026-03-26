@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
@@ -46,7 +46,7 @@ const TelaAgendaSemanal = () => {
     showPending: true,
   });
   
-  const fetchSessions = async () => {
+  const fetchSessions = useCallback(async () => {
     setIsLoading(true);
     try {
       // Get the first and last day of the week for the current date
@@ -78,11 +78,11 @@ const TelaAgendaSemanal = () => {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [currentDate, toast]);
   
   useEffect(() => {
     fetchSessions();
-  }, [currentDate]);
+  }, [fetchSessions]);
   
   const filteredSessions = sessions.filter(session => {
     // Apply filters

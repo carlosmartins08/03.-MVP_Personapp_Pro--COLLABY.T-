@@ -1,5 +1,6 @@
 
 import type { Config } from "tailwindcss";
+import tailwindcssAnimate from "tailwindcss-animate";
 
 export default {
 	darkMode: ["class"],
@@ -41,6 +42,13 @@ export default {
 					DEFAULT: '#A8E6CE',
 					dark: '#88D8B0',
 				},
+				'ds-primary': '#3055A4',
+				'ds-primary-light': '#EAF1FB',
+				'ds-surface-dark': '#1A1A2E',
+				'ds-success': '#5CB85C',
+				'ds-warning': '#F0A500',
+				'ds-error': '#D9534F',
+				'ds-sos': '#C0392B',
 				primary: {
 					DEFAULT: 'hsl(var(--primary))',
 					foreground: 'hsl(var(--primary-foreground))'
@@ -82,6 +90,7 @@ export default {
 			},
 			fontFamily: {
 				nunito: ['Nunito', 'sans-serif'],
+				roboto: ['Roboto', 'sans-serif'],
 			},
 			borderRadius: {
 				lg: 'var(--radius)',
@@ -123,5 +132,5 @@ export default {
 			}
 		}
 	},
-	plugins: [require("tailwindcss-animate")],
+	plugins: [tailwindcssAnimate],
 } satisfies Config;

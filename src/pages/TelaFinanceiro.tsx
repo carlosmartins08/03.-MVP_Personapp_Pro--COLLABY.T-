@@ -1,6 +1,5 @@
-
-import React, { useEffect, useState } from 'react';
-import { Button } from '@/components/ui/button';
+﻿import React, { useEffect, useState } from 'react';
+import { Button } from '@/design-system/components';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Calendar } from 'lucide-react';
 import PageHeader from '@/components/ui/PageHeader';
@@ -13,7 +12,7 @@ import { FinancialSummaryCards } from '@/components/financeiro/FinancialSummaryC
 import { TransactionList } from '@/components/financeiro/TransactionList';
 
 const TelaFinanceiro = () => {
-  const [periodoSelecionado, setPeriodoSelecionado] = useState<string>('Este mês');
+  const [periodoSelecionado, setPeriodoSelecionado] = useState<string>('Este mÃªs');
   const {
     summary,
     periodLabel,
@@ -23,7 +22,7 @@ const TelaFinanceiro = () => {
     fetchSummary,
     isLoading,
   } = useMonthlyFinancialSummary();
-  const { markAsPaid, isLoading: isMarkingAsPaid } = useMarkChargeAsPaid();
+  const { markAsPaid, isLoading: isMarkingAsPaid, activeChargeId } = useMarkChargeAsPaid();
   const { simulateSend, isLoading: isSendingCharge } = useSimulateChargeSend();
 
   useEffect(() => {
@@ -55,7 +54,7 @@ const TelaFinanceiro = () => {
     <div className="container pb-16">
       <PageHeader
         title="Financeiro"
-        subtitle="Controle financeiro das sessões"
+        subtitle="Controle financeiro das sessÃµes"
         rightContent={
           <ExportFinanceiroButton
             financialData={allTransactions}
@@ -99,6 +98,7 @@ const TelaFinanceiro = () => {
               onSendCharge={handleSendCharge}
               isMarkingAsPaid={isMarkingAsPaid}
               isSendingCharge={isSendingCharge}
+              activeChargeId={activeChargeId}
             />
           </TabsContent>
 
@@ -109,6 +109,7 @@ const TelaFinanceiro = () => {
               onSendCharge={handleSendCharge}
               isMarkingAsPaid={isMarkingAsPaid}
               isSendingCharge={isSendingCharge}
+              activeChargeId={activeChargeId}
             />
           </TabsContent>
 
@@ -119,14 +120,16 @@ const TelaFinanceiro = () => {
               onSendCharge={handleSendCharge}
               isMarkingAsPaid={isMarkingAsPaid}
               isSendingCharge={isSendingCharge}
+              activeChargeId={activeChargeId}
             />
 
             <div className="mt-4">
               <Button 
-                className="w-full persona-button flex items-center justify-center"
+                variant="primary"
+                className="w-full flex items-center justify-center"
               >
                 <Calendar size={16} className="mr-2" />
-                Gerar Relatório
+                Gerar RelatÃ³rio
               </Button>
             </div>
           </TabsContent>

@@ -1,10 +1,7 @@
-
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
+import { Button, Card, Input } from '@/design-system/components';
 import { Textarea } from '@/components/ui/textarea';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Label } from '@/components/ui/label';
 import PageHeader from '@/components/ui/PageHeader';
@@ -57,7 +54,7 @@ const TelaCadastroPaciente = () => {
         subtitle="Adicione um novo paciente ao sistema"
         rightContent={
           <Button 
-            variant="outline" 
+            variant="secondary" 
             size="sm"
             onClick={() => navigate('/pacientes')}
           >
@@ -68,11 +65,9 @@ const TelaCadastroPaciente = () => {
       
       <div className="p-4">
         <form onSubmit={handleSubmit}>
-          <Card className="mb-6">
-            <CardHeader>
-              <CardTitle className="text-lg">Informações Pessoais</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
+          <Card variant="default" className="mb-6">
+            <div className="space-y-4">
+              <h2 className="text-lg font-semibold">Informações Pessoais</h2>
               <div className="grid grid-cols-1 gap-4">
                 <div className="space-y-2">
                   <Label htmlFor="nome">Nome completo*</Label>
@@ -83,7 +78,6 @@ const TelaCadastroPaciente = () => {
                     value={formData.nome}
                     onChange={handleChange}
                     required
-                    className="persona-input"
                   />
                 </div>
                 
@@ -98,7 +92,6 @@ const TelaCadastroPaciente = () => {
                       value={formData.email}
                       onChange={handleChange}
                       required
-                      className="persona-input"
                     />
                   </div>
                   
@@ -111,7 +104,6 @@ const TelaCadastroPaciente = () => {
                       value={formData.telefone}
                       onChange={handleChange}
                       required
-                      className="persona-input"
                     />
                   </div>
                 </div>
@@ -119,6 +111,7 @@ const TelaCadastroPaciente = () => {
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <Label htmlFor="dataNascimento">Data de Nascimento*</Label>
+                    {/* TODO: substituir por datepicker custom (Safari A12) */}
                     <Input
                       id="dataNascimento"
                       name="dataNascimento"
@@ -126,7 +119,6 @@ const TelaCadastroPaciente = () => {
                       value={formData.dataNascimento}
                       onChange={handleChange}
                       required
-                      className="persona-input"
                     />
                   </div>
                   
@@ -136,7 +128,7 @@ const TelaCadastroPaciente = () => {
                       value={formData.genero}
                       onValueChange={(value) => handleSelectChange('genero', value)}
                     >
-                      <SelectTrigger id="genero" className="persona-input">
+                      <SelectTrigger id="genero">
                         <SelectValue placeholder="Selecione o gênero" />
                       </SelectTrigger>
                       <SelectContent>
@@ -159,7 +151,6 @@ const TelaCadastroPaciente = () => {
                     value={formData.cpf}
                     onChange={handleChange}
                     required
-                    className="persona-input"
                   />
                 </div>
                 
@@ -172,45 +163,42 @@ const TelaCadastroPaciente = () => {
                     value={formData.endereco}
                     onChange={handleChange}
                     required
-                    className="persona-input"
                   />
                 </div>
               </div>
-            </CardContent>
+            </div>
           </Card>
           
-          <Card className="mb-6">
-            <CardHeader>
-              <CardTitle className="text-lg">Observações</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-2">
-                <Label htmlFor="observacoes">Observações iniciais</Label>
-                <Textarea
-                  id="observacoes"
-                  name="observacoes"
-                  placeholder="Informações relevantes sobre o paciente, como encaminhamentos, condições prévias, etc."
-                  value={formData.observacoes}
-                  onChange={handleChange}
-                  rows={4}
-                  className="persona-input"
-                />
-              </div>
-            </CardContent>
+          <Card variant="default" className="mb-6">
+            <div className="space-y-2">
+              <h2 className="text-lg font-semibold">Observações</h2>
+              <Label htmlFor="observacoes">Observações iniciais</Label>
+              <Textarea
+                id="observacoes"
+                name="observacoes"
+                placeholder="Informações relevantes sobre o paciente, como encaminhamentos, condições prévias, etc."
+                value={formData.observacoes}
+                onChange={handleChange}
+                rows={4}
+                className="persona-input"
+              />
+            </div>
           </Card>
           
           <div className="flex flex-col sm:flex-row gap-3">
             <Button 
               type="submit" 
-              className="flex-1 persona-button"
+              variant="primary"
+              className="flex-1"
               disabled={isLoading}
+              loading={isLoading}
             >
               <Save size={16} className="mr-2" />
-              {isLoading ? 'Salvando...' : 'Salvar Paciente'}
+              Salvar Paciente
             </Button>
             <Button 
               type="button" 
-              variant="outline" 
+              variant="secondary" 
               className="flex-1"
               onClick={() => navigate('/pacientes')}
               disabled={isLoading}
@@ -225,3 +213,4 @@ const TelaCadastroPaciente = () => {
 };
 
 export default TelaCadastroPaciente;
+

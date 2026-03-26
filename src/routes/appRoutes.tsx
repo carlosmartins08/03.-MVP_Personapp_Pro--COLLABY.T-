@@ -24,6 +24,8 @@ import TelaFinanceiro from "@/pages/TelaFinanceiro";
 import TelaAlertasClinicos from "@/pages/TelaAlertasClinicos";
 import TelaConfigConta from "@/pages/TelaConfigConta";
 import TelaComportamentoPaciente from "@/pages/TelaComportamentoPaciente";
+import PatientAppLayout from "@/layouts/PatientAppLayout";
+import ProfessionalAppLayout from "@/layouts/ProfessionalAppLayout";
 
 // Patient Pages
 import TelaResumoPaciente from "@/pages/paciente/TelaResumoPaciente";
@@ -33,6 +35,17 @@ import TelaPagamentosPaciente from "@/pages/paciente/TelaPagamentosPaciente";
 import TelaRecibosPaciente from "@/pages/paciente/TelaRecibosPaciente";
 import TelaPerfilPacienteAutenticado from "@/pages/paciente/TelaPerfilPacienteAutenticado";
 import DashboardPacienteMobile from "@/components/paciente/DashboardPacienteMobile";
+import PatientDashboard from "@/pages/personapp/patient/Dashboard";
+import PatientMoodCheckIn from "@/pages/personapp/patient/MoodCheckIn";
+import PatientAnamnesis from "@/pages/personapp/patient/Anamnesis";
+import PatientProfessionalList from "@/pages/personapp/patient/ProfessionalList";
+import PatientSchedule from "@/pages/personapp/patient/Schedule";
+import PatientDiary from "@/pages/personapp/patient/Diary";
+import PatientChat from "@/pages/personapp/patient/Chat";
+import ProfessionalDashboard from "@/pages/personapp/professional/Dashboard";
+import ProfessionalSchedule from "@/pages/personapp/professional/Schedule";
+import ProfessionalPatientList from "@/pages/personapp/professional/PatientList";
+import ConsultationRoom from "@/pages/personapp/shared/ConsultationRoom";
 
 export const appRouteElements = (
   <>
@@ -83,6 +96,39 @@ export const appRouteElements = (
       <Route path="pagamentos" element={<TelaPagamentosPaciente />} />
       <Route path="recibos" element={<TelaRecibosPaciente />} />
       <Route path="perfil" element={<TelaPerfilPacienteAutenticado />} />
+    </Route>
+
+    {/* PersonApp Routes - Patient */}
+    <Route
+      path="/app/paciente"
+      element={
+        <RouteGuard requiredUserType="paciente">
+          <PatientAppLayout />
+        </RouteGuard>
+      }
+    >
+      <Route path="dashboard" element={<PatientDashboard />} />
+      <Route path="humor" element={<PatientMoodCheckIn />} />
+      <Route path="anamnese" element={<PatientAnamnesis />} />
+      <Route path="profissionais" element={<PatientProfessionalList />} />
+      <Route path="agenda" element={<PatientSchedule />} />
+      <Route path="diario" element={<PatientDiary />} />
+      <Route path="chat" element={<PatientChat />} />
+    </Route>
+
+    {/* PersonApp Routes - Professional */}
+    <Route
+      path="/app/profissional"
+      element={
+        <RouteGuard requiredUserType="profissional">
+          <ProfessionalAppLayout />
+        </RouteGuard>
+      }
+    >
+      <Route path="dashboard" element={<ProfessionalDashboard />} />
+      <Route path="agenda" element={<ProfessionalSchedule />} />
+      <Route path="pacientes" element={<ProfessionalPatientList />} />
+      <Route path="sala/:id" element={<ConsultationRoom />} />
     </Route>
 
     <Route path="/" element={<Navigate to="/login" replace />} />

@@ -1,5 +1,6 @@
 import { env } from './env';
 import { getAccessToken } from './auth-storage';
+import { mockApiRequest } from './mock-api';
 
 type QueryValue = string | number | boolean | undefined | null;
 type QueryParams = Record<string, QueryValue>;
@@ -55,6 +56,10 @@ export async function apiRequest<T = unknown>(
     signal,
     query,
   } = options;
+
+  if (env.USE_MOCKS) {
+    return mockApiRequest<T>(path, options);
+  }
 
   if (!env.API_URL) {
     throw new ApiError('VITE_API_URL não configurada.', 500);

@@ -1,19 +1,39 @@
-
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { User } from 'lucide-react';
+import { Avatar, Badge } from '@/design-system/components';
 import { useQuery } from '@tanstack/react-query';
 import { api } from '@/lib/api';
+
+type PacienteRisco = {
+  id: string;
+  nome: string;
+  status_risco: 'alto' | 'moderado' | 'baixo' | string;
+  score_atual: number;
+};
+
+type StatusBadgeVariant = 'primary' | 'success' | 'warning' | 'error' | 'neutral';
+
+const statusVariants: Record<string, StatusBadgeVariant> = {
+  alto: 'error',
+  moderado: 'warning',
+  baixo: 'success',
+};
+
+const getInitials = (name: string) => {
+  const parts = name.trim().split(/\s+/);
+  const first = parts[0]?.[0] ?? '';
+  const last = parts.length > 1 ? parts[parts.length - 1][0] : '';
+  return `${first}${last}`.toUpperCase();
+};
 
 export const ListaPacientesRisco = () => {
   const navigate = useNavigate();
   
-  const { data: pacientes, isLoading } = useQuery({
+  const { data: pacientes = [], isLoading } = useQuery<PacienteRisco[]>({
     queryKey: ['pacientes-risco'],
     queryFn: async () => {
-      return api.get('/analytics/pacientes-risco');
+      return api.get<PacienteRisco[]>('/analytics/pacientes-risco');
     }
   });
 
@@ -27,29 +47,18 @@ export const ListaPacientesRisco = () => {
     );
   }
 
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case 'alto': return 'destructive';
-      case 'moderado': return 'default';
-      case 'baixo': return 'secondary';
-      default: return 'default';
-    }
-  };
-
   return (
     <div>
       <h3 className="text-lg font-semibold mb-4">Pacientes em Acompanhamento</h3>
       <div className="space-y-4">
-        {pacientes?.map((paciente: any) => (
+        {pacientes.map((paciente) => (
           <div key={paciente.id} className="flex items-center justify-between p-4 bg-muted/20 rounded-lg">
             <div className="flex items-center gap-4">
-              <div className="w-10 h-10 rounded-full bg-background flex items-center justify-center">
-                <User className="text-muted-foreground" />
-              </div>
+              <Avatar size="md" initials={getInitials(paciente.nome)} />
               <div>
                 <h4 className="font-medium">{paciente.nome}</h4>
                 <div className="flex gap-2 mt-1">
-                  <Badge variant={getStatusColor(paciente.status_risco)}>
+                  <Badge variant={statusVariants[paciente.status_risco] ?? 'neutral'} size="sm">
                     {paciente.status_risco}
                   </Badge>
                   <span className="text-sm text-muted-foreground">

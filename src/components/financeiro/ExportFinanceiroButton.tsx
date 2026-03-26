@@ -1,13 +1,13 @@
-
 import React from 'react';
-import { Button } from '@/components/ui/button';
+import { Button } from '@/design-system/components';
 import { Download } from 'lucide-react';
 import { toast } from 'sonner';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
+import type { FinancialTransaction } from '@/hooks/useMonthlyFinancialSummary';
 
 interface ExportFinanceiroButtonProps {
-  financialData: any[];
+  financialData: FinancialTransaction[];
   summary: {
     total_received: number;
     total_pending: number;
@@ -33,7 +33,7 @@ const ExportFinanceiroButton = ({ financialData, summary, period }: ExportFinanc
   return (
     <Button
       onClick={handleExport}
-      variant="outline"
+      variant="secondary"
       className="bg-lavanda-light hover:bg-lavanda text-gray-700 border-gray-200"
     >
       <Download className="h-4 w-4 mr-2" />

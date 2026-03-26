@@ -1,12 +1,12 @@
-
 import React from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, Badge } from '@/design-system/components';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Calendar } from 'lucide-react';
-import { Badge } from '@/components/ui/badge';
 import { useLocalizacao } from '@/contexts/LocalizacaoContext';
 import EmptyState from '@/components/ui/EmptyState';
 import { Sessao } from '@/types/paciente';
+
+type StatusBadgeVariant = 'primary' | 'success' | 'warning' | 'error' | 'neutral';
 
 interface SessaoSummaryCardProps {
   sessao: Sessao | null;
@@ -14,6 +14,14 @@ interface SessaoSummaryCardProps {
   formatDate: (date: string) => string;
   formatTime: (date: string) => string;
 }
+
+const statusVariants: Record<string, StatusBadgeVariant> = {
+  realizada: 'success',
+  cancelada: 'error',
+  faltou: 'error',
+  agendada: 'primary',
+  confirmada: 'primary',
+};
 
 const SessaoSummaryCard: React.FC<SessaoSummaryCardProps> = ({
   sessao,
@@ -28,15 +36,17 @@ const SessaoSummaryCard: React.FC<SessaoSummaryCardProps> = ({
     return getTexto(statusKey) || status;
   };
 
+  const statusVariant = sessao?.status ? statusVariants[sessao.status] ?? 'neutral' : 'neutral';
+
   return (
-    <Card className="border-none shadow-md rounded-3xl overflow-hidden hover:shadow-lg transition-shadow">
-      <CardHeader className="pb-2 bg-gradient-to-r from-lavanda-light/40 to-lavanda-light/20">
-        <CardTitle className="text-base font-medium flex items-center">
+    <Card variant="default" className="border-none shadow-md rounded-3xl overflow-hidden p-0">
+      <div className="pb-2 px-4 pt-4 bg-gradient-to-r from-lavanda-light/40 to-lavanda-light/20">
+        <h3 className="text-base font-medium flex items-center">
           <Calendar className="h-4 w-4 mr-2 text-muted-foreground" />
           {getTexto('ultima_sessao') || 'Última sessão'}
-        </CardTitle>
-      </CardHeader>
-      <CardContent className="pt-4">
+        </h3>
+      </div>
+      <div className="pt-4 px-4 pb-4">
         {isLoading ? (
           <div className="space-y-2">
             <Skeleton className="h-4 w-full" />
@@ -51,16 +61,7 @@ const SessaoSummaryCard: React.FC<SessaoSummaryCardProps> = ({
             <div className="text-sm text-muted-foreground mb-2">
               {formatTime(sessao.data)}
             </div>
-            <Badge 
-              variant="outline"
-              className={`rounded-full ${
-                sessao.status === 'realizada' 
-                  ? 'bg-green-50 border-green-200 text-green-700' 
-                  : sessao.status === 'cancelada' || sessao.status === 'faltou'
-                  ? 'bg-red-50 border-red-200 text-red-700'
-                  : 'bg-blue-50 border-blue-200 text-blue-700'
-              }`}
-            >
+            <Badge variant={statusVariant} size="sm">
               {getStatusLabel(sessao.status)}
             </Badge>
           </div>
@@ -73,7 +74,7 @@ const SessaoSummaryCard: React.FC<SessaoSummaryCardProps> = ({
             onAction={() => window.location.href = '/paciente/sessoes'}
           />
         )}
-      </CardContent>
+      </div>
     </Card>
   );
 };

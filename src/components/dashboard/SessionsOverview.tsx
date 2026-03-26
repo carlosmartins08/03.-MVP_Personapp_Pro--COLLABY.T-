@@ -1,6 +1,5 @@
-
 import React from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card } from '@/design-system/components';
 import { 
   ChartContainer, 
   ChartTooltip, 
@@ -14,6 +13,7 @@ import {
   YAxis 
 } from 'recharts';
 import { CalendarDays, Users, AlertTriangle } from 'lucide-react';
+import { colors } from '@/design-system';
 
 interface SessionsOverviewProps {
   totalSessions: number;
@@ -33,15 +33,17 @@ const SessionsOverview: React.FC<SessionsOverviewProps> = ({
   weeklyData,
   isLoading
 }) => {
+  const primary = colors.primary[400];
+
   return (
-    <Card className="shadow-sm">
-      <CardHeader>
-        <CardTitle className="text-lg font-semibold flex items-center">
+    <Card variant="default" className="shadow-sm">
+      <div className="border-b border-gray-100 px-6 py-4">
+        <h3 className="text-lg font-semibold flex items-center">
           <CalendarDays className="mr-2 h-5 w-5 text-lavanda" />
           Visão Geral de Sessões
-        </CardTitle>
-      </CardHeader>
-      <CardContent>
+        </h3>
+      </div>
+      <div className="px-6 py-4">
         <div className="grid grid-cols-3 gap-4 mb-6">
           <div className="bg-[#F1F0FB] p-3 rounded-lg">
             <p className="text-sm text-gray-600">Total Realizadas</p>
@@ -67,7 +69,7 @@ const SessionsOverview: React.FC<SessionsOverviewProps> = ({
               config={{
                 series: {
                   label: "Sessões por semana",
-                  color: "#9b87f5",
+                  color: primary,
                 },
                 background: {
                   color: "#f8f9fa",
@@ -92,7 +94,7 @@ const SessionsOverview: React.FC<SessionsOverviewProps> = ({
                   />
                   <Bar 
                     dataKey="total" 
-                    fill="var(--color-series)" 
+                    fill={primary}
                     radius={[4, 4, 0, 0]}
                     barSize={30}
                   />
@@ -101,7 +103,7 @@ const SessionsOverview: React.FC<SessionsOverviewProps> = ({
             </ChartContainer>
           )}
         </div>
-      </CardContent>
+      </div>
     </Card>
   );
 };

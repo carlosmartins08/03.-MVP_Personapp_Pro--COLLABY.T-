@@ -1,10 +1,8 @@
-
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Card } from '@/components/ui/card';
+import { Badge, Card, Input, Avatar } from '@/design-system/components';
 import PageHeader from '@/components/ui/PageHeader';
 import EmptyState from '@/components/ui/EmptyState';
 import { Plus, Search, Users } from 'lucide-react';
@@ -12,6 +10,30 @@ import { usePatientSearch } from '@/hooks/usePatientSearch';
 import PatientStatusFilter from '@/components/patients/PatientStatusFilter';
 import { api } from '@/lib/api';
 import type { PacienteApi } from '@/types/api';
+
+type StatusBadgeVariant = 'primary' | 'success' | 'warning' | 'error' | 'neutral';
+
+const statusLabels: Record<NonNullable<PacienteApi['statusRanqueado']>, string> = {
+  normal: 'Normal',
+  faltas_frequentes: 'Faltas frequentes',
+  inadimplente: 'Inadimplente',
+  intensivo: 'Intensivo',
+};
+
+const statusVariants: Record<NonNullable<PacienteApi['statusRanqueado']>, StatusBadgeVariant> = {
+  normal: 'success',
+  faltas_frequentes: 'warning',
+  inadimplente: 'error',
+  intensivo: 'primary',
+};
+
+const getInitials = (name?: string | null) => {
+  if (!name) return '';
+  const parts = name.trim().split(/\s+/);
+  const first = parts[0]?.[0] ?? '';
+  const last = parts.length > 1 ? parts[parts.length - 1][0] : '';
+  return `${first}${last}`.toUpperCase();
+};
 
 const TelaPacientes = () => {
   const navigate = useNavigate();
@@ -57,12 +79,17 @@ const TelaPacientes = () => {
 
       <div className="p-4 space-y-4">
         <div className="relative">
+          <label htmlFor="busca-pacientes" className="sr-only">
+            Buscar paciente
+          </label>
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground" size={18} />
           <Input
+            id="busca-pacientes"
+            type="search"
             placeholder="Buscar paciente por nome, e-mail ou telefone"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="pl-10 persona-input"
+            className="pl-10"
           />
         </div>
 
@@ -75,33 +102,39 @@ const TelaPacientes = () => {
 
         {filteredPatients.length > 0 ? (
           <div className="space-y-3">
-            {filteredPatients.map((paciente) => (
-              <Card 
-                key={paciente.id} 
-                className="persona-card hover:shadow-lg transition-shadow cursor-pointer"
-                onClick={() => navigate(`/pacientes/${paciente.id}`)}
-              >
-                <div className="flex items-center p-3">
-                  <div className="flex-shrink-0 mr-3">
-                    <div className="w-12 h-12 rounded-full overflow-hidden">
-                      <img
-                        src={paciente.fotoPerfil}
-                        alt={paciente.nome}
-                        className="w-full h-full object-cover"
-                      />
+            {filteredPatients.map((paciente) => {
+              const status = paciente.statusRanqueado ?? undefined;
+              return (
+                <Link key={paciente.id} to={`/pacientes/${paciente.id}`} className="block">
+                  <Card variant="default" className="hover:shadow-lg transition-shadow">
+                    <div className="flex items-center gap-3">
+                      <div className="flex-shrink-0">
+                        <Avatar
+                          size="lg"
+                          imageUrl={paciente.fotoPerfil ?? undefined}
+                          initials={getInitials(paciente.nome)}
+                        />
+                      </div>
+                      <div className="flex-grow">
+                        <div className="flex items-center justify-between gap-2">
+                          <h3 className="font-semibold">{paciente.nome}</h3>
+                          {status && (
+                            <Badge variant={statusVariants[status]} size="sm">
+                              {statusLabels[status]}
+                            </Badge>
+                          )}
+                        </div>
+                        <div className="flex flex-col sm:flex-row sm:space-x-2 text-sm text-muted-foreground">
+                          <span>{paciente.email}</span>
+                          <span className="hidden sm:inline">â€¢</span>
+                          <span>{paciente.telefone}</span>
+                        </div>
+                      </div>
                     </div>
-                  </div>
-                  <div className="flex-grow">
-                    <h3 className="font-semibold">{paciente.nome}</h3>
-                    <div className="flex flex-col sm:flex-row sm:space-x-2 text-sm text-muted-foreground">
-                      <span>{paciente.email}</span>
-                      <span className="hidden sm:inline">•</span>
-                      <span>{paciente.telefone}</span>
-                    </div>
-                  </div>
-                </div>
-              </Card>
-            ))}
+                  </Card>
+                </Link>
+              );
+            })}
           </div>
         ) : (
           <EmptyState
@@ -128,3 +161,4 @@ const TelaPacientes = () => {
 };
 
 export default TelaPacientes;
+

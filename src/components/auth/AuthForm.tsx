@@ -1,9 +1,7 @@
-
 import React, { useState } from 'react';
 import { Eye, EyeOff, Info } from 'lucide-react';
 import { useAuth, UserType } from '@/hooks/useAuth';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
+import { Button, Input } from '@/design-system/components';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useToast } from '@/components/ui/use-toast';
 import { useLocalizacao } from '@/contexts/LocalizacaoContext';
@@ -24,13 +22,13 @@ export function AuthForm() {
     pt: {
       emailLabel: "Email",
       senhaLabel: "Senha",
-      tipoLabel: "Tipo de Usuário",
+      tipoLabel: "Tipo de Usuario",
       paciente: "Paciente",
       profissional: "Profissional",
       criarConta: "Criar Conta",
       entrar: "Entrar",
-      requisitos: "A senha deve ter pelo menos 8 caracteres, incluindo letras maiúsculas, minúsculas e números.",
-      verificacaoInfo: "Após o cadastro, você receberá um email com instruções para verificar sua conta.",
+      requisitos: "A senha deve ter pelo menos 8 caracteres, incluindo letras maiusculas, minusculas e numeros.",
+      verificacaoInfo: "Apos o cadastro, voce recebera um email com instrucoes para verificar sua conta.",
       carregando: "Processando..."
     },
     en: {
@@ -64,7 +62,7 @@ export function AuthForm() {
       defaultValue="login" 
       value={activeTab}
       onValueChange={setActiveTab}
-      className="w-full max-w-md mx-auto bg-white p-6 rounded-xl shadow-md"
+      className="w-full"
     >
       <TabsList className="grid w-full grid-cols-2 mb-6">
         <TabsTrigger value="login">{mensagens.entrar}</TabsTrigger>
@@ -78,6 +76,7 @@ export function AuthForm() {
             <Input
               id="login-email"
               type="email"
+              autoComplete="email"
               placeholder="seu@email.com"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
@@ -90,25 +89,31 @@ export function AuthForm() {
               <Input
                 id="login-senha"
                 type={verSenha ? "text" : "password"}
-                placeholder="••••••••"
+                autoComplete="current-password"
+                placeholder="Senha"
                 value={senha}
                 onChange={(e) => setSenha(e.target.value)}
                 required
               />
-              <span
-                className="absolute right-3 top-3 cursor-pointer text-gray-500"
+              <button
+                type="button"
+                aria-label={verSenha ? "Ocultar senha" : "Mostrar senha"}
+                aria-pressed={verSenha}
+                className="absolute right-3 top-3 text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-blue-500 rounded"
                 onClick={() => setVerSenha(!verSenha)}
               >
                 {verSenha ? <EyeOff size={18} /> : <Eye size={18} />}
-              </span>
+              </button>
             </div>
           </div>
-          <Button 
-            className="bg-[#34268C] hover:bg-[#282065] text-white w-full" 
-            onClick={() => signIn({ email, senha })} 
+          <Button
+            variant="primary"
+            className="w-full"
+            onClick={() => signIn({ email, senha })}
+            loading={isLoading}
             disabled={isLoading}
           >
-            {isLoading ? mensagens.carregando : mensagens.entrar}
+            {mensagens.entrar}
           </Button>
         </div>
       </TabsContent>
@@ -127,6 +132,7 @@ export function AuthForm() {
             <Input
               id="signup-email"
               type="email"
+              autoComplete="email"
               placeholder="seu@email.com"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
@@ -140,17 +146,21 @@ export function AuthForm() {
               <Input
                 id="signup-senha"
                 type={verSenha ? "text" : "password"}
-                placeholder="••••••••"
+                autoComplete="new-password"
+                placeholder="Senha"
                 value={senha}
                 onChange={(e) => setSenha(e.target.value)}
                 required
               />
-              <span
-                className="absolute right-3 top-3 cursor-pointer text-gray-500"
+              <button
+                type="button"
+                aria-label={verSenha ? "Ocultar senha" : "Mostrar senha"}
+                aria-pressed={verSenha}
+                className="absolute right-3 top-3 text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-blue-500 rounded"
                 onClick={() => setVerSenha(!verSenha)}
               >
                 {verSenha ? <EyeOff size={18} /> : <Eye size={18} />}
-              </span>
+              </button>
               <p className="text-xs text-gray-600 mt-1">{mensagens.requisitos}</p>
             </div>
           </div>
@@ -168,15 +178,18 @@ export function AuthForm() {
             </select>
           </div>
           
-          <Button 
-            className="bg-[#0CF25D] hover:bg-[#0bda53] text-black w-full font-medium" 
-            onClick={handleCadastro} 
+          <Button
+            variant="primary"
+            className="w-full"
+            onClick={handleCadastro}
+            loading={isLoading}
             disabled={isLoading}
           >
-            {isLoading ? mensagens.carregando : mensagens.criarConta}
+            {mensagens.criarConta}
           </Button>
         </div>
       </TabsContent>
     </Tabs>
   );
 }
+

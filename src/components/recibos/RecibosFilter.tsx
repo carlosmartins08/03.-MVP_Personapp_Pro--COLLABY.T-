@@ -13,15 +13,11 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover';
+import type { ReciboFilters } from '@/types/recibos';
 
 interface RecibosFilterProps {
-  filters: {
-    paciente: string;
-    dataInicio?: Date;
-    dataFim?: Date;
-    status?: string;
-  };
-  onFilterChange: (filters: any) => void;
+  filters: ReciboFilters;
+  onFilterChange: (filters: ReciboFilters) => void;
 }
 
 export const RecibosFilter = ({ filters, onFilterChange }: RecibosFilterProps) => {
@@ -110,4 +106,3 @@ export const RecibosFilter = ({ filters, onFilterChange }: RecibosFilterProps) =
     </div>
   );
 };
-

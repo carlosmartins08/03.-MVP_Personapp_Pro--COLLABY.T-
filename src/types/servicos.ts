@@ -31,3 +31,10 @@ export interface ServicoContratado {
   paciente_nome?: string;
   servico_nome?: string;
 }
+
+export type ContratarServicoPayload = {
+  paciente_id: string;
+  servico_id: string;
+  data_inicio: Date;
+  qtd_total_sessoes: number;
+};

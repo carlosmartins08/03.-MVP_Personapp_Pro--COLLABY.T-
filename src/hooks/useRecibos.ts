@@ -3,27 +3,18 @@ import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from '@/components/ui/use-toast';
 import { api } from '@/lib/api';
-
-interface Recibo {
-  id: string;
-  paciente: {
-    nome: string;
-  };
-  data_sessao: string;
-  created_at: string;
-  enviado: boolean;
-}
+import type { Recibo, ReciboCreatePayload, ReciboFilters } from '@/types/recibos';
 
 export const useRecibos = () => {
   const queryClient = useQueryClient();
-  const [filters, setFilters] = useState({
+  const [filters, setFilters] = useState<ReciboFilters>({
     paciente: '',
     dataInicio: undefined,
     dataFim: undefined,
     status: 'todos'
   });
 
-  const { data: recibos, isLoading } = useQuery({
+  const { data: recibos = [], isLoading } = useQuery({
     queryKey: ['recibos', filters],
     queryFn: async () => {
       const data = await api.get<Recibo[]>('/recibos');
@@ -60,7 +51,7 @@ export const useRecibos = () => {
   });
 
   const createRecibo = useMutation({
-    mutationFn: async (reciboData: any) => {
+    mutationFn: async (reciboData: ReciboCreatePayload) => {
       return api.post('/recibos', reciboData);
     },
     onSuccess: () => {

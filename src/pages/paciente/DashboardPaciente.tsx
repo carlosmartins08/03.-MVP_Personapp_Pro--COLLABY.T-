@@ -1,4 +1,4 @@
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, AppHeader } from '@/design-system/components';
 import { Button } from '@/components/ui/button';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -10,7 +10,11 @@ import { useQuery } from '@tanstack/react-query';
 import { api } from '@/lib/api';
 import type { PacienteApi, ResumoPacienteApi } from '@/types/api';
 
-export default function DashboardPaciente() {
+interface DashboardPacienteProps {
+  allowLegacyHeader?: boolean;
+}
+
+export default function DashboardPaciente({ allowLegacyHeader = false }: DashboardPacienteProps) {
   const { idioma } = useLocalizacao();
   const { user } = useAuthContext();
   const navigate = useNavigate();
@@ -61,63 +65,55 @@ export default function DashboardPaciente() {
 
   return (
     <div className="p-4 space-y-4 max-w-md mx-auto">
-      <h1 className="text-xl font-bold text-center">Bem-vindo, {paciente.nome}</h1>
+      {allowLegacyHeader ? (
+        <h1 className="text-xl font-bold text-center">Bem-vindo, {paciente.nome}</h1>
+      ) : (
+        <AppHeader variant="patient" name={paciente.nome} />
+      )}
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Último Diário</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <p className="text-sm text-muted-foreground">
-            {ultimoDiario
-              ? format(new Date(ultimoDiario.dataRegistro), 'PPP', { locale })
-              : 'Nenhum registro recente'}
-          </p>
-          <p className="mt-2">{ultimoDiario?.texto ?? 'Abraçe o diário para contar como se sente.'}</p>
-          <p className="mt-1 text-xs text-muted-foreground">
-            Sentimento detectado:{' '}
-            <strong>{ultimoDiario?.sentimento ?? 'Aguardando novas entradas'}</strong>
-          </p>
-        </CardContent>
+      <Card variant="default" className="p-4">
+        <h3 className="text-lg font-semibold">Último Diário</h3>
+        <p className="text-sm text-muted-foreground">
+          {ultimoDiario
+            ? format(new Date(ultimoDiario.dataRegistro), 'PPP', { locale })
+            : 'Nenhum registro recente'}
+        </p>
+        <p className="mt-2">{ultimoDiario?.texto ?? 'Abraçe o diário para contar como se sente.'}</p>
+        <p className="mt-1 text-xs text-muted-foreground">
+          Sentimento detectado:{' '}
+          <strong>{ultimoDiario?.sentimento ?? 'Aguardando novas entradas'}</strong>
+        </p>
       </Card>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Próxima Sessão</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <p>
-            {proximaSessaoData
-              ? format(proximaSessaoData, 'PPPpp', { locale })
-              : 'Nenhuma sessão agendada'}
-            {' - '}
-            <span className="capitalize">{ultimaSessao?.status ?? 'Sem status'}</span>
-          </p>
-          <Button className="mt-2 w-full" variant="outline" onClick={() => navigate('/paciente/sessoes')}>
-            Ver detalhes
-          </Button>
-        </CardContent>
+      <Card variant="default" className="p-4">
+        <h3 className="text-lg font-semibold">Próxima Sessão</h3>
+        <p>
+          {proximaSessaoData
+            ? format(proximaSessaoData, 'PPPpp', { locale })
+            : 'Nenhuma sessão agendada'}
+          {' - '}
+          <span className="capitalize">{ultimaSessao?.status ?? 'Sem status'}</span>
+        </p>
+        <Button className="mt-2 w-full" variant="outline" onClick={() => navigate('/paciente/sessoes')}>
+          Ver detalhes
+        </Button>
       </Card>
 
-      <Card className="border-l-4 border-yellow-400">
-        <CardHeader>
-          <CardTitle>Alerta Clínico</CardTitle>
-        </CardHeader>
-        <CardContent>
-          {ultimoAlerta ? (
-            <>
-              <p>
-                Tipo: <strong>{ultimoAlerta.tipoAlerta}</strong>
-              </p>
-              <p>Descrição: {ultimoAlerta.descricao ?? 'Sem descrição'}</p>
-              <p>
-                Urgência: <strong>{ultimoAlerta.nivelUrgencia ?? 'Normal'}</strong>
-              </p>
-            </>
-          ) : (
-            <p className="text-muted-foreground">Nenhum alerta ativo.</p>
-          )}
-        </CardContent>
+      <Card variant="default" className="border-l-4 border-yellow-400 p-4">
+        <h3 className="text-lg font-semibold">Alerta Clínico</h3>
+        {ultimoAlerta ? (
+          <>
+            <p>
+              Tipo: <strong>{ultimoAlerta.tipoAlerta}</strong>
+            </p>
+            <p>Descrição: {ultimoAlerta.descricao ?? 'Sem descrição'}</p>
+            <p>
+              Urgência: <strong>{ultimoAlerta.nivelUrgencia ?? 'Normal'}</strong>
+            </p>
+          </>
+        ) : (
+          <p className="text-muted-foreground">Nenhum alerta ativo.</p>
+        )}
       </Card>
     </div>
   );

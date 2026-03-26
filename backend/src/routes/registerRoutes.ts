@@ -9,13 +9,18 @@ import type {
 import { analyticsRoutes } from "./analytics";
 import { alertasRoutes } from "./alertas";
 import { authRoutes } from "./auth";
+import { consultasRoutes } from "./consultas";
 import { financeiroRoutes } from "./financeiro";
+import { diarioRoutes } from "./diario";
+import { notificacoesRoutes } from "./notificacoes";
 import { pacientesRoutes } from "./pacientes";
+import { profissionaisRoutes } from "./profissionais";
 import { recibosRoutes } from "./recibos";
 import { sessoesRoutes } from "./sessoes";
 import { servicosRoutes } from "./servicos";
 import { servicosContratadosRoutes } from "./servicos-contratados";
 import { traducoesRoutes } from "./traducoes";
+import { vinculosRoutes } from "./vinculos";
 
 export type RoutePlugin = FastifyPluginAsync | FastifyPluginCallback;
 export type RoutePluginOptions = FastifyRegisterOptions<FastifyPluginOptions>;
@@ -32,13 +37,18 @@ export type RouteRegistry = RouteRegistration[];
 const routeRegistry: RouteRegistry = [
   { name: "auth", plugin: authRoutes },
   { name: "pacientes", plugin: pacientesRoutes },
+  { name: "profissionais", plugin: profissionaisRoutes },
   { name: "sessoes", plugin: sessoesRoutes },
+  { name: "consultas", plugin: consultasRoutes },
   { name: "servicos", plugin: servicosRoutes },
   { name: "servicosContratados", plugin: servicosContratadosRoutes },
   { name: "recibos", plugin: recibosRoutes },
   { name: "alertas", plugin: alertasRoutes },
   { name: "analytics", plugin: analyticsRoutes },
   { name: "financeiro", plugin: financeiroRoutes },
+  { name: "diario", plugin: diarioRoutes },
+  { name: "vinculos", plugin: vinculosRoutes },
+  { name: "notificacoes", plugin: notificacoesRoutes },
   { name: "traducoes", plugin: traducoesRoutes },
 ];
 

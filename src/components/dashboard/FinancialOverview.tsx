@@ -1,6 +1,5 @@
-
 import React from 'react';
-import { Card, CardContent, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
+import { Card } from '@/design-system/components';
 import { Button } from '@/components/ui/button';
 import { DollarSign, TrendingUp, ArrowRight } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
@@ -21,14 +20,14 @@ const FinancialOverview: React.FC<FinancialOverviewProps> = ({
   const navigate = useNavigate();
 
   return (
-    <Card className="shadow-sm">
-      <CardHeader>
-        <CardTitle className="text-lg font-semibold flex items-center">
+    <Card variant="default" className="shadow-sm">
+      <div className="border-b border-gray-100 px-6 py-4">
+        <h3 className="text-lg font-semibold flex items-center">
           <DollarSign className="mr-2 h-5 w-5 text-menta" />
           Visão Geral Financeira
-        </CardTitle>
-      </CardHeader>
-      <CardContent>
+        </h3>
+      </div>
+      <div className="px-6 py-4">
         <div className="grid grid-cols-3 gap-4 mb-2">
           <div className="bg-[#F2FCE2] p-3 rounded-lg">
             <p className="text-sm text-gray-600">Total Recebido</p>
@@ -52,8 +51,8 @@ const FinancialOverview: React.FC<FinancialOverviewProps> = ({
             </div>
           </div>
         </div>
-      </CardContent>
-      <CardFooter>
+      </div>
+      <div className="px-6 pb-4">
         <Button 
           onClick={() => navigate('/financeiro')}
           className="w-full flex items-center justify-center persona-button"
@@ -61,7 +60,7 @@ const FinancialOverview: React.FC<FinancialOverviewProps> = ({
           Ver detalhado
           <ArrowRight className="ml-2 h-4 w-4" />
         </Button>
-      </CardFooter>
+      </div>
     </Card>
   );
 };

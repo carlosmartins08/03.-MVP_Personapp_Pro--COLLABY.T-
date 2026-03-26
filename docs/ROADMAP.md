@@ -84,6 +84,7 @@ create table sessoes (
   pacote text,
   score_clinico int,
   reagendada_em timestamptz,
+  daily_room_url text,
   created_at timestamptz default now()
 );
 
@@ -112,9 +113,28 @@ create table diario_sentimentos (
   paciente_id uuid references pacientes(id) on delete cascade,
   texto text not null,
   sentimento text,
+  humor int,
   tags text[],
   palavras_disfuncionais text[],
   data_registro timestamptz default now()
+);
+
+create table vinculos (
+  id uuid primary key default gen_random_uuid(),
+  paciente_id uuid references pacientes(id) on delete cascade,
+  profissional_id uuid references profissionais(id) on delete cascade,
+  status text default 'ATIVO',
+  criado_em timestamptz default now()
+);
+
+create table notificacoes (
+  id uuid primary key default gen_random_uuid(),
+  usuario_id uuid references usuarios(id) on delete cascade,
+  tipo text not null,
+  titulo text not null,
+  corpo text not null,
+  lida boolean default false,
+  criado_em timestamptz default now()
 );
 
 create table traducoes (
@@ -155,3 +175,7 @@ create table password_reset_tokens (
 - Escolher o SMTP definitivo (Resend/SendGrid, Mailgun etc.) para produção e alinhar domínios/assinatura das mensagens.
 - Mapear hosting/infra final (Railway, Fly, Render, Render, etc.) e automatizar o deploy com variáveis seguras.
 - Monitorar e incrementar observabilidade (logs estruturados, métricas no backend e Sentry/LogRocket no front) antes de habilitar o app em produção.
+
+## API atual (PersonApp - adicoes)
+- Profissionais e vinculos: `GET /profissionais`, `GET /profissionais/:id/perfil`, `POST /vinculos`, `GET /vinculos`.
+- Diario e notificacoes: `GET /diario/humor-hoje?pacienteId`, `POST /notificacoes/marcar-lida/:id`.

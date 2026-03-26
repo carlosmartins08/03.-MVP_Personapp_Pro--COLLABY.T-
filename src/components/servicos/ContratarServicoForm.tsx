@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
@@ -65,7 +65,7 @@ export function ContratarServicoForm({ onSubmit, isSubmitting, servicos: propSer
   });
 
   const [selectedServico, setSelectedServico] = useState<Servico | null>(null);
-  const servicosData = propServicos || servicos || [];
+  const servicosData = useMemo(() => propServicos || servicos || [], [propServicos, servicos]);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -77,20 +77,24 @@ export function ContratarServicoForm({ onSubmit, isSubmitting, servicos: propSer
     },
   });
 
+  const servicoId = form.watch('servico_id');
+
   useEffect(() => {
-    const servicoId = form.watch('servico_id');
-    if (servicoId) {
-      const servico = servicosData.find(s => s.id === servicoId);
-      if (servico) {
-        setSelectedServico(servico);
-        
-        // Set the qtd_total_sessoes if it's a package with defined number of sessions
-        if (servico.tipo_cobranca === 'pacote' && servico.qtd_sessoes) {
-          form.setValue('qtd_total_sessoes', servico.qtd_sessoes);
-        }
+    if (!servicoId) {
+      setSelectedServico(null);
+      return;
+    }
+
+    const servico = servicosData.find(s => s.id === servicoId);
+    if (servico) {
+      setSelectedServico(servico);
+      
+      // Set the qtd_total_sessoes if it's a package with defined number of sessions
+      if (servico.tipo_cobranca === 'pacote' && servico.qtd_sessoes) {
+        form.setValue('qtd_total_sessoes', servico.qtd_sessoes);
       }
     }
-  }, [form.watch('servico_id'), servicosData]);
+  }, [servicoId, servicosData, form]);
 
   return (
     <Form {...form}>

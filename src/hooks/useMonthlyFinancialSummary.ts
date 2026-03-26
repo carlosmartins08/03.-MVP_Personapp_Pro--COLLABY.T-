@@ -1,5 +1,5 @@
-
-import { useCallback, useMemo, useState } from 'react';
+﻿import { useCallback, useMemo, useState } from 'react';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { api } from '@/lib/api';
 import type { PeriodOption } from '@/components/PeriodSelector';
 
@@ -24,11 +24,32 @@ export type FinancialSummaryResponse = {
   transactions: FinancialTransaction[];
 };
 
-export const useMonthlyFinancialSummary = () => {
-  const [data, setData] = useState<FinancialSummaryResponse | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
+const parsePeriodLabel = (period: PeriodOption | string) => {
+  if (typeof period === 'string') return period;
+  if (typeof period === 'object' && period !== null) {
+    return period.label ?? period.value.toString();
+  }
+  return undefined;
+};
 
-  const transactions = data?.transactions ?? [];
+export const useMonthlyFinancialSummary = () => {
+  const queryClient = useQueryClient();
+  const [periodLabel, setPeriodLabel] = useState<string | null>(null);
+
+  const { data, isLoading, isFetching } = useQuery({
+    queryKey: ['financeiro-resumo', periodLabel],
+    enabled: Boolean(periodLabel),
+    queryFn: async () => {
+      if (!periodLabel) return null;
+      return api.get<FinancialSummaryResponse>('/financeiro/resumo', {
+        query: { period: periodLabel },
+      });
+    },
+    staleTime: 60 * 1000,
+    gcTime: 5 * 60 * 1000,
+  });
+
+  const transactions = useMemo(() => data?.transactions ?? [], [data]);
   const summary = useMemo(
     () => ({
       total_received: data?.total_received ?? 0,
@@ -49,41 +70,35 @@ export const useMonthlyFinancialSummary = () => {
 
   const fetchSummary = useCallback(
     async (period: PeriodOption | string): Promise<FinancialSummaryResponse> => {
-      try {
-        setIsLoading(true);
-
-        const parsedPeriod =
-          typeof period === 'string'
-            ? period
-            : typeof period === 'object'
-              ? period.label ?? period.value.toString()
-              : undefined;
-
-        const response = await api.get<FinancialSummaryResponse>('/financeiro/resumo', {
-          query: parsedPeriod ? { period: parsedPeriod } : undefined,
-        });
-
-        setData(response);
-        return response;
-      } catch (error) {
-        console.error('Error fetching monthly summary:', error);
-        setData(null);
-        throw error;
-      } finally {
-        setIsLoading(false);
+      const parsedPeriod = parsePeriodLabel(period);
+      if (!parsedPeriod) {
+        throw new Error('Periodo invalido');
       }
+      setPeriodLabel(parsedPeriod);
+
+      const response = await queryClient.fetchQuery({
+        queryKey: ['financeiro-resumo', parsedPeriod],
+        queryFn: () =>
+          api.get<FinancialSummaryResponse>('/financeiro/resumo', {
+            query: { period: parsedPeriod },
+          }),
+        staleTime: 60 * 1000,
+        gcTime: 5 * 60 * 1000,
+      });
+
+      return response;
     },
-    [],
+    [queryClient],
   );
 
   return {
     data,
     summary,
-    periodLabel: data?.period,
+    periodLabel: data?.period ?? periodLabel ?? undefined,
     transactions,
     receivedTransactions,
     pendingTransactions,
     fetchSummary,
-    isLoading,
+    isLoading: isLoading || isFetching,
   };
 };

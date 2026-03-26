@@ -16,12 +16,14 @@ Este projeto usa variáveis de ambiente tanto no frontend (Vite + API própria) 
 
    | Variável                              | Obrigatória | Descrição                                                 |
    | ------------------------------------- | ----------- | --------------------------------------------------------- |
-   | `VITE_API_URL`                        | ✅          | URL base da API Fastify (ex.: `http://localhost:4000`)    |
-   | `VITE_DEFAULT_LANGUAGE`               | ⛔️          | `pt` ou `en` (padrão `pt`)                                |
-   | `VITE_FRONTEND_URL`                   | ⛔️          | URL pública usada em e-mails/redirecionamentos            |
-   | `VITE_EMAIL_VERIFICATION_REDIRECT_URL`| ⛔️          | Para onde levar o usuário após confirmar o e-mail         |
+   | `VITE_API_URL`                        | âœ…          | URL base da API Fastify (ex.: `http://localhost:4000`)    |
+   | `VITE_USE_MOCKS`                      | opcional          | `true` para usar API mock local (frontend sem backend)    |
+   | `VITE_DEFAULT_LANGUAGE`               | â›”ï¸          | `pt` ou `en` (padrão `pt`)                                |
+   | `VITE_FRONTEND_URL`                   | â›”ï¸          | URL pública usada em e-mails/redirecionamentos            |
+   | `VITE_EMAIL_VERIFICATION_REDIRECT_URL`| â›”ï¸          | Para onde levar o usuário após confirmar o e-mail         |
 
 3. O arquivo `.env.local` é lido automaticamente pelo Vite. Ao rodar `npm run dev`/`build`, o app valida se `VITE_API_URL` está definido (veja `src/lib/env.ts`).
+   | `VITE_USE_MOCKS`                      | opcional          | `true` para usar API mock local (frontend sem backend)    |
 
 ## Backend (`backend/.env`)
 
@@ -64,3 +66,4 @@ await fastify.listen({ port: env.port });
 ```
 
 > Sempre que editar um `.env`, reinicie os processos (`npm run dev`, `npm run dev` do backend, etc.) para que as mudanças sejam carregadas.
+

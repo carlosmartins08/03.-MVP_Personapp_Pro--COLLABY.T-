@@ -6,11 +6,13 @@ const toStringOrUndefined = (value: unknown) =>
 
 export const env = {
   API_URL: toStringOrUndefined(import.meta.env.VITE_API_URL) ?? '',
+  USE_MOCKS: import.meta.env.VITE_USE_MOCKS === 'true',
   DEFAULT_LANGUAGE: (import.meta.env.VITE_DEFAULT_LANGUAGE as 'pt' | 'en') || 'pt',
   FRONTEND_URL: toStringOrUndefined(import.meta.env.VITE_FRONTEND_URL),
   EMAIL_VERIFICATION_REDIRECT_URL: toStringOrUndefined(
     import.meta.env.VITE_EMAIL_VERIFICATION_REDIRECT_URL
   ),
+  DAILY_API_KEY: toStringOrUndefined(import.meta.env.VITE_DAILY_API_KEY) ?? '',
 };
 
 /**

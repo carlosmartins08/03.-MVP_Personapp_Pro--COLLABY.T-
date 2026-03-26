@@ -24,6 +24,16 @@ export const useAuth = () => {
   const { setUser } = useAuthContext();
   const [isLoading, setIsLoading] = useState(false);
 
+  const getErrorMessage = (err: unknown, fallback: string) => {
+    if (err instanceof Error && err.message) return err.message;
+    if (typeof err === 'string') return err;
+    if (err && typeof err === 'object' && 'message' in err) {
+      const message = (err as { message?: unknown }).message;
+      if (typeof message === 'string') return message;
+    }
+    return fallback;
+  };
+
   const mensagens = {
     pt: {
       erroCadastro: 'Erro ao criar conta',
@@ -60,10 +70,10 @@ export const useAuth = () => {
         description: mensagens.verificacaoEmail,
       });
       navigate('/login');
-    } catch (err: any) {
+    } catch (err: unknown) {
       toast({
         title: mensagens.erroCadastro,
-        description: err?.message || mensagens.erroGenerico,
+        description: getErrorMessage(err, mensagens.erroGenerico),
         variant: 'destructive',
       });
     } finally {
@@ -104,10 +114,10 @@ export const useAuth = () => {
       } else {
         navigate('/profissional/dashboard');
       }
-    } catch (err: any) {
+    } catch (err: unknown) {
       toast({
         title: mensagens.erroLogin,
-        description: err?.message || 'Verifique suas credenciais.',
+        description: getErrorMessage(err, 'Verifique suas credenciais.'),
         variant: 'destructive',
       });
     } finally {
@@ -123,10 +133,10 @@ export const useAuth = () => {
         title: 'E-mail enviado',
         description: mensagens.emailReset,
       });
-    } catch (err: any) {
+    } catch (err: unknown) {
       toast({
         title: mensagens.erroGenerico,
-        description: err?.message || mensagens.erroGenerico,
+        description: getErrorMessage(err, mensagens.erroGenerico),
         variant: 'destructive',
       });
     } finally {
@@ -143,10 +153,10 @@ export const useAuth = () => {
         description: 'Faça login com sua nova senha.',
       });
       navigate('/login');
-    } catch (err: any) {
+    } catch (err: unknown) {
       toast({
         title: mensagens.erroGenerico,
-        description: err?.message || mensagens.erroGenerico,
+        description: getErrorMessage(err, mensagens.erroGenerico),
         variant: 'destructive',
       });
     } finally {
