@@ -1,6 +1,6 @@
 
 import { useEffect, useState } from 'react';
-import PageHeader from '@/components/ui/PageHeader';
+import { PageHeader } from '@/design-system/components';
 import { useLocalizacao } from '@/contexts/LocalizacaoContext';
 import WelcomeMessage from '@/components/paciente/WelcomeMessage';
 import RecentDataSummary from '@/components/paciente/RecentDataSummary';

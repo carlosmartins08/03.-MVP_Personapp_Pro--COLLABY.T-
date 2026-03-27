@@ -1,14 +1,12 @@
 
 import React from 'react';
 import { Plus } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { Button, PageHeader } from '@/design-system/components';
 import { Dialog } from '@/components/ui/dialog';
 import { ServicosTable } from '@/components/servicos/ServicosTable';
 import { ServicoForm } from '@/components/servicos/ServicoForm';
 import { AlertaServicosBadge } from '@/components/servicos/AlertaServicosBadge';
 import { AlertasServicosCard } from '@/components/servicos/AlertasServicosCard';
-// Correct import for PageHeader
-import { PageHeader } from '@/components/ui/PageHeader';
 import { useServicos } from '@/hooks/useServicos';
 import type { Servico } from '@/types/servicos';
 import { toast } from '@/components/ui/use-toast';
@@ -65,7 +63,7 @@ const TelaServicos = () => {
       <PageHeader
         title="Serviços"
         subtitle="Gerencie os serviços oferecidos"
-        rightContent={
+        action={
           <Button onClick={() => setDialogOpen(true)}>
             <Plus className="h-4 w-4 mr-2" />
             Novo Serviço

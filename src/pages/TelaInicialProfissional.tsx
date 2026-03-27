@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import PageHeader from '@/components/ui/PageHeader';
+import { Button, Card, PageHeader } from '@/design-system/components';
 import { Calendar, DollarSign, Clock, Users, AlertCircle } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { format } from 'date-fns';
@@ -67,27 +65,27 @@ const TelaInicialProfissional = () => {
       <div className="px-4">
         <div className="grid grid-cols-2 gap-4 mb-6">
           <Card className="bg-lavanda-light border-none">
-            <CardHeader className="pb-2 pt-4">
-              <CardTitle className="text-sm font-medium text-gray-600 flex items-center">
+            <div className="pb-2 pt-4">
+              <h3 className="text-sm font-medium text-gray-600 flex items-center">
                 <Calendar size={16} className="mr-1" />
                 Sessões Hoje
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
+              </h3>
+            </div>
+            <div>
               <p className="text-2xl font-bold">{sessoesAgendadas}</p>
-            </CardContent>
+            </div>
           </Card>
           
           <Card className="bg-menta-light border-none">
-            <CardHeader className="pb-2 pt-4">
-              <CardTitle className="text-sm font-medium text-gray-600 flex items-center">
+            <div className="pb-2 pt-4">
+              <h3 className="text-sm font-medium text-gray-600 flex items-center">
                 <DollarSign size={16} className="mr-1" />
                 Valor Total
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
+              </h3>
+            </div>
+            <div>
               <p className="text-2xl font-bold">R$ {valorTotalHoje}</p>
-            </CardContent>
+            </div>
           </Card>
         </div>
         
@@ -125,7 +123,7 @@ const TelaInicialProfissional = () => {
                       </p>
                     </div>
                     <Button 
-                      variant="outline" 
+                      variant="secondary" 
                       size="sm"
                       onClick={() => navigate(`/sessoes/${sessao.id}`)}
                     >
@@ -176,7 +174,7 @@ const TelaInicialProfissional = () => {
                     <p className="text-sm text-muted-foreground">{paciente.telefone}</p>
                   </div>
                   <Button 
-                    variant="outline" 
+                    variant="secondary" 
                     size="sm"
                     onClick={() => navigate(`/pacientes/${paciente.id}`)}
                   >
@@ -202,3 +200,5 @@ const TelaInicialProfissional = () => {
 };
 
 export default TelaInicialProfissional;
+
+

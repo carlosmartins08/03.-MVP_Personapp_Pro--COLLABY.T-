@@ -2,7 +2,7 @@
 import { useNavigate } from "react-router-dom"
 
 import type { MoodLevel } from "@/design-system/types"
-import { Button, Card, MoodFace } from "@/design-system/components"
+import { AppHeader, Button, Card, MoodFace } from "@/design-system/components"
 import { cn } from "@/lib/utils"
 import { useMoodCheckIn } from "@/hooks/personapp/useMoodCheckIn"
 
@@ -48,24 +48,29 @@ const MoodCheckInPage = () => {
 
   if (step === 1) {
     return (
-      <div className="-mx-4">
-        <MoodFace
-          value={value}
-          onChange={setValue}
-          onNext={() => setStep(2)}
-          stepCurrent={1}
-          stepTotal={3}
-          className="min-h-[calc(100dvh-64px)]"
-        />
-      </div>
+      <>
+        <AppHeader variant="minimal" />
+        <div className="-mx-4">
+          <MoodFace
+            value={value}
+            onChange={setValue}
+            onNext={() => setStep(2)}
+            stepCurrent={1}
+            stepTotal={3}
+            className="min-h-[calc(100dvh-64px)]"
+          />
+        </div>
+      </>
     )
   }
 
   return (
-    <div className="mx-auto flex w-full max-w-2xl flex-col gap-4">
-      <div className="text-sm font-medium text-gray-500">
-        Passo {step} de 3
-      </div>
+    <>
+      <AppHeader variant="minimal" />
+      <div className="mx-auto flex w-full max-w-2xl flex-col gap-4">
+        <div className="text-sm font-medium text-gray-500">
+          Passo {step} de 3
+        </div>
 
       {step === 2 && (
         <Card variant="default" className="p-5">
@@ -137,7 +142,8 @@ const MoodCheckInPage = () => {
           </div>
         </Card>
       )}
-    </div>
+      </div>
+    </>
   )
 }
 

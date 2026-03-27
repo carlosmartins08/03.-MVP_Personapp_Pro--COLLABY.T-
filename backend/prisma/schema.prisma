@@ -59,7 +59,7 @@ model Usuario {
 
 model Profissional {
   id            String   @id @default(uuid())
-  userId        String?  @map("user_id")
+  userId        String?  @unique @map("user_id")
   nome          String
   crp           String?
   especialidade String?
@@ -75,7 +75,7 @@ model Profissional {
 
 model Paciente {
   id              String           @id @default(uuid())
-  userId          String?          @map("user_id")
+  userId        String?  @unique @map("user_id")
   nome            String
   email           String?
   telefone        String?

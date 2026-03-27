@@ -1,8 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { format } from 'date-fns';
 import { ptBR, enUS } from 'date-fns/locale';
-import { AppHeader, Card } from '@/design-system/components';
-import { Skeleton } from '@/components/ui/skeleton';
+import { AppHeader, Card, Skeleton } from '@/design-system/components';
 import { useLocalizacao } from '@/contexts/LocalizacaoContext';
 import { api } from '@/lib/api';
 

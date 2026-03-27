@@ -1,12 +1,17 @@
 
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Label } from '@/components/ui/label';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import PageHeader from '@/components/ui/PageHeader';
+import {
+  Button,
+  Card,
+  Input,
+  Label,
+  PageHeader,
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from '@/design-system/components';
 import { toast } from '@/components/ui/use-toast';
 import { Save, LogOut, User, CreditCard, Bell, Sliders, Lock } from 'lucide-react';
 import { Switch } from '@/components/ui/switch';
@@ -72,7 +77,7 @@ const TelaPerfilProfissional = () => {
               <h2 className="text-xl font-bold mb-2">{usuarioMock.nome}</h2>
               <p className="text-muted-foreground mb-4">{usuarioMock.especialidade}</p>
               
-              <Button size="sm" variant="outline">
+              <Button size="sm" variant="secondary">
                 Alterar foto
               </Button>
             </div>
@@ -90,13 +95,13 @@ const TelaPerfilProfissional = () => {
           <TabsContent value="perfil" className="mt-0">
             <form onSubmit={handleSubmit}>
               <Card>
-                <CardHeader>
-                  <CardTitle className="text-lg flex items-center">
+                <div>
+                  <h3 className="text-lg flex items-center">
                     <User size={18} className="mr-2 text-lavanda" />
                     Informações Pessoais
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4">
+                  </h3>
+                </div>
+                <div className="space-y-4">
                   <div className="space-y-2">
                     <Label htmlFor="nome">Nome completo</Label>
                     <Input
@@ -150,7 +155,7 @@ const TelaPerfilProfissional = () => {
                     <Save size={16} className="mr-2" />
                     {isLoading ? 'Salvando...' : 'Salvar Alterações'}
                   </Button>
-                </CardContent>
+                </div>
               </Card>
             </form>
           </TabsContent>
@@ -158,13 +163,13 @@ const TelaPerfilProfissional = () => {
           {/* Aba de Conta */}
           <TabsContent value="conta" className="mt-0 space-y-4">
             <Card>
-              <CardHeader>
-                <CardTitle className="text-lg flex items-center">
+              <div>
+                <h3 className="text-lg flex items-center">
                   <Lock size={18} className="mr-2 text-lavanda" />
                   Segurança
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
+                </h3>
+              </div>
+              <div className="space-y-4">
                 <div className="space-y-2">
                   <Label htmlFor="senha-atual">Senha atual</Label>
                   <Input
@@ -198,17 +203,17 @@ const TelaPerfilProfissional = () => {
                 <Button className="w-full persona-button">
                   Alterar Senha
                 </Button>
-              </CardContent>
+              </div>
             </Card>
             
             <Card>
-              <CardHeader>
-                <CardTitle className="text-lg flex items-center">
+              <div>
+                <h3 className="text-lg flex items-center">
                   <Bell size={18} className="mr-2 text-lavanda" />
                   Notificações
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
+                </h3>
+              </div>
+              <div className="space-y-4">
                 <div className="flex items-center justify-between">
                   <div>
                     <h3 className="font-medium">Novas sessões</h3>
@@ -232,20 +237,20 @@ const TelaPerfilProfissional = () => {
                   </div>
                   <Switch defaultChecked />
                 </div>
-              </CardContent>
+              </div>
             </Card>
           </TabsContent>
           
           {/* Aba Financeiro */}
           <TabsContent value="financeiro" className="mt-0 space-y-4">
             <Card>
-              <CardHeader>
-                <CardTitle className="text-lg flex items-center">
+              <div>
+                <h3 className="text-lg flex items-center">
                   <CreditCard size={18} className="mr-2 text-lavanda" />
                   Método de Recebimento
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
+                </h3>
+              </div>
+              <div className="space-y-4">
                 <div className="space-y-2">
                   <Label htmlFor="banco">Banco</Label>
                   <Input
@@ -287,17 +292,17 @@ const TelaPerfilProfissional = () => {
                 <Button className="w-full persona-button">
                   Salvar Informações Bancárias
                 </Button>
-              </CardContent>
+              </div>
             </Card>
             
             <Card>
-              <CardHeader>
-                <CardTitle className="text-lg flex items-center">
+              <div>
+                <h3 className="text-lg flex items-center">
                   <Sliders size={18} className="mr-2 text-lavanda" />
                   Configurações Financeiras
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
+                </h3>
+              </div>
+              <div className="space-y-4">
                 <div className="space-y-2">
                   <Label htmlFor="valor-padrao">Valor padrão da sessão (R$)</Label>
                   <Input
@@ -327,14 +332,14 @@ const TelaPerfilProfissional = () => {
                 <Button className="w-full persona-button">
                   Salvar Configurações
                 </Button>
-              </CardContent>
+              </div>
             </Card>
           </TabsContent>
         </Tabs>
         
         <div className="mt-6">
           <Button 
-            variant="outline" 
+            variant="secondary" 
             className="w-full"
             onClick={handleLogout}
           >
@@ -348,3 +353,4 @@ const TelaPerfilProfissional = () => {
 };
 
 export default TelaPerfilProfissional;
+

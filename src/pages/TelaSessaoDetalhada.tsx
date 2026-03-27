@@ -1,13 +1,8 @@
 
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button, Card, EmptyState, Input, PageHeader, Textarea } from '@/design-system/components';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import PageHeader from '@/components/ui/PageHeader';
-import EmptyState from '@/components/ui/EmptyState';
 import { ArrowLeft, CheckCircle, Clock, Calendar, DollarSign, FileText, User, XCircle } from 'lucide-react';
 import { sessoesMock, pacientesMock } from '@/data/mockData';
 import { format } from 'date-fns';
@@ -37,8 +32,11 @@ const TelaSessaoDetalhada = () => {
         title="Sessão não encontrada"
         description="A sessão que você está procurando não existe ou foi removida."
         icon={<Calendar size={48} />}
-        actionLabel="Voltar para Sessões"
-        onAction={() => navigate('/sessoes')}
+        action={
+          <Button variant="secondary" size="sm" onClick={() => navigate('/sessoes')}>
+            Voltar para Sessões
+          </Button>
+        }
       />
     );
   }
@@ -52,8 +50,11 @@ const TelaSessaoDetalhada = () => {
         title="Paciente não encontrado"
         description="O paciente desta sessão não existe ou foi removido."
         icon={<User size={48} />}
-        actionLabel="Voltar para Sessões"
-        onAction={() => navigate('/sessoes')}
+        action={
+          <Button variant="secondary" size="sm" onClick={() => navigate('/sessoes')}>
+            Voltar para Sessões
+          </Button>
+        }
       />
     );
   }
@@ -146,9 +147,9 @@ const TelaSessaoDetalhada = () => {
       <PageHeader
         title="Detalhes da Sessão"
         subtitle={`${dataFormatada} às ${horaFormatada}`}
-        rightContent={
+        action={
           <Button 
-            variant="outline" 
+            variant="secondary" 
             size="sm"
             onClick={() => navigate('/sessoes')}
           >
@@ -180,7 +181,7 @@ const TelaSessaoDetalhada = () => {
             </div>
             
             <Button 
-              variant="outline" 
+              variant="secondary" 
               size="sm"
               onClick={() => navigate(`/pacientes/${paciente.id}`)}
             >
@@ -191,13 +192,13 @@ const TelaSessaoDetalhada = () => {
         
         {/* Card com detalhes da sessão */}
         <Card className="mb-6">
-          <CardHeader>
-            <CardTitle className="text-lg flex items-center">
+          <div>
+            <h3 className="text-lg flex items-center">
               <Calendar size={18} className="mr-2 text-lavanda" />
               Informações da Sessão
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
+            </h3>
+          </div>
+          <div className="space-y-4">
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <label className="text-sm font-medium">Data</label>
@@ -290,18 +291,18 @@ const TelaSessaoDetalhada = () => {
                 )}
               </div>
             </div>
-          </CardContent>
+          </div>
         </Card>
         
         {/* Card com anotações */}
         <Card className="mb-6">
-          <CardHeader>
-            <CardTitle className="text-lg flex items-center">
+          <div>
+            <h3 className="text-lg flex items-center">
               <FileText size={18} className="mr-2 text-lavanda" />
               Anotações Clínicas
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
+            </h3>
+          </div>
+          <div>
             {editMode ? (
               <Textarea
                 value={sessao.anotacoes || ''}
@@ -315,7 +316,7 @@ const TelaSessaoDetalhada = () => {
                 {sessao.anotacoes || "Nenhuma anotação registrada."}
               </div>
             )}
-          </CardContent>
+          </div>
         </Card>
         
         {/* Ações */}
@@ -340,7 +341,7 @@ const TelaSessaoDetalhada = () => {
                 )}
               </Button>
               <Button 
-                variant="outline" 
+                variant="secondary" 
                 onClick={() => {
                   setSessao({...sessaoOriginal});
                   setEditMode(false);
@@ -363,7 +364,7 @@ const TelaSessaoDetalhada = () => {
               </Button>
               {sessao.statusPagamento === 'pendente' && (
                 <Button 
-                  variant="outline" 
+                  variant="secondary" 
                   onClick={() => handlePaymentStatusChange('pago')}
                   className="flex-1"
                 >
@@ -373,7 +374,7 @@ const TelaSessaoDetalhada = () => {
               )}
               {sessao.status === 'agendada' && (
                 <Button 
-                  variant="outline" 
+                  variant="secondary" 
                   onClick={() => handleStatusChange('confirmada')}
                   className="flex-1"
                 >
@@ -390,3 +391,5 @@ const TelaSessaoDetalhada = () => {
 };
 
 export default TelaSessaoDetalhada;
+
+

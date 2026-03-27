@@ -1,9 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { Label } from '@/components/ui/label';
+import { Button, Card, Input, Label } from '@/design-system/components';
 import { toast } from '@/components/ui/use-toast';
 import { useAuth } from '@/hooks/useAuth';
 
@@ -50,12 +47,12 @@ const RedefinirSenha = () => {
 
         <Card>
           <form onSubmit={handlePasswordReset}>
-            <CardHeader>
-              <CardTitle>Nova Senha</CardTitle>
-              <CardDescription>Informe o token recebido e defina sua nova senha.</CardDescription>
-            </CardHeader>
+            <div className="mb-4">
+              <h3 className="text-lg font-semibold">Nova Senha</h3>
+              <p className="text-sm text-muted-foreground">Informe o token recebido e defina sua nova senha.</p>
+            </div>
 
-            <CardContent className="space-y-4">
+            <div className="space-y-4">
               <div className="space-y-2">
                 <Label htmlFor="token">Token</Label>
                 <Input
@@ -91,17 +88,17 @@ const RedefinirSenha = () => {
                   minLength={8}
                 />
               </div>
-            </CardContent>
+            </div>
 
-            <CardFooter className="flex flex-col space-y-4">
+            <div className="flex flex-col space-y-4">
               <Button type="submit" className="w-full persona-button" disabled={isLoading}>
                 {isLoading ? 'Redefinindo...' : 'Redefinir Senha'}
               </Button>
 
-              <Button variant="link" type="button" onClick={() => navigate('/login')}>
+              <Button variant="ghost" type="button" onClick={() => navigate('/login')}>
                 Voltar para Login
               </Button>
-            </CardFooter>
+            </div>
           </form>
         </Card>
       </div>
@@ -110,3 +107,4 @@ const RedefinirSenha = () => {
 };
 
 export default RedefinirSenha;
+

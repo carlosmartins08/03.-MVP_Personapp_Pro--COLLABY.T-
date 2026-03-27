@@ -1,5 +1,4 @@
-import { Card, AppHeader } from '@/design-system/components';
-import { Button } from '@/components/ui/button';
+import { AppHeader, Button, Card } from '@/design-system/components';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { format } from 'date-fns';
@@ -94,7 +93,7 @@ export default function DashboardPaciente({ allowLegacyHeader = false }: Dashboa
           {' - '}
           <span className="capitalize">{ultimaSessao?.status ?? 'Sem status'}</span>
         </p>
-        <Button className="mt-2 w-full" variant="outline" onClick={() => navigate('/paciente/sessoes')}>
+        <Button className="mt-2 w-full" variant="secondary" onClick={() => navigate('/paciente/sessoes')}>
           Ver detalhes
         </Button>
       </Card>

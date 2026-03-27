@@ -13,7 +13,7 @@ const patientTabs = [
 
 const PatientAppLayout = () => {
   return (
-    <div className="flex min-h-screen flex-col bg-gray-50">
+    <div className="flex min-h-screen flex-col bg-gray-50 font-roboto">
       <main className="flex-1 px-4 py-4 pb-[calc(64px+env(safe-area-inset-bottom,0px))]">
         <Outlet />
       </main>

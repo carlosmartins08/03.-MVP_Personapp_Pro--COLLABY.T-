@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { Button } from '@/design-system/components';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Button, PageHeader, Tabs, TabsContent, TabsList, TabsTrigger } from '@/design-system/components';
 import { Calendar } from 'lucide-react';
-import PageHeader from '@/components/ui/PageHeader';
 import { useMonthlyFinancialSummary } from '@/hooks/useMonthlyFinancialSummary';
 import { PeriodSelector } from '@/components/PeriodSelector';
 import { useMarkChargeAsPaid } from '@/hooks/useMarkChargeAsPaid';
@@ -55,7 +53,7 @@ const TelaFinanceiro = () => {
       <PageHeader
         title="Financeiro"
         subtitle="Controle financeiro das sessões"
-        rightContent={
+        action={
           <ExportFinanceiroButton
             financialData={allTransactions}
             summary={summary}

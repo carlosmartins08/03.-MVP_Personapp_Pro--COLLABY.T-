@@ -3,14 +3,10 @@ import { useQuery } from '@tanstack/react-query';
 import { useNavigate, useParams } from 'react-router-dom';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
-import PageHeader from '@/components/ui/PageHeader';
+import { Avatar, Badge, Button, Card, EmptyState, PageHeader } from '@/design-system/components';
 import ExportEvolucaoButton from '@/components/evolucao/ExportEvolucaoButton';
 import { api } from '@/lib/api';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
-import EmptyState from '@/components/ui/EmptyState';
 import {
   Activity,
   ClipboardList,
@@ -41,12 +37,12 @@ const statusLabel: Record<string, string> = {
   cancelada: 'Cancelada',
 };
 
-const badgeVariants: Record<string, 'default' | 'secondary' | 'destructive' | 'outline'> = {
-  agendada: 'outline',
-  confirmada: 'default',
-  realizada: 'secondary',
-  faltou: 'destructive',
-  cancelada: 'destructive',
+const badgeVariants: Record<string, 'primary' | 'success' | 'warning' | 'error' | 'neutral'> = {
+  agendada: 'neutral',
+  confirmada: 'primary',
+  realizada: 'success',
+  faltou: 'error',
+  cancelada: 'error',
 };
 
 const formatSessionDate = (value?: string) => {
@@ -105,8 +101,11 @@ const TelaEvolucaoPaciente = () => {
       <EmptyState
         title="Paciente não encontrado"
         description="Verifique se o link ainda é válido e retorne para a lista de pacientes."
-        actionLabel="Voltar para pacientes"
-        onAction={() => navigate('/pacientes')}
+        action={
+          <Button variant="secondary" size="sm" onClick={() => navigate('/pacientes')}>
+            Voltar para pacientes
+          </Button>
+        }
       />
     );
   }
@@ -185,7 +184,7 @@ const TelaEvolucaoPaciente = () => {
       <PageHeader
         title="Evolução do Paciente"
         subtitle={`Visão clínica detalhada de ${paciente.nome}`}
-        rightContent={
+        action={
           <ExportEvolucaoButton
             paciente={paciente}
             sessoes={sessoesPaciente}
@@ -196,12 +195,9 @@ const TelaEvolucaoPaciente = () => {
 
       <div className="grid gap-4 lg:grid-cols-3">
         <Card className="lg:col-span-2">
-          <CardHeader className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+          <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
             <div className="flex items-center gap-4">
-              <Avatar className="h-20 w-20">
-                <AvatarImage src={paciente.fotoPerfil} alt={paciente.nome} />
-                <AvatarFallback>{paciente.nome[0]}</AvatarFallback>
-              </Avatar>
+              <Avatar size="xl" className="h-20 w-20" imageUrl={paciente.fotoPerfil ?? undefined} initials={paciente.nome[0]} />
               <div>
                 <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">
                   Paciente
@@ -212,9 +208,9 @@ const TelaEvolucaoPaciente = () => {
                 </p>
               </div>
             </div>
-            <Badge variant="outline">{rankingText}</Badge>
-          </CardHeader>
-          <CardContent className="grid gap-4 md:grid-cols-2">
+            <Badge variant="neutral">{rankingText}</Badge>
+          </div>
+          <div className="grid gap-4 md:grid-cols-2">
             <div className="space-y-3">
               <div className="flex items-center gap-2 text-sm text-muted-foreground">
                 <Phone className="h-4 w-4" />
@@ -252,14 +248,14 @@ const TelaEvolucaoPaciente = () => {
                 <span>{totalPendentes > 0 ? 'Com pendências' : 'Em dia'}</span>
               </div>
             </div>
-          </CardContent>
+          </div>
         </Card>
 
         <Card>
-          <CardHeader>
-            <CardTitle className="text-base">Última sessão</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-3">
+          <div>
+            <h3 className="text-base">Última sessão</h3>
+          </div>
+          <div className="space-y-3">
             {ultimaSessao ? (
               <>
                 <div className="flex items-center justify-between">
@@ -269,7 +265,7 @@ const TelaEvolucaoPaciente = () => {
                       {formatSessionLabel(ultimaSessao.data)}
                     </p>
                   </div>
-                  <Badge variant={badgeVariants[ultimaSessao.status] ?? 'outline'}>
+                  <Badge variant={badgeVariants[ultimaSessao.status] ?? 'neutral'}>
                     {statusLabel[ultimaSessao.status] ?? ultimaSessao.status}
                   </Badge>
                 </div>
@@ -296,16 +292,16 @@ const TelaEvolucaoPaciente = () => {
                 })}
               </p>
             )}
-          </CardContent>
+          </div>
         </Card>
       </div>
 
       <div className="mt-6 grid gap-4 md:grid-cols-3">
         <Card>
-          <CardHeader>
-            <CardTitle className="text-base">Taxa de comparecimento</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-3">
+          <div>
+            <h3 className="text-base">Taxa de comparecimento</h3>
+          </div>
+          <div className="space-y-3">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-2xl font-semibold">{attendanceRate}%</p>
@@ -318,14 +314,14 @@ const TelaEvolucaoPaciente = () => {
               </div>
             </div>
             <Progress value={attendanceRate} />
-          </CardContent>
+          </div>
         </Card>
 
         <Card>
-          <CardHeader>
-            <CardTitle className="text-base">Financeiro</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-2">
+          <div>
+            <h3 className="text-base">Financeiro</h3>
+          </div>
+          <div className="space-y-2">
             <div className="flex items-center justify-between text-sm text-muted-foreground">
               <span>Total recebido</span>
               <strong className="text-base text-foreground">
@@ -349,14 +345,14 @@ const TelaEvolucaoPaciente = () => {
                       : 'sem pagamento confirmado'
                   }`}
             </div>
-          </CardContent>
+          </div>
         </Card>
 
         <Card>
-          <CardHeader>
-            <CardTitle className="text-base">Próxima sessão</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-2">
+          <div>
+            <h3 className="text-base">Próxima sessão</h3>
+          </div>
+          <div className="space-y-2">
             {proximasSessoes.length > 0 ? (
               <>
                 <p className="text-sm text-muted-foreground">
@@ -366,7 +362,7 @@ const TelaEvolucaoPaciente = () => {
                   {proximasSessoes[0].duracao} minutos • Valor:{' '}
                   {currencyFormatter.format(proximasSessoes[0].valor)}
                 </div>
-                <Badge variant={badgeVariants[proximasSessoes[0].status] ?? 'outline'}>
+                <Badge variant={badgeVariants[proximasSessoes[0].status] ?? 'neutral'}>
                   {statusLabel[proximasSessoes[0].status] ?? 'Agendada'}
                 </Badge>
               </>
@@ -381,22 +377,22 @@ const TelaEvolucaoPaciente = () => {
                   : 'nenhuma sessão'}
               </span>
             </div>
-          </CardContent>
+          </div>
         </Card>
       </div>
 
       <div className="mt-6 grid gap-4 xl:grid-cols-2">
         <Card>
-          <CardHeader className="flex items-center justify-between">
+          <div className="flex items-center justify-between">
             <div>
-              <CardTitle className="text-base">Próximas sessões</CardTitle>
+              <h3 className="text-base">Próximas sessões</h3>
               <p className="text-xs text-muted-foreground">
                 {proximasSessoes.length} agendamento(s) planejado(s)
               </p>
             </div>
             <Activity className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
+          </div>
+          <div>
             {proximasSessoes.length === 0 ? (
               <p className="text-sm text-muted-foreground">Sem novos agendamentos.</p>
             ) : (
@@ -414,7 +410,7 @@ const TelaEvolucaoPaciente = () => {
                         Duração {sessao.duracao} minutos
                       </p>
                     </div>
-                    <Badge variant={badgeVariants[sessao.status] ?? 'outline'}>
+                    <Badge variant={badgeVariants[sessao.status] ?? 'neutral'}>
                       {statusLabel[sessao.status] ?? sessao.status}
                     </Badge>
                   </div>
@@ -424,20 +420,20 @@ const TelaEvolucaoPaciente = () => {
                 </div>
               ))
             )}
-          </CardContent>
+          </div>
         </Card>
 
         <Card>
-          <CardHeader className="flex items-center justify-between">
+          <div className="flex items-center justify-between">
             <div>
-              <CardTitle className="text-base">Histórico recente</CardTitle>
+              <h3 className="text-base">Histórico recente</h3>
               <p className="text-xs text-muted-foreground">
                 {historicoRecente.length} sessão(ões) realizadas
               </p>
             </div>
             <ClipboardList className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
+          </div>
+          <div>
             {historicoRecente.length === 0 ? (
               <p className="text-sm text-muted-foreground">
                 Nenhuma sessão finalizada para mostrar o histórico.
@@ -455,7 +451,7 @@ const TelaEvolucaoPaciente = () => {
                       </p>
                       <p className="text-xs text-muted-foreground">Score clínico não registrado</p>
                     </div>
-                    <Badge variant={badgeVariants[sessao.status] ?? 'outline'}>
+                    <Badge variant={badgeVariants[sessao.status] ?? 'neutral'}>
                       {statusLabel[sessao.status] ?? sessao.status}
                     </Badge>
                   </div>
@@ -468,7 +464,7 @@ const TelaEvolucaoPaciente = () => {
                 </div>
               ))
             )}
-          </CardContent>
+          </div>
         </Card>
       </div>
     </div>
@@ -476,3 +472,6 @@ const TelaEvolucaoPaciente = () => {
 };
 
 export default TelaEvolucaoPaciente;
+
+
+

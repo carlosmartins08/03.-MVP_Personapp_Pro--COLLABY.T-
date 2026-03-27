@@ -1,7 +1,6 @@
 
 import React from 'react';
-import PageHeader from '@/components/ui/PageHeader';
-import { Card, CardContent } from '@/components/ui/card';
+import { Card, PageHeader } from '@/design-system/components';
 import { CalendarCheck } from 'lucide-react';
 
 const TelaSessoesPaciente = () => {
@@ -14,7 +13,7 @@ const TelaSessoesPaciente = () => {
       
       <div className="space-y-6 px-4">
         <Card>
-          <CardContent className="pt-6">
+          <div className="pt-6">
             <div className="flex flex-col items-center justify-center py-10 text-center">
               <CalendarCheck className="h-16 w-16 text-muted-foreground mb-4" />
               <h3 className="text-lg font-medium mb-2">Histórico de sessões</h3>
@@ -22,7 +21,7 @@ const TelaSessoesPaciente = () => {
                 Aqui você poderá visualizar suas sessões passadas e agendamentos futuros com seu terapeuta.
               </p>
             </div>
-          </CardContent>
+          </div>
         </Card>
       </div>
     </div>

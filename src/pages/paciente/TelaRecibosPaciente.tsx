@@ -1,7 +1,6 @@
 
 import React from 'react';
-import PageHeader from '@/components/ui/PageHeader';
-import { Card, CardContent } from '@/components/ui/card';
+import { Card, PageHeader } from '@/design-system/components';
 import { FileText } from 'lucide-react';
 
 const TelaRecibosPaciente = () => {
@@ -14,7 +13,7 @@ const TelaRecibosPaciente = () => {
       
       <div className="space-y-6 px-4">
         <Card>
-          <CardContent className="pt-6">
+          <div className="pt-6">
             <div className="flex flex-col items-center justify-center py-10 text-center">
               <FileText className="h-16 w-16 text-muted-foreground mb-4" />
               <h3 className="text-lg font-medium mb-2">Documentos financeiros</h3>
@@ -22,7 +21,7 @@ const TelaRecibosPaciente = () => {
                 Acesse seus recibos e comprovantes de pagamento para fins de declaração de imposto de renda ou reembolso de plano de saúde.
               </p>
             </div>
-          </CardContent>
+          </div>
         </Card>
       </div>
     </div>

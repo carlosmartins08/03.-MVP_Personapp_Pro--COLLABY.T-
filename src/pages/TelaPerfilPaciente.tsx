@@ -1,10 +1,18 @@
 import React, { useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Avatar, Badge, Button, Card } from '@/design-system/components';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import PageHeader from '@/components/ui/PageHeader';
-import EmptyState from '@/components/ui/EmptyState';
+import {
+  Avatar,
+  Badge,
+  Button,
+  Card,
+  EmptyState,
+  PageHeader,
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from '@/design-system/components';
 import { 
   ArrowLeft, 
   Calendar, 
@@ -126,8 +134,11 @@ const TelaPerfilPaciente = () => {
         title="Paciente nÃƒÂ£o encontrado"
         description="O paciente que vocÃƒÂª estÃƒÂ¡ procurando nÃƒÂ£o existe ou foi removido."
         icon={<User size={48} />}
-        actionLabel="Voltar para Pacientes"
-        onAction={() => navigate('/pacientes')}
+        action={
+          <Button variant="secondary" size="sm" onClick={() => navigate('/pacientes')}>
+            Voltar para Pacientes
+          </Button>
+        }
       />
     );
   }
@@ -147,7 +158,7 @@ const TelaPerfilPaciente = () => {
       <PageHeader
         title={paciente.nome}
         subtitle={`Paciente desde ${dataCadastro}`}
-        rightContent={
+        action={
           <div className="flex gap-2">
             <ExportAlertasButton
               pacienteId={paciente.id}

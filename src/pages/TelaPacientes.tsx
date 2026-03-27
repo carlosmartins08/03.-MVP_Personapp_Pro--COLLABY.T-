@@ -1,10 +1,7 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
-import { Button } from '@/components/ui/button';
-import { Badge, Card, Input, Avatar } from '@/design-system/components';
-import PageHeader from '@/components/ui/PageHeader';
-import EmptyState from '@/components/ui/EmptyState';
+import { Avatar, Badge, Button, Card, EmptyState, Input, PageHeader } from '@/design-system/components';
 import { Plus, Search, Users } from 'lucide-react';
 import { usePatientSearch } from '@/hooks/usePatientSearch';
 import PatientStatusFilter from '@/components/patients/PatientStatusFilter';
@@ -66,7 +63,7 @@ const TelaPacientes = () => {
       <PageHeader
         title="Pacientes"
         subtitle="Gerencie seus pacientes"
-        rightContent={
+        action={
           <Button 
             onClick={() => navigate('/pacientes/cadastro')}
             className="persona-button"
@@ -149,9 +146,12 @@ const TelaPacientes = () => {
                 ? "Tente ajustar os filtros de busca."
                 : "Cadastre seu primeiro paciente para começar."
             }
-            actionLabel={!searchTerm && statusFilter === 'todos' ? "Cadastrar Paciente" : undefined}
-            onAction={
-              !searchTerm && statusFilter === 'todos' ? () => navigate("/pacientes/cadastro") : undefined
+            action={
+              !searchTerm && statusFilter === 'todos' ? (
+                <Button variant="secondary" size="sm" onClick={() => navigate("/pacientes/cadastro")}>
+                  Cadastrar Paciente
+                </Button>
+              ) : undefined
             }
           />
         )}

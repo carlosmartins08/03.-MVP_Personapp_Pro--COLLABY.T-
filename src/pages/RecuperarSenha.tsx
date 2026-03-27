@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
+import { Button, Input } from '@/design-system/components';
 import { useAuth } from '@/hooks/useAuth';
 
 const RecuperarSenha = () => {
@@ -45,7 +44,7 @@ const RecuperarSenha = () => {
 
           <div className="mt-4 text-center">
             <Button
-              variant="link"
+              variant="ghost"
               type="button"
               onClick={() => navigate('/login')}
               className="text-sm text-violet-600"

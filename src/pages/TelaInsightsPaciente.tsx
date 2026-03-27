@@ -2,10 +2,8 @@
 import React from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button, Card, PageHeader } from '@/design-system/components';
 import { ArrowLeft, Brain, CheckCircle2, Clock, DollarSign, Users, X } from 'lucide-react';
-import PageHeader from '@/components/ui/PageHeader';
 import { ChartContainer, ChartTooltip } from "@/components/ui/chart";
 import { Area, AreaChart, Pie, PieChart, Cell } from 'recharts';
 import { api } from '@/lib/api';
@@ -52,9 +50,9 @@ const TelaInsightsPaciente = () => {
         <PageHeader
           title="Paciente não encontrado"
           subtitle="O paciente que você está procurando não existe ou foi removido."
-          rightContent={
+          action={
             <Button 
-              variant="outline" 
+              variant="secondary" 
               size="sm"
               onClick={() => navigate('/pacientes')}
             >
@@ -127,9 +125,9 @@ const TelaInsightsPaciente = () => {
       <PageHeader
         title={`Insights - ${paciente.nome}`}
         subtitle="Análise detalhada do histórico do paciente"
-        rightContent={
+        action={
           <Button 
-            variant="outline" 
+            variant="secondary" 
             size="sm"
             onClick={() => navigate(`/pacientes/${id}`)}
           >
@@ -141,13 +139,13 @@ const TelaInsightsPaciente = () => {
       <div className="grid gap-6 p-4">
         {/* Bloco de Sessões */}
         <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center text-lg">
+          <div>
+            <h3 className="flex items-center text-lg">
               <Users size={18} className="mr-2 text-lavanda" />
               Histórico de Sessões
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
+            </h3>
+          </div>
+          <div>
             <div className="grid sm:grid-cols-3 gap-4 mb-6">
               <div className="text-center">
                 <div className="text-2xl font-bold">{sessoesRealizadas.length}</div>
@@ -188,18 +186,18 @@ const TelaInsightsPaciente = () => {
                 </AreaChart>
               </ChartContainer>
             </div>
-          </CardContent>
+          </div>
         </Card>
 
         {/* Bloco de Faltas */}
         <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center text-lg">
+          <div>
+            <h3 className="flex items-center text-lg">
               <X size={18} className="mr-2 text-destructive" />
               Análise de Faltas
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
+            </h3>
+          </div>
+          <div>
             <div className="grid sm:grid-cols-3 gap-4 mb-6">
               <div className="text-center">
                 <div className="text-2xl font-bold">{faltas.length}</div>
@@ -237,18 +235,18 @@ const TelaInsightsPaciente = () => {
                 <ChartTooltip />
               </PieChart>
             </div>
-          </CardContent>
+          </div>
         </Card>
 
         {/* Bloco Financeiro */}
         <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center text-lg">
+          <div>
+            <h3 className="flex items-center text-lg">
               <DollarSign size={18} className="mr-2 text-menta-dark" />
               Resumo Financeiro
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
+            </h3>
+          </div>
+          <div>
             <div className="grid sm:grid-cols-3 gap-4 mb-6">
               <div className="text-center">
                 <div className="text-2xl font-bold">
@@ -303,18 +301,18 @@ const TelaInsightsPaciente = () => {
                 </div>
               ))}
             </div>
-          </CardContent>
+          </div>
         </Card>
 
         {/* Bloco de Intervalos */}
         <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center text-lg">
+          <div>
+            <h3 className="flex items-center text-lg">
               <Clock size={18} className="mr-2 text-lavanda" />
               Intervalos de Atendimento
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
+            </h3>
+          </div>
+          <div>
             <div className="grid sm:grid-cols-3 gap-4">
               <div className="text-center">
                 <div className="text-2xl font-bold">{mediaIntervalos}</div>
@@ -331,7 +329,7 @@ const TelaInsightsPaciente = () => {
                 <div className="text-sm text-muted-foreground">Última Sessão</div>
               </div>
             </div>
-          </CardContent>
+          </div>
         </Card>
       </div>
     </div>
@@ -339,3 +337,5 @@ const TelaInsightsPaciente = () => {
 };
 
 export default TelaInsightsPaciente;
+
+

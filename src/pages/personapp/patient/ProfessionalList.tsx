@@ -83,7 +83,7 @@ const ProfessionalListPage = () => {
   }, [query, selectedApproach])
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-4 max-w-md mx-auto px-4">
       <div className="-mx-4">
         <AppHeader
           variant="minimal"
@@ -99,7 +99,7 @@ const ProfessionalListPage = () => {
             value={query}
             onChange={(event) => setQuery(event.target.value)}
             placeholder="Buscar por nome ou CRP"
-            className="pl-9"
+            className="w-full pl-9"
           />
         </div>
 
@@ -148,7 +148,7 @@ const ProfessionalListPage = () => {
           const topApproaches = professionalApproaches.slice(0, 3)
 
           return (
-            <Card key={professional.id} variant="default" className="p-4">
+            <Card key={professional.id} variant="default" className="w-full p-4">
               <div className="flex gap-3">
                 <Avatar size="md" initials={getInitials(professional.nome)} />
                 <div className="flex flex-1 flex-col">
@@ -194,10 +194,12 @@ const ProfessionalListPage = () => {
                   </div>
 
                   <div className="mt-4 flex flex-wrap gap-2">
-                    <Button variant="ghost" size="sm">
+                    <Button variant="ghost" size="sm" className="w-full sm:w-auto">
                       Ver perfil
                     </Button>
-                    <Button size="sm">Agendar</Button>
+                    <Button size="sm" className="w-full sm:w-auto">
+                      Agendar
+                    </Button>
                   </div>
                 </div>
               </div>

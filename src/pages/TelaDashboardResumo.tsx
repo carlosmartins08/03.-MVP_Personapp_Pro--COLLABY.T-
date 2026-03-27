@@ -1,6 +1,5 @@
 import React from 'react';
-import PageHeader from '@/components/ui/PageHeader';
-import { AppHeader } from '@/design-system/components';
+import { AppHeader, PageHeader } from '@/design-system/components';
 import SessionsOverview from '@/components/dashboard/SessionsOverview';
 import FinancialOverview from '@/components/dashboard/FinancialOverview';
 import ClinicalAlerts from '@/components/dashboard/ClinicalAlerts';

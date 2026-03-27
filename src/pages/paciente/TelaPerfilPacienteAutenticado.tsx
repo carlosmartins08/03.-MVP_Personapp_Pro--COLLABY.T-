@@ -1,6 +1,6 @@
 
 import React from 'react';
-import PageHeader from '@/components/ui/PageHeader';
+import { PageHeader } from '@/design-system/components';
 
 const TelaPerfilPacienteAutenticado = () => {
   return (

@@ -1,6 +1,6 @@
 
 import React from 'react';
-import PageHeader from '@/components/ui/PageHeader';
+import { PageHeader } from '@/design-system/components';
 import { AlertasClinicosLista } from '@/components/alertas/AlertasClinicosLista';
 import ExportAlertasButton from '@/components/alertas/ExportAlertasButton';
 
@@ -10,7 +10,7 @@ const TelaAlertasClinicos = () => {
       <PageHeader
         title="Alertas Clínicos"
         subtitle="Acompanhe indicadores importantes dos seus pacientes"
-        rightContent={
+        action={
           <ExportAlertasButton 
             profissionalNome="Dr. Profissional"
             isFromCentral={true}

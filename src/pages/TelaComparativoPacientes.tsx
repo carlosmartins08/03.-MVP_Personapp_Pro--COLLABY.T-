@@ -1,11 +1,7 @@
 
 import React, { useState } from 'react';
-import { Card } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
+import { Badge, Button, Card, Input, PageHeader } from '@/design-system/components';
 import { Search, X } from 'lucide-react';
-import PageHeader from '@/components/ui/PageHeader';
 import { pacientesMock, sessoesMock } from '@/data/mockData';
 import PatientComparison from '@/components/patients/PatientComparison';
 
@@ -90,7 +86,7 @@ const TelaComparativoPacientes = () => {
                 return (
                   <Badge
                     key={patient.id}
-                    variant="secondary"
+                    variant="neutral"
                     style={{ backgroundColor: `${COLORS[index]}20` }}
                     className="py-2"
                   >

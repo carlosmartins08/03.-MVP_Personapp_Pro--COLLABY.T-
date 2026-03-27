@@ -1,7 +1,6 @@
 
 import React from 'react';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import PageHeader from '@/components/ui/PageHeader';
+import { PageHeader, Tabs, TabsContent, TabsList, TabsTrigger } from '@/design-system/components';
 import AccountInfoTab from '@/components/config/AccountInfoTab';
 import SecurityTab from '@/components/config/SecurityTab';
 import PreferencesTab from '@/components/config/PreferencesTab';

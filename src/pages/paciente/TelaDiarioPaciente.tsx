@@ -3,10 +3,8 @@ import { useQuery } from '@tanstack/react-query';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { BookOpen, Plus } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
+import { Button, Card, Skeleton } from '@/design-system/components';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { Skeleton } from '@/components/ui/skeleton';
 import { useAuthContext } from '@/contexts/AuthContext';
 import { api } from '@/lib/api';
 
@@ -62,7 +60,7 @@ const TelaDiarioPaciente = () => {
           ) : registros?.length ? (
             registros.map((registro) => (
               <Card key={registro.id}>
-                <CardContent className="p-4">
+                <div className="p-4">
                   <div className="flex items-start gap-3">
                     <BookOpen className="h-5 w-5 text-muted-foreground mt-1" />
                     <div>
@@ -74,7 +72,7 @@ const TelaDiarioPaciente = () => {
                       <p className="mt-2">{registro.texto}</p>
                     </div>
                   </div>
-                </CardContent>
+                </div>
               </Card>
             ))
           ) : (
@@ -90,3 +88,4 @@ const TelaDiarioPaciente = () => {
 };
 
 export default TelaDiarioPaciente;
+

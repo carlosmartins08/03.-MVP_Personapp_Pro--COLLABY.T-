@@ -32,7 +32,7 @@ async function seedCredentials() {
     },
   });
 
-  await prisma.profissional.upsert({
+  const profissional = await prisma.profissional.upsert({
     where: { userId: professionalUser.id },
     update: {
       nome: "Dr. Marina Pessoa",
@@ -85,7 +85,7 @@ async function seedCredentials() {
   });
 
   return {
-    professionalId: professionalUser.id,
+    professionalId: profissional.id,
     patientUserId: patientUser.id,
   };
 }
@@ -97,6 +97,7 @@ async function seedOperationalData({
   professionalId: string;
   patientUserId: string;
 }) {
+  const profissionalId = professionalId;
   const paciente = await prisma.paciente.findFirst({
     where: { userId: patientUserId },
     select: { id: true },

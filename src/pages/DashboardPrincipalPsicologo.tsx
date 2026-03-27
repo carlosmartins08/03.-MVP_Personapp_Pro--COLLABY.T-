@@ -1,7 +1,5 @@
 import React from 'react';
-import { AppHeader, Card } from '@/design-system/components';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import PageHeader from '@/components/ui/PageHeader';
+import { AppHeader, Card, PageHeader, Tabs, TabsContent, TabsList, TabsTrigger } from '@/design-system/components';
 import { IndicadoresGerais } from '@/components/dashboard/IndicadoresGerais';
 import { GraficosSentimentosEvolucao } from '@/components/dashboard/GraficosSentimentosEvolucao';
 import { ListaPacientesRisco } from '@/components/dashboard/ListaPacientesRisco';

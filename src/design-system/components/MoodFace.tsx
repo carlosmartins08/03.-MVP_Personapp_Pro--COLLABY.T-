@@ -2,6 +2,7 @@ import * as React from "react"
 
 import { cn } from "@/lib/utils"
 import type { MoodLabel, MoodLevel } from "../types"
+import { colors } from "../tokens"
 
 type MoodConfig = {
   label: MoodLabel
@@ -16,37 +17,37 @@ const moodConfig: Record<MoodLevel, MoodConfig> = {
   1: {
     label: "Muito mal",
     background: "#2D1A1A",
-    face: "#FEEEED",
-    accent: "#D9534F",
+    face: colors.semantic.errorBg,
+    accent: colors.semantic.error,
     mouthPath: "M48 98 Q70 88 92 98",
   },
   2: {
     label: "Ansioso",
     background: "#2D2610",
-    face: "#FFF8E6",
-    accent: "#F0A500",
+    face: colors.semantic.warningBg,
+    accent: colors.semantic.warning,
     mouthPath: "M50 93 Q70 89 90 93",
   },
   3: {
     label: "Neutro",
     background: "#222230",
-    face: "#EAEDF2",
-    accent: "#333333",
+    face: colors.neutral[100],
+    accent: colors.neutral[400],
     mouthPath: "M52 90 Q70 90 88 90",
   },
   4: {
     label: "Bem",
     background: "#1A2D1E",
-    face: "#EBF8F0",
-    accent: "#5CB85C",
+    face: colors.semantic.successBg,
+    accent: colors.semantic.success,
     mouthPath: "M48 88 Q70 102 92 88",
     cheeks: true,
   },
   5: {
     label: "Otimo!",
     background: "#1A1D2D",
-    face: "#EAF1FB",
-    accent: "#3055A4",
+    face: colors.primary[50],
+    accent: colors.primary[400],
     mouthPath: "M44 86 Q70 108 96 86",
     cheeks: true,
   },

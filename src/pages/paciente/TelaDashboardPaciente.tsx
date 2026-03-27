@@ -1,6 +1,5 @@
 import React from 'react';
-import PageHeader from '@/components/ui/PageHeader';
-import { AppHeader } from '@/design-system/components';
+import { AppHeader, PageHeader } from '@/design-system/components';
 import { useLocalizacao } from '@/contexts/LocalizacaoContext';
 import WelcomeMessage from '@/components/paciente/WelcomeMessage';
 import RecentDataSummary from '@/components/paciente/RecentDataSummary';

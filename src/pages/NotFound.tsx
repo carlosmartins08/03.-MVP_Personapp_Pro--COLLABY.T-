@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { Button } from '@/components/ui/button';
+import { Button } from '@/design-system/components';
 import { ArrowLeft, Home } from 'lucide-react';
 
 const NotFound = () => {
@@ -19,7 +19,7 @@ const NotFound = () => {
         <div className="flex flex-col sm:flex-row gap-3 justify-center">
           <Button 
             onClick={() => navigate(-1)}
-            variant="outline"
+            variant="secondary"
             className="flex items-center"
           >
             <ArrowLeft size={16} className="mr-2" />

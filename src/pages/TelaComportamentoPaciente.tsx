@@ -3,10 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { ArrowLeft, Search, AlertTriangle } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 import { useToast } from '@/hooks/use-toast';
-import PageHeader from '@/components/ui/PageHeader';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
+import { Button, Card, Input, PageHeader } from '@/design-system/components';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { usePacienteComportamento } from '@/hooks/usePacienteComportamento';
 import { buildTemaAnaliseFromDiarios } from '@/utils/tema-analise';
@@ -70,9 +67,9 @@ const TelaComportamentoPaciente = () => {
       <PageHeader
         title="Comportamento do Paciente"
         subtitle="Analise detalhada do comportamento e progresso emocional"
-        rightContent={
+        action={
           pacienteId && (
-            <Button variant="outline" onClick={() => navigate(`/profissional/paciente/${pacienteId}`)}>
+            <Button variant="secondary" onClick={() => navigate(`/profissional/paciente/${pacienteId}`)}>
               Ver perfil completo
             </Button>
           )
@@ -120,13 +117,13 @@ const TelaComportamentoPaciente = () => {
 
         {!pacienteId ? (
           <Card>
-            <CardContent className="flex flex-col items-center justify-center py-10 text-center">
+            <div className="flex flex-col items-center justify-center py-10 text-center">
               <AlertTriangle className="h-16 w-16 text-muted-foreground mb-4" />
               <h3 className="text-lg font-medium mb-2">Selecione um paciente</h3>
               <p className="text-muted-foreground mb-6 max-w-md">
                 Selecione um paciente para visualizar seu comportamento e progresso emocional.
               </p>
-            </CardContent>
+            </div>
           </Card>
         ) : (
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
@@ -160,3 +157,4 @@ const TelaComportamentoPaciente = () => {
 };
 
 export default TelaComportamentoPaciente;
+

@@ -39,9 +39,9 @@ const DashboardPage = () => {
   } = useProfessionalDashboard()
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col gap-6 max-w-md mx-auto px-4">
       <div className="-mx-4">
-        <AppHeader variant="professional" name="Profissional">
+        <AppHeader variant="professional" name="Rafael Souza" notificationCount={2}>
           <div className="grid gap-3 px-4 pb-2 md:grid-cols-3">
             {isLoadingMetrics ? (
               Array.from({ length: 3 }).map((_, index) => (
@@ -51,19 +51,19 @@ const DashboardPage = () => {
               <>
                 <Card variant="default" className="p-4">
                   <p className="text-xs text-gray-500">Total pacientes</p>
-                  <p className="mt-2 text-2xl font-semibold text-gray-900">
+                  <p className="mt-2 text-2xl sm:text-3xl font-semibold text-gray-900">
                     {metrics.totalPatients}
                   </p>
                 </Card>
                 <Card variant="default" className="p-4">
                   <p className="text-xs text-gray-500">Sessoes esta semana</p>
-                  <p className="mt-2 text-2xl font-semibold text-gray-900">
+                  <p className="mt-2 text-2xl sm:text-3xl font-semibold text-gray-900">
                     {metrics.sessionsThisWeek}
                   </p>
                 </Card>
                 <Card variant="default" className="p-4">
                   <p className="text-xs text-gray-500">Sessoes hoje</p>
-                  <p className="mt-2 text-2xl font-semibold text-gray-900">
+                  <p className="mt-2 text-2xl sm:text-3xl font-semibold text-gray-900">
                     {metrics.sessionsToday}
                   </p>
                 </Card>

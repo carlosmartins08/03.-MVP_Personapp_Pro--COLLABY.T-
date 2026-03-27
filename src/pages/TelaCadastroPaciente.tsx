@@ -1,10 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Button, Card, Input } from '@/design-system/components';
-import { Textarea } from '@/components/ui/textarea';
+import { Button, Card, Input, Label, PageHeader, Textarea } from '@/design-system/components';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Label } from '@/components/ui/label';
-import PageHeader from '@/components/ui/PageHeader';
 import { toast } from '@/components/ui/use-toast';
 import { ArrowLeft, Save } from 'lucide-react';
 
@@ -52,7 +49,7 @@ const TelaCadastroPaciente = () => {
       <PageHeader
         title="Cadastrar Paciente"
         subtitle="Adicione um novo paciente ao sistema"
-        rightContent={
+        action={
           <Button 
             variant="secondary" 
             size="sm"

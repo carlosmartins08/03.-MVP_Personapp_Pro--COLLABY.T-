@@ -1,8 +1,7 @@
 
 import React from 'react';
 import { Plus } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import PageHeader from '@/components/ui/PageHeader';
+import { PageHeader } from '@/design-system/components';
 import { RecibosForm } from '@/components/recibos/RecibosForm';
 import { RecibosTable } from '@/components/recibos/RecibosTable';
 import { RecibosFilter } from '@/components/recibos/RecibosFilter';

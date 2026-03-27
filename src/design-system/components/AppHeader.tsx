@@ -72,7 +72,7 @@ const AppHeader = ({
       <div className="relative z-10 flex items-center justify-between">
         <div>
           <p className={cn("text-base font-semibold", isPatient ? "text-white" : "text-gray-900")}>
-            {isPatient ? `Ola, ${name ?? ""}` : `Dr/Dra. ${name ?? ""}`}
+            {isPatient ? `Ola, ${name ?? ""} 👋` : `Dr/Dra. ${name ?? ""}`}
           </p>
           <p className={cn("text-sm capitalize", isPatient ? "text-white/80" : "text-gray-500")}>
             {dateLabel}

@@ -1,11 +1,18 @@
 import React, { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { Link, useNavigate } from 'react-router-dom';
-import { Button } from '@/components/ui/button';
-import { Badge, Card, Input } from '@/design-system/components';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import PageHeader from '@/components/ui/PageHeader';
-import EmptyState from '@/components/ui/EmptyState';
+import {
+  Badge,
+  Button,
+  Card,
+  EmptyState,
+  Input,
+  PageHeader,
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from '@/design-system/components';
 import { Plus, Search, Calendar, Clock } from 'lucide-react';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
@@ -150,7 +157,7 @@ const TelaSessoes = () => {
       <PageHeader
         title="Sessões"
         subtitle="Gerencie as sessões dos pacientes"
-        rightContent={
+        action={
           <Button 
             onClick={() => navigate('/sessoes/cadastro')}
             className="persona-button"
@@ -203,9 +210,12 @@ const TelaSessoes = () => {
                     ? "Tente buscar com outros termos."
                     : "Agende sua primeira sessão para começar."
                 }
-                actionLabel={!searchTerm ? "Agendar Sessão" : undefined}
-                onAction={
-                  !searchTerm ? () => navigate("/sessoes/cadastro") : undefined
+                action={
+                  !searchTerm ? (
+                    <Button variant="secondary" size="sm" onClick={() => navigate("/sessoes/cadastro")}>
+                      Agendar Sessão
+                    </Button>
+                  ) : undefined
                 }
               />
             )}
@@ -251,4 +261,5 @@ const TelaSessoes = () => {
 };
 
 export default TelaSessoes;
+
 

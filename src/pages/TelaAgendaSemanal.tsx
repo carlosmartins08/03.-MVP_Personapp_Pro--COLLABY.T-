@@ -7,9 +7,8 @@ import { Calendar, PlusCircle, Filter } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { api } from '@/lib/api';
 
-import PageHeader from '@/components/ui/PageHeader';
 import WeeklyCalendarGrid from '@/components/agenda/WeeklyCalendarGrid';
-import { Button } from '@/components/ui/button';
+import { Button, PageHeader } from '@/design-system/components';
 import { 
   Sheet, 
   SheetContent, 
@@ -107,12 +106,12 @@ const TelaAgendaSemanal = () => {
       <PageHeader 
         title="Agenda Semanal"
         subtitle="Visualize e gerencie suas sessões da semana"
-        rightContent={
+        action={
           <div className="flex gap-2">
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button 
-                  variant="outline" 
+                  variant="secondary" 
                   size="sm"
                   className="flex items-center gap-1"
                 >

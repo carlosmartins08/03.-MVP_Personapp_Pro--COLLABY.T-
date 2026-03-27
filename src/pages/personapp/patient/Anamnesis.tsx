@@ -3,7 +3,7 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { useNavigate } from "react-router-dom"
 
-import { Button, Card, Input } from "@/design-system/components"
+import { AppHeader, Button, Card, Input } from "@/design-system/components"
 import { cn } from "@/lib/utils"
 import { anamnesisSchema, type AnamnesisFormValues } from "@/forms/anamnesisSchema"
 
@@ -155,46 +155,51 @@ const AnamnesisPage = () => {
 
   if (submitted) {
     return (
-      <div className="mx-auto flex w-full max-w-xl flex-col gap-4">
-        <Card variant="default" className="p-6">
-          <h1 className="text-lg font-semibold text-gray-900">Anamnese enviada</h1>
-          <p className="mt-2 text-sm text-gray-600">
-            Suas respostas foram salvas. Seu psicologo tera acesso em breve.
-          </p>
-          <div className="mt-4">
-            <Button onClick={() => navigate("/app/paciente/dashboard")}>Voltar</Button>
-          </div>
-        </Card>
-      </div>
+      <>
+        <AppHeader variant="minimal" />
+        <div className="mx-auto flex w-full max-w-xl flex-col gap-4">
+          <Card variant="default" className="p-6">
+            <h1 className="text-lg font-semibold text-gray-900">Anamnese enviada</h1>
+            <p className="mt-2 text-sm text-gray-600">
+              Suas respostas foram salvas. Seu psicologo tera acesso em breve.
+            </p>
+            <div className="mt-4">
+              <Button onClick={() => navigate("/app/paciente/dashboard")}>Voltar</Button>
+            </div>
+          </Card>
+        </div>
+      </>
     )
   }
 
   return (
-    <div className="mx-auto flex w-full max-w-2xl flex-col gap-4">
-      <div className="flex flex-col gap-3">
-        <div className="h-1 w-full rounded-full bg-gray-100">
-          <div
-            className="h-1 rounded-full bg-ds-primary transition-all duration-300"
-            style={{ width: progress }}
-          />
+    <>
+      <AppHeader variant="minimal" />
+      <div className="mx-auto flex w-full max-w-2xl flex-col gap-4">
+        <div className="flex flex-col gap-3">
+          <div className="h-1 w-full rounded-full bg-gray-100">
+            <div
+              className="h-1 rounded-full bg-ds-primary transition-all duration-300"
+              style={{ width: progress }}
+            />
+          </div>
+
+          <div className="flex items-center justify-between text-xs font-medium text-gray-500">
+            <span>Passo {step} de 4</span>
+            <span>~{currentStep.estimate}</span>
+          </div>
+
+          <div className="flex items-center justify-between">
+            <h1 className="text-lg font-semibold text-gray-900">{currentStep.title}</h1>
+            <span className="text-xs font-medium text-gray-500">
+              {saveStatus === "saving" ? "Salvando..." : "Auto-save ativo"}
+            </span>
+          </div>
         </div>
 
-        <div className="flex items-center justify-between text-xs font-medium text-gray-500">
-          <span>Passo {step} de 4</span>
-          <span>~{currentStep.estimate}</span>
-        </div>
-
-        <div className="flex items-center justify-between">
-          <h1 className="text-lg font-semibold text-gray-900">{currentStep.title}</h1>
-          <span className="text-xs font-medium text-gray-500">
-            {saveStatus === "saving" ? "Salvando..." : "Auto-save ativo"}
-          </span>
-        </div>
-      </div>
-
-      <Card variant="default" className="p-5">
-        {step === 1 && (
-          <div className="flex flex-col gap-4">
+        <Card variant="default" className="p-5">
+          {step === 1 && (
+            <div className="flex flex-col gap-4">
             <div className="flex flex-col gap-2">
               <label htmlFor="nome" className="text-sm font-medium text-gray-700">
                 Nome completo
@@ -372,8 +377,8 @@ const AnamnesisPage = () => {
           </div>
         )}
 
-        {step === 4 && (
-          <div className="flex flex-col gap-4">
+          {step === 4 && (
+            <div className="flex flex-col gap-4">
             <div className="flex flex-col gap-2">
               <p className="text-sm font-medium text-gray-700">Dias disponiveis</p>
               <div className="flex flex-wrap gap-2">
@@ -455,20 +460,21 @@ const AnamnesisPage = () => {
               )}
             </div>
           </div>
-        )}
-      </Card>
+          )}
+        </Card>
 
-      <div className="flex items-center justify-between">
-        <Button
-          variant="ghost"
-          onClick={() => setStep((prev) => Math.max(1, prev - 1))}
-          disabled={step === 1}
-        >
-          Anterior
-        </Button>
-        <Button onClick={handleNext}>{step === 4 ? "Concluir" : "Proximo"}</Button>
+        <div className="flex items-center justify-between">
+          <Button
+            variant="ghost"
+            onClick={() => setStep((prev) => Math.max(1, prev - 1))}
+            disabled={step === 1}
+          >
+            Anterior
+          </Button>
+          <Button onClick={handleNext}>{step === 4 ? "Concluir" : "Proximo"}</Button>
+        </div>
       </div>
-    </div>
+    </>
   )
 }
 

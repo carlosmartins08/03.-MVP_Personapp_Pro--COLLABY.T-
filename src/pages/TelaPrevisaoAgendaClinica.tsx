@@ -1,7 +1,6 @@
 
 import React from 'react';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import PageHeader from '@/components/ui/PageHeader';
+import { PageHeader, Tabs, TabsContent, TabsList, TabsTrigger } from '@/design-system/components';
 import { Calendar, FileText } from 'lucide-react';
 import { PeriodSelector } from '@/components/PeriodSelector';
 import { OcupacaoFuturaPanel } from '@/components/previsao-agenda/OcupacaoFuturaPanel';
@@ -27,7 +26,7 @@ const TelaPrevisaoAgendaClinica = () => {
       <PageHeader
         title="Previsão da Agenda"
         subtitle="Análise preditiva e insights sobre agendamentos futuros"
-        rightContent={
+        action={
           <div className="flex items-center gap-2">
             <PeriodSelector
               selectedOption={selectedPeriod}

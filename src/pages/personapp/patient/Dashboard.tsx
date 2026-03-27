@@ -1,7 +1,7 @@
 ﻿import React from "react"
 import { useNavigate } from "react-router-dom"
 
-import { Badge, Button, Card } from "@/design-system/components"
+import { AppHeader, Badge, Button, Card } from "@/design-system/components"
 import { moodMeta, useMoodCheckIn } from "@/hooks/personapp/useMoodCheckIn"
 
 const formatDate = (value: string) => {
@@ -24,7 +24,10 @@ const DashboardPage = () => {
   const dateLabel = entry?.createdAt ? formatDate(entry.createdAt) : ""
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-4 max-w-md mx-auto px-4">
+      <AppHeader variant="patient" name="Maria" date={new Date()} notificationCount={1}>
+        <p className="text-sm text-white/80">Como você está hoje?</p>
+      </AppHeader>
       <Card variant="default" className="p-5">
         <div className="flex items-start justify-between gap-4">
           <div>
