@@ -61,7 +61,7 @@ const ConsultationRoomPage = () => {
   }
 
   return (
-    <div className="flex flex-col gap-5">
+    <div className="flex flex-col gap-5 max-w-lg mx-auto px-4 pb-24">
       <div className="-mx-4">
         <AppHeader
           variant="minimal"
@@ -73,8 +73,8 @@ const ConsultationRoomPage = () => {
       <div className="flex flex-col gap-3">
         <div className="flex items-center justify-between">
           <div>
-            <p className="text-xs uppercase tracking-wide text-gray-500">Consulta #{id ?? "--"}</p>
-            <h1 className="text-lg font-semibold text-gray-900">Atendimento online</h1>
+            <p className="text-xs uppercase tracking-wide text-neutral-300">Consulta #{id ?? "--"}</p>
+            <h1 className="text-lg font-semibold text-neutral-500">Atendimento online</h1>
           </div>
           <Badge
             variant={
@@ -94,7 +94,7 @@ const ConsultationRoomPage = () => {
 
         {roomState === "waiting" && (
           <Card variant="default" className="p-5">
-            <p className="text-sm text-gray-600">Aguardando paciente entrar na sala.</p>
+            <p className="text-sm text-neutral-400">Aguardando paciente entrar na sala.</p>
             <div className="mt-4 flex flex-wrap gap-2">
               <Button onClick={handleStart}>Iniciar chamada</Button>
               <Button variant="ghost" onClick={() => setRoomState("ended")}>Cancelar</Button>
@@ -104,7 +104,7 @@ const ConsultationRoomPage = () => {
 
         {roomState === "active" && (
           <div className="flex flex-col gap-4">
-            <Card variant="default" className="relative h-[360px] overflow-hidden bg-gray-900 text-white">
+            <Card variant="default" className="relative h-[360px] overflow-hidden bg-ds-surface-dark text-white">
               <div ref={containerRef} className="absolute inset-0" />
               {!isConnected && (
                 <div className="absolute inset-0 flex flex-col items-center justify-center gap-2">
@@ -148,7 +148,7 @@ const ConsultationRoomPage = () => {
 
         {roomState === "ending" && (
           <Card variant="default" className="p-5">
-            <p className="text-sm text-gray-600">Encerrando atendimento...</p>
+            <p className="text-sm text-neutral-400">Encerrando atendimento...</p>
             <div className="mt-4 flex gap-2">
               <Button onClick={() => setRoomState("ended")}>Finalizar agora</Button>
               <Button variant="ghost" onClick={() => setRoomState("active")}>Voltar</Button>
@@ -158,7 +158,7 @@ const ConsultationRoomPage = () => {
 
         {roomState === "ended" && (
           <Card variant="default" className="p-5">
-            <p className="text-sm text-gray-600">
+            <p className="text-sm text-neutral-400">
               Consulta encerrada. O registro ficara disponivel no prontuario.
             </p>
             <div className="mt-4 flex gap-2">
@@ -169,10 +169,10 @@ const ConsultationRoomPage = () => {
       </div>
 
       <Card variant="default" className="p-4">
-        <p className="text-xs text-gray-500">Sala</p>
-        <p className="text-sm text-gray-700">{roomUrl ?? "Criando sala..."}</p>
-        <p className="mt-2 text-xs text-gray-500">Token</p>
-        <p className="text-sm text-gray-700 break-all">{token ?? "Gerando token..."}</p>
+        <p className="text-xs text-neutral-300">Sala</p>
+        <p className="text-sm text-neutral-400">{roomUrl ?? "Criando sala..."}</p>
+        <p className="mt-2 text-xs text-neutral-300">Token</p>
+        <p className="text-sm text-neutral-400 break-all">{token ?? "Gerando token..."}</p>
       </Card>
     </div>
   )

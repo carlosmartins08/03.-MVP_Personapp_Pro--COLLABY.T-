@@ -44,6 +44,10 @@ export async function sessoesRoutes(app: FastifyInstance) {
         },
       },
       orderBy: { data: order ?? "desc" },
+      include: {
+        profissional: { select: { id: true, nome: true, crp: true } },
+        paciente: { select: { id: true, nome: true } },
+      },
     });
     return reply.send(sessoes);
   });

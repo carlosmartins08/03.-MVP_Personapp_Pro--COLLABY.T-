@@ -32,7 +32,7 @@ const BottomNav = ({ tabs }: BottomNavProps) => {
   }
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 h-16 border-t border-gray-200 bg-white">
+    <nav className="fixed bottom-0 left-0 right-0 h-16 border-t border-neutral-100 bg-white">
       <div className="flex h-full items-center justify-around">
         {tabs.map((tab) => {
           const active = isActive(tab.path)
@@ -44,7 +44,7 @@ const BottomNav = ({ tabs }: BottomNavProps) => {
               aria-current={active ? "page" : undefined}
               className={cn(
                 "flex h-full flex-1 flex-col items-center justify-center gap-1",
-                active ? "text-ds-primary" : "text-gray-500"
+                active ? "text-ds-primary" : "text-neutral-300"
               )}
             >
               {renderIcon(tab.icon, active)}

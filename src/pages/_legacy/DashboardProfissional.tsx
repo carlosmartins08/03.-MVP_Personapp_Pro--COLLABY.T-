@@ -34,7 +34,7 @@ interface DashboardProfissionalProps {
 }
 
 const DashboardProfissional = ({ allowLegacyHeader = false }: DashboardProfissionalProps) => {
-  const { idioma, getTexto } = useLocalizacao();
+  const { idioma } = useLocalizacao();
   const locale = idioma === 'en' ? enUS : ptBR;
 
   const { data, isLoading } = useQuery({
@@ -67,17 +67,34 @@ const DashboardProfissional = ({ allowLegacyHeader = false }: DashboardProfissio
     }
   };
 
+  const formatStatus = (status?: string | null) => {
+    switch (status) {
+      case 'realizada':
+        return 'Realizada';
+      case 'agendada':
+        return 'Agendada';
+      case 'cancelada':
+        return 'Cancelada';
+      case 'confirmada':
+        return 'Confirmada';
+      case 'faltou':
+        return 'Faltou';
+      default:
+        return status ?? '-';
+    }
+  };
+
   return (
     <div className="p-6 space-y-6 max-w-5xl mx-auto">
       {allowLegacyHeader ? (
-        <h1 className="text-2xl font-bold">{getTexto('bem_vindo') || 'Bem-vindo'}!</h1>
+        <h1 className="text-2xl font-bold">Bem-vindo!</h1>
       ) : (
         <AppHeader variant="professional" name="Profissional" />
       )}
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         <Card variant="default" className="p-6">
-          <h3 className="text-lg font-semibold mb-4">{getTexto('diarios_recentes') || 'Ultimos Diarios'}</h3>
+          <h3 className="text-lg font-semibold mb-4">Últimos diários</h3>
           <div className="space-y-4">
             {isLoading ? (
               Array(3)
@@ -90,11 +107,11 @@ const DashboardProfissional = ({ allowLegacyHeader = false }: DashboardProfissio
                   </div>
                 ))
             ) : data?.diarios?.length === 0 ? (
-              <p className="text-muted-foreground">{getTexto('sem_diarios') || 'Nenhum diario disponivel.'}</p>
+              <p className="text-muted-foreground">Nenhum diário disponível.</p>
             ) : (
               data?.diarios?.map((diario) => (
                 <div key={diario.id} className="border-b pb-3 last:border-b-0 last:pb-0">
-                  <p className="font-medium">{diario.sentimento || getTexto('sem_sentimento') || 'Sem sentimento'}</p>
+                  <p className="font-medium">{diario.sentimento || 'Sem sentimento'}</p>
                   <p className="text-sm">{diario.texto}</p>
                   <p className="text-xs text-muted-foreground mt-1">{formatDate(diario.dataRegistro)}</p>
                 </div>
@@ -104,7 +121,7 @@ const DashboardProfissional = ({ allowLegacyHeader = false }: DashboardProfissio
         </Card>
 
         <Card variant="default" className="p-6">
-          <h3 className="text-lg font-semibold mb-4">{getTexto('proximas_sessoes') || 'Proximas Sessoes'}</h3>
+          <h3 className="text-lg font-semibold mb-4">Próximas sessões</h3>
           <div className="space-y-4">
             {isLoading ? (
               Array(3)
@@ -117,13 +134,13 @@ const DashboardProfissional = ({ allowLegacyHeader = false }: DashboardProfissio
                 ))
             ) : data?.sessoes?.length === 0 ? (
               <p className="text-muted-foreground">
-                {getTexto('sem_sessoes') || 'Nenhuma sessao agendada.'}
+                Nenhuma sessão agendada.
               </p>
             ) : (
               data?.sessoes?.map((sessao) => (
                 <div key={sessao.id} className="border-b pb-3 last:border-b-0 last:pb-0">
                   <p className="font-medium">
-                    {getTexto('status') || 'Status'}: <span className="capitalize">{sessao.status}</span>
+                    Status: <span className="capitalize">{formatStatus(sessao.status)}</span>
                   </p>
                   <p className="text-sm text-muted-foreground">{formatDateTime(sessao.data)}</p>
                 </div>
@@ -133,7 +150,7 @@ const DashboardProfissional = ({ allowLegacyHeader = false }: DashboardProfissio
         </Card>
 
         <Card variant="default" className="p-6 md:col-span-2 lg:col-span-1">
-          <h3 className="text-lg font-semibold mb-4">{getTexto('alertas_clinicos') || 'Alertas Clinicos'}</h3>
+          <h3 className="text-lg font-semibold mb-4">Alertas clínicos</h3>
           <div className="space-y-4">
             {isLoading ? (
               Array(3)
@@ -146,7 +163,7 @@ const DashboardProfissional = ({ allowLegacyHeader = false }: DashboardProfissio
                   </div>
                 ))
             ) : data?.alertas?.length === 0 ? (
-              <p className="text-muted-foreground">{getTexto('sem_alertas') || 'Nenhum alerta ativo.'}</p>
+              <p className="text-muted-foreground">Nenhum alerta ativo.</p>
             ) : (
               data?.alertas?.map((alerta) => {
                 const nivel = alerta.nivelUrgencia;

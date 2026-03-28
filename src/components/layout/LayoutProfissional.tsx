@@ -1,9 +1,9 @@
 
 import { useNavigate } from 'react-router-dom';
 import { Outlet } from 'react-router-dom';
+import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { Menu } from 'lucide-react';
 import { 
   Home, Users, Calendar, ScrollText, 
@@ -11,7 +11,6 @@ import {
   BarChart2
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { useIsMobile } from '@/hooks/use-mobile';
 import { Link, useLocation } from 'react-router-dom';
 import { useAuthContext } from '@/contexts/AuthContext';
 
@@ -75,35 +74,42 @@ const SidebarContent = () => {
 };
 
 export const LayoutProfissional = () => {
-  const isMobile = useIsMobile();
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   return (
     <div className="flex min-h-screen min-h-[100dvh]">
-      {!isMobile ? (
-        <aside className="w-64 border-r bg-background">
-          <SidebarContent />
-        </aside>
-      ) : (
-        <Sheet>
-          <SheetTrigger asChild>
-            <Button
-              variant="ghost"
-              size="icon"
-              className="fixed top-4 left-4 z-50"
-              aria-label="Abrir menu de navegaÃ§Ã£o"
-            >
-              <Menu className="h-5 w-5" />
-            </Button>
-          </SheetTrigger>
-          <SheetContent side="left" className="p-0 w-64">
-            <SidebarContent />
-          </SheetContent>
-        </Sheet>
+      {sidebarOpen && (
+        <div
+          className="fixed inset-0 z-20 bg-black/40 md:hidden"
+          onClick={() => setSidebarOpen(false)}
+        />
       )}
+
+      <aside
+        className={cn(
+          "fixed inset-y-0 left-0 z-30 w-56 border-r border-neutral-100 bg-white transition-transform duration-200 md:static md:translate-x-0",
+          sidebarOpen ? "translate-x-0" : "-translate-x-full"
+        )}
+      >
+        <SidebarContent />
+      </aside>
+
+      <Button
+        variant="ghost"
+        size="icon"
+        className="fixed top-4 left-4 z-40 md:hidden"
+        aria-label="Abrir menu de navegação"
+        onClick={() => setSidebarOpen(true)}
+      >
+        <Menu className="h-5 w-5" />
+      </Button>
       
-      <main className="flex-1 overflow-auto">
+      <main className="flex-1 overflow-auto p-4 md:p-6 lg:p-8">
         <Outlet />
       </main>
     </div>
   );
 };
+
+
+

@@ -110,9 +110,9 @@ export const useAuth = () => {
       });
 
       if (user.tipo === 'paciente') {
-        navigate('/paciente/dashboard');
+        navigate('/app/paciente/dashboard');
       } else {
-        navigate('/profissional/dashboard');
+        navigate('/app/profissional/dashboard');
       }
     } catch (err: unknown) {
       toast({

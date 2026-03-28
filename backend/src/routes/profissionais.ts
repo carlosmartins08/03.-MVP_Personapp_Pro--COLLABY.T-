@@ -37,6 +37,16 @@ export async function profissionaisRoutes(app: FastifyInstance) {
     return reply.send(profissionais);
   });
 
+  app.get("/profissionais/user/:userId", async (request, reply) => {
+    const { userId } = z.object({ userId: z.string().uuid() }).parse(request.params);
+    const profissional = await app.prisma.profissional.findFirst({
+      where: { userId },
+      select: { id: true, nome: true, crp: true, especialidade: true },
+    });
+    if (!profissional) return reply.code(404).send({ error: "Profissional não encontrado" });
+    return reply.send(profissional);
+  });
+
   app.get("/profissionais/:id/perfil", async (request, reply) => {
     const { id } = profissionalParamsSchema.parse(request.params);
     const profissional = await app.prisma.profissional.findUnique({

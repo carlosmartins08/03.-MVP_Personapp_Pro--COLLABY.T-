@@ -68,7 +68,7 @@ const WelcomeMessage = () => {
       <div className="relative">
         <div className="flex items-center p-4 pl-5 bg-white/80 backdrop-blur-sm rounded-full shadow-sm text-muted-foreground">
           <Search className="h-4 w-4 mr-2 text-muted-foreground" />
-          <p className="text-sm">{getTexto('o_que_procura') || 'O que voce procura hoje?'}</p>
+          <p className="text-sm">Buscar sessões, profissionais...</p>
         </div>
       </div>
     </div>

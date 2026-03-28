@@ -27,7 +27,7 @@ export const RouteGuard = ({ children, requiredUserType }: RouteGuardProps) => {
         description: 'Redirecionando para a área correta.',
         variant: 'destructive',
       });
-      navigate(user.tipo === 'profissional' ? '/profissional/dashboard' : '/paciente/dashboard', {
+      navigate(user.tipo === 'profissional' ? '/app/profissional/dashboard' : '/app/paciente/dashboard', {
         replace: true,
       });
     }

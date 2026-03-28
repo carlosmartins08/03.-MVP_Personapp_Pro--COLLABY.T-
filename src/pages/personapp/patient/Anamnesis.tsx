@@ -157,10 +157,10 @@ const AnamnesisPage = () => {
     return (
       <>
         <AppHeader variant="minimal" />
-        <div className="mx-auto flex w-full max-w-xl flex-col gap-4">
+        <div className="mx-auto flex w-full max-w-lg flex-col gap-4 px-4 pb-24">
           <Card variant="default" className="p-6">
-            <h1 className="text-lg font-semibold text-gray-900">Anamnese enviada</h1>
-            <p className="mt-2 text-sm text-gray-600">
+            <h1 className="text-lg font-semibold text-neutral-500">Anamnese enviada</h1>
+            <p className="mt-2 text-sm text-neutral-400">
               Suas respostas foram salvas. Seu psicologo tera acesso em breve.
             </p>
             <div className="mt-4">
@@ -175,23 +175,23 @@ const AnamnesisPage = () => {
   return (
     <>
       <AppHeader variant="minimal" />
-      <div className="mx-auto flex w-full max-w-2xl flex-col gap-4">
+      <div className="mx-auto flex w-full max-w-lg flex-col gap-4 px-4 pb-24">
         <div className="flex flex-col gap-3">
-          <div className="h-1 w-full rounded-full bg-gray-100">
+          <div className="h-1 w-full rounded-full bg-neutral-100">
             <div
               className="h-1 rounded-full bg-ds-primary transition-all duration-300"
               style={{ width: progress }}
             />
           </div>
 
-          <div className="flex items-center justify-between text-xs font-medium text-gray-500">
+          <div className="flex items-center justify-between text-xs font-medium text-neutral-300">
             <span>Passo {step} de 4</span>
             <span>~{currentStep.estimate}</span>
           </div>
 
           <div className="flex items-center justify-between">
-            <h1 className="text-lg font-semibold text-gray-900">{currentStep.title}</h1>
-            <span className="text-xs font-medium text-gray-500">
+            <h1 className="text-lg font-semibold text-neutral-500">{currentStep.title}</h1>
+            <span className="text-xs font-medium text-neutral-300">
               {saveStatus === "saving" ? "Salvando..." : "Auto-save ativo"}
             </span>
           </div>
@@ -201,7 +201,7 @@ const AnamnesisPage = () => {
           {step === 1 && (
             <div className="flex flex-col gap-4">
             <div className="flex flex-col gap-2">
-              <label htmlFor="nome" className="text-sm font-medium text-gray-700">
+              <label htmlFor="nome" className="text-sm font-medium text-neutral-400">
                 Nome completo
               </label>
               <Input id="nome" placeholder="Seu nome" {...register("nome")} />
@@ -212,7 +212,7 @@ const AnamnesisPage = () => {
 
             <div className="grid gap-4 md:grid-cols-2">
               <div className="flex flex-col gap-2">
-                <label htmlFor="dataNascimento" className="text-sm font-medium text-gray-700">
+                <label htmlFor="dataNascimento" className="text-sm font-medium text-neutral-400">
                   Data de nascimento
                 </label>
                 <Input
@@ -226,13 +226,13 @@ const AnamnesisPage = () => {
               </div>
 
               <div className="flex flex-col gap-2">
-                <label htmlFor="genero" className="text-sm font-medium text-gray-700">
+                <label htmlFor="genero" className="text-sm font-medium text-neutral-400">
                   Genero
                 </label>
                 <select
                   id="genero"
                   {...register("genero")}
-                  className="h-12 w-full rounded-md border border-gray-200 bg-white px-3 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-ds-primary"
+                  className="h-12 w-full rounded-md border border-neutral-100 bg-white px-3 text-sm text-neutral-400 focus:outline-none focus:ring-2 focus:ring-ds-primary"
                 >
                   <option value="">Selecione</option>
                   <option value="feminino">Feminino</option>
@@ -248,13 +248,13 @@ const AnamnesisPage = () => {
             </div>
 
             <div className="flex flex-col gap-2">
-              <label htmlFor="estadoCivil" className="text-sm font-medium text-gray-700">
+              <label htmlFor="estadoCivil" className="text-sm font-medium text-neutral-400">
                 Estado civil
               </label>
               <select
                 id="estadoCivil"
                 {...register("estadoCivil")}
-                className="h-12 w-full rounded-md border border-gray-200 bg-white px-3 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-ds-primary"
+                className="h-12 w-full rounded-md border border-neutral-100 bg-white px-3 text-sm text-neutral-400 focus:outline-none focus:ring-2 focus:ring-ds-primary"
               >
                 <option value="">Selecione</option>
                 <option value="solteiro">Solteiro</option>
@@ -274,7 +274,7 @@ const AnamnesisPage = () => {
         {step === 2 && (
           <div className="flex flex-col gap-4">
             <div className="flex flex-col gap-2">
-              <p className="text-sm font-medium text-gray-700">Ja fez terapia?</p>
+              <p className="text-sm font-medium text-neutral-400">Ja fez terapia?</p>
               <div className="flex gap-2">
                 {(["sim", "nao"] as const).map((option) => (
                   <label
@@ -283,7 +283,7 @@ const AnamnesisPage = () => {
                       "flex cursor-pointer items-center gap-2 rounded-full border px-4 py-2 text-sm font-medium",
                       terapiaAnterior === option
                         ? "border-ds-primary bg-ds-primary text-white"
-                        : "border-gray-200 text-gray-600"
+                        : "border-neutral-100 text-neutral-400"
                     )}
                   >
                     <input
@@ -302,7 +302,7 @@ const AnamnesisPage = () => {
             </div>
 
             <div className="flex flex-col gap-2">
-              <p className="text-sm font-medium text-gray-700">Usa medicacao?</p>
+              <p className="text-sm font-medium text-neutral-400">Usa medicacao?</p>
               <div className="flex gap-2">
                 {(["sim", "nao"] as const).map((option) => (
                   <label
@@ -311,7 +311,7 @@ const AnamnesisPage = () => {
                       "flex cursor-pointer items-center gap-2 rounded-full border px-4 py-2 text-sm font-medium",
                       medicacao === option
                         ? "border-ds-primary bg-ds-primary text-white"
-                        : "border-gray-200 text-gray-600"
+                        : "border-neutral-100 text-neutral-400"
                     )}
                   >
                     <input
@@ -334,14 +334,14 @@ const AnamnesisPage = () => {
         {step === 3 && (
           <div className="flex flex-col gap-4">
             <div className="flex flex-col gap-2">
-              <label htmlFor="motivacao" className="text-sm font-medium text-gray-700">
+              <label htmlFor="motivacao" className="text-sm font-medium text-neutral-400">
                 Conte um pouco sobre o que motivou voce a buscar terapia
               </label>
               <textarea
                 id="motivacao"
                 rows={5}
                 {...register("motivacao")}
-                className="w-full rounded-md border border-gray-200 bg-white px-3 py-2 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-ds-primary"
+                className="w-full rounded-md border border-neutral-100 bg-white px-3 py-2 text-sm text-neutral-400 focus:outline-none focus:ring-2 focus:ring-ds-primary"
               />
               {errors.motivacao && (
                 <p className="text-xs text-ds-error">{errors.motivacao.message}</p>
@@ -349,7 +349,7 @@ const AnamnesisPage = () => {
             </div>
 
             <div className="flex flex-col gap-2">
-              <p className="text-sm font-medium text-gray-700">Desafios principais</p>
+              <p className="text-sm font-medium text-neutral-400">Desafios principais</p>
               <div className="flex flex-wrap gap-2">
                 {challengeOptions.map((option) => {
                   const isActive = selectedChallenges.includes(option)
@@ -362,7 +362,7 @@ const AnamnesisPage = () => {
                         "rounded-full border px-3 py-1 text-xs font-semibold transition-colors",
                         isActive
                           ? "border-ds-primary bg-ds-primary text-white"
-                          : "border-gray-200 text-gray-600"
+                          : "border-neutral-100 text-neutral-400"
                       )}
                     >
                       {option}
@@ -380,7 +380,7 @@ const AnamnesisPage = () => {
           {step === 4 && (
             <div className="flex flex-col gap-4">
             <div className="flex flex-col gap-2">
-              <p className="text-sm font-medium text-gray-700">Dias disponiveis</p>
+              <p className="text-sm font-medium text-neutral-400">Dias disponiveis</p>
               <div className="flex flex-wrap gap-2">
                 {daysOptions.map((option) => {
                   const isActive = selectedDays.includes(option)
@@ -393,7 +393,7 @@ const AnamnesisPage = () => {
                         "rounded-full border px-3 py-1 text-xs font-semibold transition-colors",
                         isActive
                           ? "border-ds-primary bg-ds-primary text-white"
-                          : "border-gray-200 text-gray-600"
+                          : "border-neutral-100 text-neutral-400"
                       )}
                     >
                       {option}
@@ -407,7 +407,7 @@ const AnamnesisPage = () => {
             </div>
 
             <div className="flex flex-col gap-2">
-              <p className="text-sm font-medium text-gray-700">Periodo preferido</p>
+              <p className="text-sm font-medium text-neutral-400">Periodo preferido</p>
               <div className="flex flex-wrap gap-2">
                 {periodOptions.map((option) => {
                   const isActive = selectedPeriod === option
@@ -420,7 +420,7 @@ const AnamnesisPage = () => {
                         "rounded-full border px-3 py-1 text-xs font-semibold transition-colors",
                         isActive
                           ? "border-ds-primary bg-ds-primary text-white"
-                          : "border-gray-200 text-gray-600"
+                          : "border-neutral-100 text-neutral-400"
                       )}
                     >
                       {option}
@@ -434,7 +434,7 @@ const AnamnesisPage = () => {
             </div>
 
             <div className="flex flex-col gap-2">
-              <p className="text-sm font-medium text-gray-700">Modalidade</p>
+              <p className="text-sm font-medium text-neutral-400">Modalidade</p>
               <div className="flex flex-wrap gap-2">
                 {modalityOptions.map((option) => {
                   const isActive = selectedModalidade === option
@@ -447,7 +447,7 @@ const AnamnesisPage = () => {
                         "rounded-full border px-3 py-1 text-xs font-semibold transition-colors",
                         isActive
                           ? "border-ds-primary bg-ds-primary text-white"
-                          : "border-gray-200 text-gray-600"
+                          : "border-neutral-100 text-neutral-400"
                       )}
                     >
                       {option}

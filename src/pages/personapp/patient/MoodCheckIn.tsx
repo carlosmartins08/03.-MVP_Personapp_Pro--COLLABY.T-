@@ -67,8 +67,8 @@ const MoodCheckInPage = () => {
   return (
     <>
       <AppHeader variant="minimal" />
-      <div className="mx-auto flex w-full max-w-2xl flex-col gap-4">
-        <div className="text-sm font-medium text-gray-500">
+      <div className="mx-auto flex w-full max-w-lg flex-col gap-4 px-4 pb-24">
+        <div className="text-sm font-medium text-neutral-300">
           Passo {step} de 3
         </div>
 
@@ -76,7 +76,7 @@ const MoodCheckInPage = () => {
         <Card variant="default" className="p-5">
           <div className="flex flex-col gap-1">
             <h1 className="text-lg font-semibold">O que contribuiu?</h1>
-            <p className="text-sm text-gray-500">Selecione quantos quiser.</p>
+            <p className="text-sm text-neutral-300">Selecione quantos quiser.</p>
           </div>
 
           <div className="mt-4 flex flex-wrap gap-2">
@@ -91,7 +91,7 @@ const MoodCheckInPage = () => {
                     "rounded-full border px-3 py-1 text-sm font-medium transition-colors",
                     isActive
                       ? "border-ds-primary bg-ds-primary text-white"
-                      : "border-gray-200 text-gray-600 hover:bg-gray-100"
+                      : "border-neutral-100 text-neutral-400 hover:bg-neutral-100"
                   )}
                 >
                   {tag}
@@ -113,11 +113,11 @@ const MoodCheckInPage = () => {
         <Card variant="default" className="p-5">
           <div className="flex flex-col gap-1">
             <h1 className="text-lg font-semibold">Quer adicionar uma nota?</h1>
-            <p className="text-sm text-gray-500">Opcional.</p>
+            <p className="text-sm text-neutral-300">Opcional.</p>
           </div>
 
           <div className="mt-4">
-            <label htmlFor="mood-note" className="text-sm font-medium text-gray-700">
+            <label htmlFor="mood-note" className="text-sm font-medium text-neutral-400">
               Escreva livremente
             </label>
             <textarea
@@ -125,7 +125,7 @@ const MoodCheckInPage = () => {
               value={note}
               onChange={(event) => setNote(event.target.value)}
               rows={5}
-              className="mt-2 w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-ds-primary"
+              className="mt-2 w-full rounded-lg border border-neutral-100 bg-white px-3 py-2 text-sm text-neutral-400 focus:outline-none focus:ring-2 focus:ring-ds-primary"
               placeholder="Opcional"
             />
           </div>

@@ -75,33 +75,33 @@ const SOSButton = ({
             onClick={(event) => event.stopPropagation()}
           >
             <div className="flex items-center justify-between">
-              <h2 className="text-lg font-semibold text-gray-900">Suporte de crise</h2>
+              <h2 className="text-lg font-semibold text-neutral-500">Suporte de crise</h2>
               <button
                 type="button"
                 aria-label="Fechar"
                 onClick={() => setOpen(false)}
-                className="h-8 w-8 rounded-full text-gray-500 hover:bg-gray-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ds-primary focus-visible:ring-offset-2"
+                className="h-8 w-8 rounded-full text-neutral-300 hover:bg-neutral-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ds-primary focus-visible:ring-offset-2"
               >
                 ×
               </button>
             </div>
 
-            <p className="text-center text-sm text-gray-600 mt-4 px-4">
+            <p className="text-center text-sm text-neutral-400 mt-4 px-4">
               Você não está sozinho. Estamos aqui.
             </p>
 
             <div className="mt-6 space-y-4">
               <a
                 href="tel:188"
-                className="flex w-full items-center justify-between rounded-xl border border-gray-200 px-4 py-3 text-sm font-semibold text-gray-900"
+                className="flex w-full items-center justify-between rounded-xl border border-neutral-100 px-4 py-3 text-sm font-semibold text-neutral-500"
               >
                 Ligar CVV 188
-                <span className="text-xs text-gray-500">tel:188</span>
+                <span className="text-xs text-neutral-300">tel:188</span>
               </a>
 
-              <div className="rounded-xl border border-gray-200 px-4 py-3">
-                <p className="text-sm font-semibold text-gray-900">Contatos de apoio</p>
-                <ul className="mt-2 space-y-2 text-sm text-gray-700">
+              <div className="rounded-xl border border-neutral-100 px-4 py-3">
+                <p className="text-sm font-semibold text-neutral-500">Contatos de apoio</p>
+                <ul className="mt-2 space-y-2 text-sm text-neutral-400">
                   {contacts.length > 0 ? (
                     contacts.map((contact, index) => (
                       <li key={`${contact.label}-${index}`}>
@@ -124,10 +124,10 @@ const SOSButton = ({
                 href={mapsUrl}
                 target="_blank"
                 rel="noreferrer"
-                className="flex w-full items-center justify-between rounded-xl border border-gray-200 px-4 py-3 text-sm font-semibold text-gray-900"
+                className="flex w-full items-center justify-between rounded-xl border border-neutral-100 px-4 py-3 text-sm font-semibold text-neutral-500"
               >
                 Ajuda proxima
-                <span className="text-xs text-gray-500">Abrir mapas</span>
+                <span className="text-xs text-neutral-300">Abrir mapas</span>
               </a>
             </div>
           </div>

@@ -3,7 +3,7 @@ import * as React from "react"
 import { cn } from "@/lib/utils"
 
 const Skeleton = ({ className }: { className?: string }) => (
-  <div className={cn("animate-pulse bg-gray-200 rounded-lg", className)} />
+  <div className={cn("animate-pulse bg-neutral-100 rounded-lg", className)} />
 )
 
 const SkeletonText = ({ className }: { className?: string }) => (

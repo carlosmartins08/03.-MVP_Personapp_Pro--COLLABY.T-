@@ -44,6 +44,13 @@ export const colors = {
     sistemica: { bg: '#FFF7ED', text: '#7C2D12', accent: '#F97316' },
     transpessoal: { bg: '#F0FDFA', text: '#134E4A', accent: '#14B8A6' },
   },
+  moodBackground: {
+    1: '#2D1A1A',
+    2: '#2D2610',
+    3: '#222230',
+    4: '#1A2D1E',
+    5: '#1A1D2D',
+  },
 } as const;
 
 export const spacing = {

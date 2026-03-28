@@ -1,23 +1,28 @@
-import { Outlet } from "react-router-dom"
-import { Calendar, DollarSign, Home, Settings, Users } from "lucide-react"
+import { Navigate, Outlet } from "react-router-dom"
+import { Calendar, Home, Settings, Users } from "lucide-react"
 
+import { useAuthContext } from "@/contexts/AuthContext"
 import { BottomNav } from "@/design-system/components"
 
 const professionalTabs = [
-  { label: "Dashboard", path: "/profissional/dashboard", icon: <Home /> },
-  { label: "Agenda", path: "/profissional/agenda", icon: <Calendar /> },
-  { label: "Pacientes", path: "/profissional/pacientes", icon: <Users /> },
-  { label: "Financeiro", path: "/profissional/financeiro", icon: <DollarSign /> },
-  { label: "Config", path: "/profissional/configuracoes", icon: <Settings /> },
+  { label: "Início",    path: "/app/profissional/dashboard",  icon: <Home /> },
+  { label: "Agenda",    path: "/app/profissional/agenda",      icon: <Calendar /> },
+  { label: "Pacientes", path: "/app/profissional/pacientes",   icon: <Users /> },
+  { label: "Config",    path: "/app/profissional/configuracoes", icon: <Settings /> },
 ]
 
 const ProfessionalAppLayout = () => {
+  const { user, isLoadingUser } = useAuthContext()
+
+  if (isLoadingUser) return null
+  if (!user) return <Navigate to="/login" replace />
+  if (user.tipo !== "profissional") return <Navigate to="/app/paciente/dashboard" replace />
+
   return (
-    <div className="flex min-h-screen flex-col bg-gray-50 font-roboto">
-      <main className="flex-1 px-4 py-4 pb-[calc(64px+env(safe-area-inset-bottom,0px))]">
+    <div className="flex min-h-[100dvh] flex-col bg-neutral-50 font-roboto">
+      <main className="flex-1 pb-[calc(64px+env(safe-area-inset-bottom,0px))]">
         <Outlet />
       </main>
-
       <BottomNav tabs={professionalTabs} />
     </div>
   )

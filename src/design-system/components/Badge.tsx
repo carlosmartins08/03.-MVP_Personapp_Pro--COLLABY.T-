@@ -2,7 +2,7 @@ import * as React from "react"
 
 import { cn } from "@/lib/utils"
 
-type BadgeVariant = "primary" | "success" | "warning" | "error" | "neutral"
+type BadgeVariant = "primary" | "info" | "success" | "warning" | "error" | "neutral"
 type BadgeSize = "sm" | "md"
 
 interface BadgeProps {
@@ -20,18 +20,20 @@ const sizeClasses: Record<BadgeSize, string> = {
 
 const variantClasses: Record<BadgeVariant, string> = {
   primary: "bg-ds-primary text-white",
+  info: "bg-ds-primary text-white",
   success: "bg-ds-success text-white",
   warning: "bg-ds-warning text-white",
   error: "bg-ds-error text-white",
-  neutral: "bg-gray-200 text-gray-700",
+  neutral: "bg-neutral-100 text-neutral-400",
 }
 
 const dotClasses: Record<BadgeVariant, string> = {
   primary: "bg-white",
+  info: "bg-white",
   success: "bg-white",
   warning: "bg-white",
   error: "bg-white",
-  neutral: "bg-gray-500",
+  neutral: "bg-neutral-300",
 }
 
 const Badge = ({

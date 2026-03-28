@@ -2,7 +2,6 @@ import React from 'react';
 import { Card, Badge } from '@/design-system/components';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Calendar } from 'lucide-react';
-import { useLocalizacao } from '@/contexts/LocalizacaoContext';
 import EmptyState from '@/components/ui/EmptyState';
 import { Sessao } from '@/types/paciente';
 
@@ -29,11 +28,21 @@ const SessaoSummaryCard: React.FC<SessaoSummaryCardProps> = ({
   formatDate,
   formatTime
 }) => {
-  const { getTexto } = useLocalizacao();
-  
   const getStatusLabel = (status: string) => {
-    const statusKey = `sessao_${status}`;
-    return getTexto(statusKey) || status;
+    switch (status) {
+      case 'realizada':
+        return 'Realizada';
+      case 'agendada':
+        return 'Agendada';
+      case 'cancelada':
+        return 'Cancelada';
+      case 'confirmada':
+        return 'Confirmada';
+      case 'faltou':
+        return 'Faltou';
+      default:
+        return status;
+    }
   };
 
   const statusVariant = sessao?.status ? statusVariants[sessao.status] ?? 'neutral' : 'neutral';
@@ -43,7 +52,7 @@ const SessaoSummaryCard: React.FC<SessaoSummaryCardProps> = ({
       <div className="pb-2 px-4 pt-4 bg-gradient-to-r from-lavanda-light/40 to-lavanda-light/20">
         <h3 className="text-base font-medium flex items-center">
           <Calendar className="h-4 w-4 mr-2 text-muted-foreground" />
-          {getTexto('ultima_sessao') || 'Última sessão'}
+          Última sessão
         </h3>
       </div>
       <div className="pt-4 px-4 pb-4">
@@ -68,9 +77,9 @@ const SessaoSummaryCard: React.FC<SessaoSummaryCardProps> = ({
         ) : (
           <EmptyState
             icon={<Calendar className="h-8 w-8 text-muted-foreground opacity-70" />}
-            title={getTexto('sem_sessoes_registradas') || 'Sem sessões registradas'}
-            description={getTexto('incentivo_agendar_sessao') || 'Agende sua próxima sessão'}
-            actionLabel={getTexto('ver_agenda') || 'Ver agenda'}
+            title="Sem sessões registradas"
+            description="Agende sua próxima sessão"
+            actionLabel="Ver agenda"
             onAction={() => window.location.href = '/paciente/sessoes'}
           />
         )}

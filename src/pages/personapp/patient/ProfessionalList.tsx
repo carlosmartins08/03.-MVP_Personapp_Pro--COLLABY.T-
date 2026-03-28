@@ -1,12 +1,11 @@
-﻿import React, { useMemo, useState } from "react"
+﻿import React, { useState } from "react"
 import { Search } from "lucide-react"
 import { useNavigate } from "react-router-dom"
+import { useQuery } from "@tanstack/react-query"
 
 import { AppHeader, Avatar, Badge, Button, Card, Input } from "@/design-system/components"
 import { colors, type ApproachKey } from "@/design-system"
-import { professionalsMock } from "@/mocks/professionals"
-
-// TODO: integrar GET /profissionais no backend Fastify quando a rota existir.
+import { api } from "@/lib/api"
 const approachLabels: Record<ApproachKey, string> = {
   psicanalise: "Psicanalise",
   behaviorismo: "Behaviorismo",
@@ -60,30 +59,29 @@ const getInitials = (name: string) => {
     .toUpperCase()
 }
 
+type Profissional = { id: string; nome: string; crp: string | null; especialidade: string | null }
+
 const ProfessionalListPage = () => {
   const navigate = useNavigate()
   const [query, setQuery] = useState("")
   const [selectedApproach, setSelectedApproach] = useState<ApproachKey | "todos">("todos")
 
-  const filteredProfessionals = useMemo(() => {
-    const normalizedQuery = query.trim().toLowerCase()
+  const { data: professionals = [], isLoading } = useQuery({
+    queryKey: ["profissionais", query, selectedApproach],
+    queryFn: () =>
+      api.get<Profissional[]>("/profissionais", {
+        query: {
+          ...(query.trim() ? { busca: query.trim() } : {}),
+          ...(selectedApproach !== "todos" ? { abordagem: selectedApproach } : {}),
+        },
+      }),
+    staleTime: 30 * 1000,
+  })
 
-    return professionalsMock.filter((professional) => {
-      const matchesQuery =
-        !normalizedQuery ||
-        professional.nome.toLowerCase().includes(normalizedQuery) ||
-        (professional.crp ?? "").toLowerCase().includes(normalizedQuery)
-
-      const professionalApproaches = parseApproaches(professional.especialidade)
-      const matchesApproach =
-        selectedApproach === "todos" || professionalApproaches.includes(selectedApproach)
-
-      return matchesQuery && matchesApproach
-    })
-  }, [query, selectedApproach])
+  const filteredProfessionals = professionals
 
   return (
-    <div className="flex flex-col gap-4 max-w-md mx-auto px-4">
+    <div className="flex flex-col gap-4 max-w-lg mx-auto px-4 pb-24">
       <div className="-mx-4">
         <AppHeader
           variant="minimal"
@@ -94,7 +92,7 @@ const ProfessionalListPage = () => {
 
       <div className="flex flex-col gap-3">
         <div className="relative">
-          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
+          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-neutral-200" />
           <Input
             value={query}
             onChange={(event) => setQuery(event.target.value)}
@@ -139,8 +137,11 @@ const ProfessionalListPage = () => {
       </div>
 
       <div className="flex flex-col gap-4">
-        {filteredProfessionals.length === 0 && (
-          <p className="text-sm text-gray-500">Nenhum profissional encontrado.</p>
+        {isLoading && (
+          <p className="text-sm text-neutral-300 text-center py-6">Carregando profissionais...</p>
+        )}
+        {!isLoading && filteredProfessionals.length === 0 && (
+          <p className="text-sm text-neutral-300">Nenhum profissional encontrado.</p>
         )}
 
         {filteredProfessionals.map((professional) => {
@@ -153,7 +154,7 @@ const ProfessionalListPage = () => {
                 <Avatar size="md" initials={getInitials(professional.nome)} />
                 <div className="flex flex-1 flex-col">
                   <div className="flex flex-wrap items-center gap-2">
-                    <h3 className="text-base font-semibold text-gray-900">
+                    <h3 className="text-base font-semibold text-neutral-500">
                       {professional.nome}
                     </h3>
                     {professional.crp && (
@@ -163,7 +164,7 @@ const ProfessionalListPage = () => {
                     )}
                   </div>
 
-                  <p className="text-xs text-gray-500">
+                  <p className="text-xs text-neutral-300">
                     CRP {professional.crp ?? "Nao informado"}
                   </p>
 
@@ -188,7 +189,7 @@ const ProfessionalListPage = () => {
                     </div>
                   )}
 
-                  <div className="mt-3 flex flex-wrap gap-3 text-xs text-gray-600">
+                  <div className="mt-3 flex flex-wrap gap-3 text-xs text-neutral-400">
                     <span>Modalidade: Online</span>
                     <span>Valor: R$ 180</span>
                   </div>

@@ -39,7 +39,7 @@ const DashboardPage = () => {
   } = useProfessionalDashboard()
 
   return (
-    <div className="flex flex-col gap-6 max-w-md mx-auto px-4">
+    <div className="flex flex-col gap-6 max-w-lg mx-auto px-4 pb-24">
       <div className="-mx-4">
         <AppHeader variant="professional" name="Rafael Souza" notificationCount={2}>
           <div className="grid gap-3 px-4 pb-2 md:grid-cols-3">
@@ -50,20 +50,20 @@ const DashboardPage = () => {
             ) : (
               <>
                 <Card variant="default" className="p-4">
-                  <p className="text-xs text-gray-500">Total pacientes</p>
-                  <p className="mt-2 text-2xl sm:text-3xl font-semibold text-gray-900">
+                  <p className="text-xs text-neutral-300">Total pacientes</p>
+                  <p className="mt-2 text-2xl sm:text-3xl font-semibold text-neutral-500">
                     {metrics.totalPatients}
                   </p>
                 </Card>
                 <Card variant="default" className="p-4">
-                  <p className="text-xs text-gray-500">Sessoes esta semana</p>
-                  <p className="mt-2 text-2xl sm:text-3xl font-semibold text-gray-900">
+                  <p className="text-xs text-neutral-300">Sessoes esta semana</p>
+                  <p className="mt-2 text-2xl sm:text-3xl font-semibold text-neutral-500">
                     {metrics.sessionsThisWeek}
                   </p>
                 </Card>
                 <Card variant="default" className="p-4">
-                  <p className="text-xs text-gray-500">Sessoes hoje</p>
-                  <p className="mt-2 text-2xl sm:text-3xl font-semibold text-gray-900">
+                  <p className="text-xs text-neutral-300">Sessoes hoje</p>
+                  <p className="mt-2 text-2xl sm:text-3xl font-semibold text-neutral-500">
                     {metrics.sessionsToday}
                   </p>
                 </Card>
@@ -75,7 +75,7 @@ const DashboardPage = () => {
 
       <section className="flex flex-col gap-3">
         <div className="flex items-center justify-between">
-          <h2 className="text-base font-semibold text-gray-900">Abordagens</h2>
+          <h2 className="text-base font-semibold text-neutral-500">Abordagens</h2>
         </div>
         <div className="flex gap-3 overflow-x-auto pb-2">
           {isLoadingApproaches
@@ -95,7 +95,7 @@ const DashboardPage = () => {
       </section>
 
       <section className="flex flex-col gap-3">
-        <h2 className="text-base font-semibold text-gray-900">Proxima sessao</h2>
+        <h2 className="text-base font-semibold text-neutral-500">Próxima sessão</h2>
         {isLoadingNextSession ? (
           <SkeletonCard className="h-36" />
         ) : nextSession ? (
@@ -109,14 +109,14 @@ const DashboardPage = () => {
           />
         ) : (
           <Card variant="default" className="p-4">
-            <p className="text-sm text-gray-600">Nenhuma sessao agendada.</p>
+            <p className="text-sm text-neutral-400">Nenhuma sessão agendada.</p>
           </Card>
         )}
       </section>
 
       <section className="flex flex-col gap-3">
         <div className="flex items-center justify-between">
-          <h2 className="text-base font-semibold text-gray-900">Pacientes recentes</h2>
+          <h2 className="text-base font-semibold text-neutral-500">Pacientes recentes</h2>
           <Button variant="ghost" size="sm" onClick={() => navigate("/app/profissional/pacientes")}> 
             Ver todos
           </Button>
@@ -136,15 +136,15 @@ const DashboardPage = () => {
               ))}
             </div>
           ) : recentPatients.length === 0 ? (
-            <p className="text-sm text-gray-600">Nenhum paciente encontrado.</p>
+            <p className="text-sm text-neutral-400">Nenhum paciente encontrado.</p>
           ) : (
             <div className="flex flex-col gap-4">
               {recentPatients.map((patient) => (
                 <div key={patient.id} className="flex items-center gap-3">
                   <Avatar size="sm" initials={getInitials(patient.nome)} />
                   <div className="flex flex-1 flex-col">
-                    <p className="text-sm font-semibold text-gray-900">{patient.nome}</p>
-                    <p className="text-xs text-gray-500">{patient.sessionLabel}</p>
+                    <p className="text-sm font-semibold text-neutral-500">{patient.nome}</p>
+                    <p className="text-xs text-neutral-300">{patient.sessionLabel}</p>
                   </div>
                   <Badge variant={patient.status.variant} size="sm">
                     {patient.status.label}
