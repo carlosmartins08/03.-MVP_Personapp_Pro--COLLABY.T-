@@ -1,0 +1,4 @@
+﻿- [ ] DS v3 — evoluir linguagem visual
+      Plano completo em: docs/DS_V3_PLAN.md
+      Fase 1: tokens + tipografia (Sora + Manrope) + componentes
+      Fase 2: aplicar nas telas (piloto: patient/Dashboard)

@@ -1,110 +1,135 @@
-import React, { useState, useMemo } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
-import { Button, Card, Input, Label } from '@/design-system/components';
-import { toast } from '@/components/ui/use-toast';
-import { useAuth } from '@/hooks/useAuth';
+import React, { useMemo, useState } from "react"
+import { useLocation, useNavigate } from "react-router-dom"
+
+import { toast } from "@/components/ui/use-toast"
+import { Button, Input, Label } from "@/design-system/components"
+import { useAuth } from "@/hooks/useAuth"
 
 const RedefinirSenha = () => {
-  const location = useLocation();
-  const queryToken = useMemo(() => new URLSearchParams(location.search).get('token') || '', [location.search]);
-  const [token, setToken] = useState(queryToken);
-  const [newPassword, setNewPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-  const { resetPassword, isLoading } = useAuth();
-  const navigate = useNavigate();
+  const location = useLocation()
+  const queryToken = useMemo(
+    () => new URLSearchParams(location.search).get("token") || "",
+    [location.search]
+  )
+  const [token, setToken] = useState(queryToken)
+  const [newPassword, setNewPassword] = useState("")
+  const [confirmPassword, setConfirmPassword] = useState("")
+  const { resetPassword, isLoading } = useAuth()
+  const navigate = useNavigate()
 
   const handlePasswordReset = async (e: React.FormEvent) => {
-    e.preventDefault();
+    e.preventDefault()
 
     if (!token) {
       toast({
-        title: 'Token obrigatório',
-        description: 'Informe o token recebido por e-mail.',
-        variant: 'destructive',
-      });
-      return;
+        title: "Token obrigatorio",
+        description: "Informe o token recebido por e-mail.",
+        variant: "destructive",
+      })
+      return
     }
 
     if (newPassword !== confirmPassword) {
       toast({
-        title: 'Senhas não coincidem',
-        description: 'Verifique se digitou a nova senha corretamente.',
-        variant: 'destructive',
-      });
-      return;
+        title: "Senhas nao coincidem",
+        description: "Verifique se digitou a nova senha corretamente.",
+        variant: "destructive",
+      })
+      return
     }
 
-    await resetPassword(token, newPassword);
-  };
+    await resetPassword(token, newPassword)
+  }
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-menta-light p-4">
-      <div className="w-full max-w-md">
+    <div className="min-h-screen bg-ds-surface-page p-4 flex items-center justify-center font-manrope">
+      <div className="w-full max-w-sm mx-auto bg-white rounded-3xl p-8 border border-neutral-100 shadow-ds-lg">
         <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-lavanda-dark mb-2">PersonaClinic</h1>
-          <p className="text-muted-foreground">Redefina sua senha</p>
+          <div className="w-14 h-14 rounded-2xl bg-ds-primary mx-auto mb-4 flex items-center justify-center shadow-ds-md">
+            <span className="text-white font-sora font-bold text-xl">P</span>
+          </div>
+          <h1 className="text-2xl font-sora font-bold text-neutral-400">Redefinir senha</h1>
+          <p className="text-sm font-manrope text-neutral-300 mt-1">
+            Informe o token recebido e defina sua nova senha.
+          </p>
         </div>
 
-        <Card>
-          <form onSubmit={handlePasswordReset}>
-            <div className="mb-4">
-              <h3 className="text-lg font-semibold">Nova Senha</h3>
-              <p className="text-sm text-muted-foreground">Informe o token recebido e defina sua nova senha.</p>
-            </div>
+        <form onSubmit={handlePasswordReset} className="space-y-4">
+          <div className="space-y-1.5">
+            <Label
+              htmlFor="token"
+              className="text-xs font-manrope font-semibold uppercase tracking-wider text-neutral-300"
+            >
+              Token
+            </Label>
+            <Input
+              id="token"
+              type="text"
+              placeholder="Cole o token enviado por e-mail"
+              value={token}
+              onChange={(e) => setToken(e.target.value)}
+              className="font-manrope"
+              required
+            />
+          </div>
 
-            <div className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="token">Token</Label>
-                <Input
-                  id="token"
-                  type="text"
-                  placeholder="Cole o token enviado por e-mail"
-                  value={token}
-                  onChange={(e) => setToken(e.target.value)}
-                  required
-                />
-              </div>
+          <div className="space-y-1.5">
+            <Label
+              htmlFor="nova-senha"
+              className="text-xs font-manrope font-semibold uppercase tracking-wider text-neutral-300"
+            >
+              Nova senha
+            </Label>
+            <Input
+              id="nova-senha"
+              type="password"
+              value={newPassword}
+              onChange={(e) => setNewPassword(e.target.value)}
+              className="font-manrope"
+              required
+              minLength={8}
+            />
+          </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="nova-senha">Nova Senha</Label>
-                <Input
-                  id="nova-senha"
-                  type="password"
-                  value={newPassword}
-                  onChange={(e) => setNewPassword(e.target.value)}
-                  required
-                  minLength={8}
-                />
-              </div>
+          <div className="space-y-1.5">
+            <Label
+              htmlFor="confirmar-senha"
+              className="text-xs font-manrope font-semibold uppercase tracking-wider text-neutral-300"
+            >
+              Confirmar nova senha
+            </Label>
+            <Input
+              id="confirmar-senha"
+              type="password"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              className="font-manrope"
+              required
+              minLength={8}
+            />
+          </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="confirmar-senha">Confirmar Nova Senha</Label>
-                <Input
-                  id="confirmar-senha"
-                  type="password"
-                  value={confirmPassword}
-                  onChange={(e) => setConfirmPassword(e.target.value)}
-                  required
-                  minLength={8}
-                />
-              </div>
-            </div>
+          <Button
+            type="submit"
+            variant="primary"
+            className="w-full font-manrope font-semibold rounded-2xl h-12 transition-all duration-200 hover:shadow-ds-md active:scale-[0.98]"
+            disabled={isLoading}
+          >
+            {isLoading ? "Redefinindo..." : "Redefinir senha"}
+          </Button>
 
-            <div className="flex flex-col space-y-4">
-              <Button type="submit" className="w-full persona-button" disabled={isLoading}>
-                {isLoading ? 'Redefinindo...' : 'Redefinir Senha'}
-              </Button>
-
-              <Button variant="ghost" type="button" onClick={() => navigate('/login')}>
-                Voltar para Login
-              </Button>
-            </div>
-          </form>
-        </Card>
+          <Button
+            variant="ghost"
+            type="button"
+            onClick={() => navigate("/login")}
+            className="w-full text-sm font-manrope text-ds-primary hover:underline transition-colors"
+          >
+            Voltar para Login
+          </Button>
+        </form>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default RedefinirSenha;
-
+export default RedefinirSenha

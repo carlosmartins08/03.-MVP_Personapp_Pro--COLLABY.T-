@@ -6,6 +6,8 @@ export type PagarmePaymentResult = {
   provider: "pagarme" | "fallback";
   status: "pago" | "pendente";
   transactionId?: string | null;
+  boletoUrl?: string | null;
+  boletoVencimento?: Date | null;
   raw?: unknown;
 };
 
@@ -28,7 +30,7 @@ const toCents = (value: number) => Math.max(0, Math.round(value * 100));
 export const pagamentoService = {
   async processPagarmePayment(input: PagarmePaymentInput): Promise<PagarmePaymentResult> {
     if (!env.pagarMeApiKey) {
-      return { provider: "fallback", status: "pago" };
+      return { provider: "fallback", status: "pendente" };
     }
 
     const client = await pagarme.client.connect({ api_key: env.pagarMeApiKey });
@@ -66,10 +68,18 @@ export const pagamentoService = {
         ? "pago"
         : "pendente";
 
+    const rawBoletoExpiration =
+      (transaction as { boleto_expiration_date?: string | null })?.boleto_expiration_date
+      ?? null;
+
     return {
       provider: "pagarme",
       status,
       transactionId: transaction?.id ?? null,
+      boletoUrl:
+        (transaction as { boleto_url?: string | null })?.boleto_url
+        ?? null,
+      boletoVencimento: rawBoletoExpiration ? new Date(rawBoletoExpiration) : null,
       raw: transaction,
     };
   },

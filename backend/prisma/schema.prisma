@@ -53,6 +53,7 @@ model Usuario {
   emailTokens   EmailVerificationToken[]
   resetTokens   PasswordResetToken[]
   notificacoes  Notificacao[]
+  mensagens     Mensagem[]
 
   @@map("usuarios")
 }
@@ -65,9 +66,10 @@ model Profissional {
   especialidade String?
   criadoEm      DateTime @default(now()) @map("criado_em")
 
-  usuario Usuario? @relation(fields: [userId], references: [id])
-  sessoes Sessao[]
-  vinculos Vinculo[]
+  usuario          Usuario?           @relation(fields: [userId], references: [id])
+  sessoes          Sessao[]
+  vinculos         Vinculo[]
+  planosTratamento PlanoTratamento[]
 
   @@map("profissionais")
   @@index([userId])
@@ -94,9 +96,12 @@ model Paciente {
   sessoes             Sessao[]
   servicosContratados ServicoContratado[]
   recibos             Recibo[]
+  pagamentos          Pagamento[]
   alertas             AlertaClinico[]
   diarios             DiarioSentimento[]
+  anamnese            Anamnese?
   vinculos            Vinculo[]
+  planosTratamento    PlanoTratamento[]
 
   @@map("pacientes")
   @@index([userId])
@@ -153,6 +158,7 @@ model Sessao {
   paciente     Paciente?    @relation(fields: [pacienteId], references: [id])
   profissional Profissional? @relation(fields: [profissionalId], references: [id])
   recibos      Recibo[]
+  pagamentos   Pagamento[]
 
   @@map("sessoes")
   @@index([pacienteId])
@@ -207,6 +213,84 @@ model DiarioSentimento {
   @@index([pacienteId])
 }
 
+model PlanoTratamento {
+  id              String       @id @default(uuid())
+  pacienteId      String       @map("paciente_id")
+  paciente        Paciente     @relation(fields: [pacienteId], references: [id])
+  profissionalId  String       @map("profissional_id")
+  profissional    Profissional @relation(fields: [profissionalId], references: [id])
+  objetivos       String
+  abordagem       String
+  frequencia      String
+  duracaoPrevista String?      @map("duracao_prevista")
+  tecnicas        String?
+  indicadores     String?
+  observacoes     String?
+  status          String       @default("ativo")
+  criadoEm        DateTime     @default(now()) @map("criado_em")
+  atualizadoEm    DateTime     @updatedAt @map("atualizado_em")
+
+  @@map("planos_tratamento")
+  @@index([pacienteId])
+  @@index([profissionalId])
+}
+
+model Pagamento {
+  id               String    @id @default(uuid())
+  sessaoId         String    @map("sessao_id")
+  sessao           Sessao    @relation(fields: [sessaoId], references: [id])
+  pacienteId       String    @map("paciente_id")
+  paciente         Paciente  @relation(fields: [pacienteId], references: [id])
+  valor            Float
+  status           String    @default("pendente")
+  metodo           String    @default("boleto")
+  transactionId    String?   @map("transaction_id")
+  boletoUrl        String?   @map("boleto_url")
+  boletoVencimento DateTime? @map("boleto_vencimento")
+  provider         String    @default("pagarme")
+  criadoEm         DateTime  @default(now()) @map("criado_em")
+  atualizadoEm     DateTime  @updatedAt @map("atualizado_em")
+
+  @@map("pagamentos")
+  @@index([sessaoId])
+  @@index([pacienteId])
+}
+
+model Anamnese {
+  id                      String   @id @default(uuid())
+  pacienteId              String   @unique @map("paciente_id")
+  motivoConsulta          String?  @map("motivo_consulta")
+  expectativas            String?
+  historicoSaudeMental    String?  @map("historico_saude_mental")
+  experienciasTraumaticas String?  @map("experiencias_traumaticas")
+  sintomasAtuais          String?  @map("sintomas_atuais")
+  rotinaDiaria            String?  @map("rotina_diaria")
+  habitosSono             String?  @map("habitos_sono")
+  dietaExercicio          String?  @map("dieta_exercicio")
+  usoSubstancias          String?  @map("uso_substancias")
+  dinamicaFamiliar        String?  @map("dinamica_familiar")
+  apoioSocial             String?  @map("apoio_social")
+  indicadoresRisco        String?  @map("indicadores_risco")
+  consentimento           Boolean  @default(false)
+  abordagensRecomendadas  String[] @default([]) @map("abordagens_recomendadas")
+  respostasPsicanalise    Json?    @map("respostas_psicanalise")
+  respostasBehaviorismo   Json?    @map("respostas_behaviorismo")
+  respostasHumanismo      Json?    @map("respostas_humanismo")
+  respostasCognitivismo   Json?    @map("respostas_cognitivismo")
+  respostasPsicPositiva   Json?    @map("respostas_psic_positiva")
+  respostasNeuropsicologia Json?   @map("respostas_neuropsicologia")
+  respostasSistemica      Json?    @map("respostas_sistemica")
+  respostasTranspessoal   Json?    @map("respostas_transpessoal")
+  status                  String   @default("pendente")
+  criadoEm                DateTime @default(now()) @map("criado_em")
+  atualizadoEm            DateTime @updatedAt @map("atualizado_em")
+
+  paciente Paciente @relation(fields: [pacienteId], references: [id])
+
+  @@map("anamneses")
+  @@index([pacienteId])
+}
+
 model Vinculo {
   id             String   @id @default(uuid())
   pacienteId     String   @map("paciente_id")
@@ -216,10 +300,27 @@ model Vinculo {
 
   paciente     Paciente     @relation(fields: [pacienteId], references: [id])
   profissional Profissional @relation(fields: [profissionalId], references: [id])
+  mensagens    Mensagem[]
 
   @@map("vinculos")
   @@index([pacienteId])
   @@index([profissionalId])
+}
+
+model Mensagem {
+  id        String   @id @default(uuid())
+  vinculoId String   @map("vinculo_id")
+  vinculo   Vinculo  @relation(fields: [vinculoId], references: [id])
+  autorId   String   @map("autor_id")
+  autor     Usuario  @relation(fields: [autorId], references: [id])
+  texto     String
+  lida      Boolean  @default(false)
+  criadoEm  DateTime @default(now()) @map("criado_em")
+
+  @@map("mensagens")
+  @@index([vinculoId])
+  @@index([autorId])
+  @@index([criadoEm])
 }
 
 model Notificacao {

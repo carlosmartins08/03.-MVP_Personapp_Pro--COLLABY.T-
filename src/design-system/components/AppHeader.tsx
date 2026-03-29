@@ -1,21 +1,23 @@
-import * as React from "react"
-import { ArrowLeft, Bell } from "lucide-react"
+import * as React from "react";
+import { ArrowLeft, Bell } from "lucide-react";
 
-import { cn } from "@/lib/utils"
+import { useNotificationBadge } from "@/contexts/NotificationBadgeContext";
+import { cn } from "@/lib/utils";
 
-type AppHeaderVariant = "patient" | "professional" | "minimal"
+type AppHeaderVariant = "patient" | "professional" | "minimal";
 
 interface AppHeaderProps {
-  variant?: AppHeaderVariant
-  name?: string
-  title?: string
-  date?: Date
-  notificationCount?: number
-  onBack?: () => void
-  onNotificationsClick?: () => void
-  action?: React.ReactNode
-  children?: React.ReactNode
-  className?: string
+  variant?: AppHeaderVariant;
+  name?: string;
+  title?: string;
+  date?: Date;
+  notificationCount?: number;
+  onBack?: () => void;
+  onNotificationsClick?: () => void;
+  onNotificationPress?: () => void;
+  action?: React.ReactNode;
+  children?: React.ReactNode;
+  className?: string;
 }
 
 const formatDate = (d: Date) =>
@@ -23,23 +25,32 @@ const formatDate = (d: Date) =>
     weekday: "long",
     day: "numeric",
     month: "long",
-  }).format(d)
+  }).format(d);
 
 const AppHeader = ({
   variant = "patient",
   name,
   title,
   date,
-  notificationCount = 0,
+  notificationCount,
   onBack,
   onNotificationsClick,
+  onNotificationPress,
   action,
   children,
   className,
 }: AppHeaderProps) => {
-  const dateLabel = formatDate(date ?? new Date())
-  const showNotifications = variant !== "minimal"
-  const hasNotifications = notificationCount > 0
+  const dateLabel = formatDate(date ?? new Date());
+  const showNotifications = variant !== "minimal";
+  const notificationBadge = useNotificationBadge();
+
+  const resolvedNotificationCount =
+    notificationCount ?? notificationBadge?.notificationCount ?? 0;
+  const resolvedNotificationPress =
+    onNotificationPress
+    ?? onNotificationsClick
+    ?? notificationBadge?.onNotificationPress;
+  const hasNotifications = resolvedNotificationCount > 0;
 
   if (variant === "minimal") {
     return (
@@ -61,10 +72,10 @@ const AppHeader = ({
           {action && <div>{action}</div>}
         </div>
       </header>
-    )
+    );
   }
 
-  const isPatient = variant === "patient"
+  const isPatient = variant === "patient";
 
   return (
     <header
@@ -77,20 +88,33 @@ const AppHeader = ({
       <div className="relative z-10 flex items-center justify-between">
         <div>
           {title ? (
-            <h1 className={cn(
-              "text-xl font-bold",
-              isPatient ? "text-white" : "text-neutral-500"
-            )}>
-              {isPatient && name ? `Olá, ${name} 👋` : title}
+            <h1
+              className={cn(
+                isPatient
+                  ? "text-2xl font-bold font-sora text-white leading-tight"
+                  : "text-xl font-bold text-neutral-500"
+              )}
+            >
+              {isPatient && name ? `Ol\u00E1, ${name} \u{1F44B}` : title}
             </h1>
           ) : (
-            <p className={cn(
-              isPatient ? "text-2xl font-bold text-white" : "text-base font-semibold text-neutral-500"
-            )}>
-              {isPatient ? `Olá, ${name ?? ""} 👋` : `Dr/Dra. ${name ?? ""}`}
+            <p
+              className={cn(
+                isPatient
+                  ? "text-2xl font-bold font-sora text-white leading-tight"
+                  : "text-base font-semibold text-neutral-500"
+              )}
+            >
+              {isPatient ? `Ol\u00E1, ${name ?? ""} \u{1F44B}` : `Dr/Dra. ${name ?? ""}`}
             </p>
           )}
-          <p className={cn("text-sm capitalize", isPatient ? "text-white/70" : "text-neutral-300")}>
+          <p
+            className={cn(
+              isPatient
+                ? "text-sm font-manrope text-white/70 mt-0.5"
+                : "text-sm capitalize text-neutral-300"
+            )}
+          >
             {dateLabel}
           </p>
         </div>
@@ -100,18 +124,20 @@ const AppHeader = ({
           {showNotifications && !action && (
             <button
               type="button"
-              onClick={onNotificationsClick}
-              aria-label="Notificações"
+              onClick={resolvedNotificationPress}
+              aria-label="Notifica\u00E7\u00F5es"
               className={cn(
-                "relative inline-flex h-9 w-9 items-center justify-center rounded-full transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ds-primary focus-visible:ring-offset-2",
-                isPatient
-                  ? "bg-white/15 text-white hover:bg-white/25"
-                  : "bg-neutral-100 text-ds-primary hover:bg-neutral-200"
+                "relative w-9 h-9 rounded-full flex items-center justify-center transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ds-primary focus-visible:ring-offset-2",
+                isPatient ? "bg-white/20" : "bg-neutral-100"
               )}
             >
-              <Bell className="h-4 w-4" />
+              <Bell className={cn("w-5 h-5", isPatient ? "text-white" : "text-neutral-400")} />
               {hasNotifications && (
-                <span className="absolute right-1 top-1 h-2 w-2 rounded-full bg-ds-error" />
+                <span className="absolute -top-0.5 -right-0.5 w-4 h-4 rounded-full bg-ds-error flex items-center justify-center">
+                  <span className="text-white text-[10px] font-bold leading-none">
+                    {resolvedNotificationCount > 9 ? "9+" : resolvedNotificationCount}
+                  </span>
+                </span>
               )}
             </button>
           )}
@@ -126,8 +152,9 @@ const AppHeader = ({
       )}
       {children && <div className="relative z-10 mt-4">{children}</div>}
     </header>
-  )
-}
+  );
+};
 
-export { AppHeader }
-export type { AppHeaderProps, AppHeaderVariant }
+export { AppHeader };
+export type { AppHeaderProps, AppHeaderVariant };
+

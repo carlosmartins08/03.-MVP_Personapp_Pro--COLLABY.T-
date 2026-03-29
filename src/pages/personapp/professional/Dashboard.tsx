@@ -1,4 +1,4 @@
-﻿import React from "react"
+import React from "react"
 import { useNavigate } from "react-router-dom"
 
 import {
@@ -9,10 +9,11 @@ import {
   Button,
   Card,
   ConsultDarkCard,
-  SkeletonCard,
   SkeletonAvatar,
+  SkeletonCard,
   SkeletonText,
 } from "@/design-system/components"
+import { DotGrid, ShapeBlob } from "@/design-system/decorations"
 import { useProfessionalDashboard } from "@/hooks/personapp/useProfessionalDashboard"
 
 const getInitials = (name: string) => {
@@ -39,31 +40,46 @@ const DashboardPage = () => {
   } = useProfessionalDashboard()
 
   return (
-    <div className="flex flex-col gap-6 max-w-lg mx-auto px-4 pb-24">
+    <div className="flex flex-col gap-6 max-w-lg mx-auto px-4 pb-24 font-manrope">
       <div className="-mx-4">
-        <AppHeader variant="professional" name="Rafael Souza" notificationCount={2}>
+        <AppHeader variant="professional" name="Rafael Souza">
           <div className="grid gap-3 px-4 pb-2 md:grid-cols-3">
             {isLoadingMetrics ? (
               Array.from({ length: 3 }).map((_, index) => (
-                <SkeletonCard key={`metric-${index}`} className="h-20" />
+                <SkeletonCard key={`metric-${index}`} className="h-24 rounded-3xl" />
               ))
             ) : (
               <>
-                <Card variant="default" className="p-4">
-                  <p className="text-xs text-neutral-300">Total pacientes</p>
-                  <p className="mt-2 text-2xl sm:text-3xl font-semibold text-neutral-500">
+                <Card
+                  variant="default"
+                  className="rounded-3xl p-4 border border-neutral-100 shadow-ds-card transition-all duration-200 hover:shadow-ds-md cursor-pointer"
+                >
+                  <p className="text-xs font-manrope font-semibold uppercase tracking-wider text-neutral-300">
+                    Total pacientes
+                  </p>
+                  <p className="mt-2 text-4xl font-sora font-bold text-neutral-500">
                     {metrics.totalPatients}
                   </p>
                 </Card>
-                <Card variant="default" className="p-4">
-                  <p className="text-xs text-neutral-300">Sessoes esta semana</p>
-                  <p className="mt-2 text-2xl sm:text-3xl font-semibold text-neutral-500">
+                <Card
+                  variant="default"
+                  className="rounded-3xl p-4 border border-neutral-100 shadow-ds-card transition-all duration-200 hover:shadow-ds-md cursor-pointer"
+                >
+                  <p className="text-xs font-manrope font-semibold uppercase tracking-wider text-neutral-300">
+                    Sessoes esta semana
+                  </p>
+                  <p className="mt-2 text-4xl font-sora font-bold text-neutral-500">
                     {metrics.sessionsThisWeek}
                   </p>
                 </Card>
-                <Card variant="default" className="p-4">
-                  <p className="text-xs text-neutral-300">Sessoes hoje</p>
-                  <p className="mt-2 text-2xl sm:text-3xl font-semibold text-neutral-500">
+                <Card
+                  variant="default"
+                  className="rounded-3xl p-4 border border-neutral-100 shadow-ds-card transition-all duration-200 hover:shadow-ds-md cursor-pointer"
+                >
+                  <p className="text-xs font-manrope font-semibold uppercase tracking-wider text-neutral-300">
+                    Sessoes hoje
+                  </p>
+                  <p className="mt-2 text-4xl font-sora font-bold text-neutral-500">
                     {metrics.sessionsToday}
                   </p>
                 </Card>
@@ -75,12 +91,14 @@ const DashboardPage = () => {
 
       <section className="flex flex-col gap-3">
         <div className="flex items-center justify-between">
-          <h2 className="text-base font-semibold text-neutral-500">Abordagens</h2>
+          <h2 className="text-xs font-manrope font-semibold uppercase tracking-wider text-neutral-300">
+            Abordagens
+          </h2>
         </div>
         <div className="flex gap-3 overflow-x-auto pb-2">
           {isLoadingApproaches
             ? Array.from({ length: 3 }).map((_, index) => (
-                <SkeletonCard key={`approach-${index}`} className="h-24 w-48" />
+                <SkeletonCard key={`approach-${index}`} className="h-24 w-48 rounded-3xl" />
               ))
             : approachCards.map((item) => (
                 <ApproachCard
@@ -95,34 +113,67 @@ const DashboardPage = () => {
       </section>
 
       <section className="flex flex-col gap-3">
-        <h2 className="text-base font-semibold text-neutral-500">Próxima sessão</h2>
+        <h2 className="text-xs font-manrope font-semibold uppercase tracking-wider text-neutral-300">
+          Proxima sessao
+        </h2>
         {isLoadingNextSession ? (
-          <SkeletonCard className="h-36" />
+          <SkeletonCard className="h-36 rounded-3xl" />
         ) : nextSession ? (
-          <ConsultDarkCard
-            status={nextSession.status}
-            title={nextSession.title}
-            patientName={nextSession.patientName}
-            timeLabel={nextSession.timeLabel}
-            dateLabel={nextSession.dateLabel}
-            onAction={() => navigate("/app/profissional/agenda")}
-          />
+          <div className="relative overflow-hidden bg-ds-primary rounded-3xl shadow-ds-lg">
+            <ShapeBlob
+              color="currentColor"
+              size={150}
+              opacity={0.06}
+              className="absolute -top-8 -right-8 z-20 pointer-events-none text-white"
+            />
+            <DotGrid
+              color="currentColor"
+              opacity={0.08}
+              cols={6}
+              rows={3}
+              className="absolute bottom-2 right-3 z-20 pointer-events-none text-white"
+            />
+            <ConsultDarkCard
+              status={nextSession.status}
+              title={nextSession.title}
+              patientName={nextSession.patientName}
+              timeLabel={nextSession.timeLabel}
+              dateLabel={nextSession.dateLabel}
+              onAction={() => navigate("/app/profissional/agenda")}
+              className="relative z-10 rounded-3xl shadow-none"
+            />
+          </div>
         ) : (
-          <Card variant="default" className="p-4">
-            <p className="text-sm text-neutral-400">Nenhuma sessão agendada.</p>
+          <Card
+            variant="default"
+            className="rounded-3xl p-4 border border-neutral-100 shadow-ds-card transition-all duration-200 hover:shadow-ds-md cursor-pointer"
+          >
+            <p className="text-sm font-manrope text-neutral-400 leading-relaxed">
+              Nenhuma sessao agendada.
+            </p>
           </Card>
         )}
       </section>
 
       <section className="flex flex-col gap-3">
         <div className="flex items-center justify-between">
-          <h2 className="text-base font-semibold text-neutral-500">Pacientes recentes</h2>
-          <Button variant="ghost" size="sm" onClick={() => navigate("/app/profissional/pacientes")}> 
+          <h2 className="text-xs font-manrope font-semibold uppercase tracking-wider text-neutral-300">
+            Pacientes recentes
+          </h2>
+          <Button
+            variant="ghost"
+            size="sm"
+            className="rounded-2xl h-11 font-manrope font-medium transition-all duration-200"
+            onClick={() => navigate("/app/profissional/pacientes")}
+          >
             Ver todos
           </Button>
         </div>
 
-        <Card variant="default" className="p-4">
+        <Card
+          variant="default"
+          className="rounded-3xl p-4 border border-neutral-100 shadow-ds-card transition-all duration-200 hover:shadow-ds-md cursor-pointer"
+        >
           {isLoadingPatients ? (
             <div className="flex flex-col gap-3">
               {Array.from({ length: 3 }).map((_, index) => (
@@ -136,15 +187,17 @@ const DashboardPage = () => {
               ))}
             </div>
           ) : recentPatients.length === 0 ? (
-            <p className="text-sm text-neutral-400">Nenhum paciente encontrado.</p>
+            <p className="text-sm font-manrope text-neutral-400 leading-relaxed">
+              Nenhum paciente encontrado.
+            </p>
           ) : (
             <div className="flex flex-col gap-4">
               {recentPatients.map((patient) => (
                 <div key={patient.id} className="flex items-center gap-3">
                   <Avatar size="sm" initials={getInitials(patient.nome)} />
                   <div className="flex flex-1 flex-col">
-                    <p className="text-sm font-semibold text-neutral-500">{patient.nome}</p>
-                    <p className="text-xs text-neutral-300">{patient.sessionLabel}</p>
+                    <p className="text-sm font-manrope font-semibold text-neutral-500">{patient.nome}</p>
+                    <p className="text-xs font-manrope text-neutral-300">{patient.sessionLabel}</p>
                   </div>
                   <Badge variant={patient.status.variant} size="sm">
                     {patient.status.label}

@@ -7,13 +7,17 @@ import type {
 } from "fastify";
 
 import { analyticsRoutes } from "./analytics";
+import { anamneseRoutes } from "./anamnese";
 import { alertasRoutes } from "./alertas";
 import { authRoutes } from "./auth";
+import { chatRoutes } from "./chat";
 import { consultasRoutes } from "./consultas";
 import { financeiroRoutes } from "./financeiro";
 import { diarioRoutes } from "./diario";
 import { notificacoesRoutes } from "./notificacoes";
+import { pagamentosRoutes } from "./pagamentos";
 import { pacientesRoutes } from "./pacientes";
+import { planoTratamentoRoutes } from "./plano-tratamento";
 import { profissionaisRoutes } from "./profissionais";
 import { recibosRoutes } from "./recibos";
 import { sessoesRoutes } from "./sessoes";
@@ -36,6 +40,7 @@ export type RouteRegistry = RouteRegistration[];
 
 const routeRegistry: RouteRegistry = [
   { name: "auth", plugin: authRoutes },
+  { name: "chat", plugin: chatRoutes },
   { name: "pacientes", plugin: pacientesRoutes },
   { name: "profissionais", plugin: profissionaisRoutes },
   { name: "sessoes", plugin: sessoesRoutes },
@@ -47,8 +52,11 @@ const routeRegistry: RouteRegistry = [
   { name: "analytics", plugin: analyticsRoutes },
   { name: "financeiro", plugin: financeiroRoutes },
   { name: "diario", plugin: diarioRoutes },
+  { name: "anamnese", plugin: anamneseRoutes },
   { name: "vinculos", plugin: vinculosRoutes },
   { name: "notificacoes", plugin: notificacoesRoutes },
+  { name: "pagamentos", plugin: pagamentosRoutes },
+  { name: "planoTratamento", plugin: planoTratamentoRoutes },
   { name: "traducoes", plugin: traducoesRoutes },
 ];
 

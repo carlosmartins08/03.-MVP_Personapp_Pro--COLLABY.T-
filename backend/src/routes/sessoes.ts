@@ -78,6 +78,48 @@ export async function sessoesRoutes(app: FastifyInstance) {
     return reply.send(updated);
   });
 
+  app.patch("/sessoes/:id/confirmar", async (request, reply) => {
+    const params = z.object({ id: z.string().uuid() }).parse(request.params);
+    const userId = request.user?.sub;
+
+    if (!userId) {
+      return reply.code(401).send({ error: "Nao autenticado" });
+    }
+
+    const paciente = await app.prisma.paciente.findFirst({
+      where: { userId },
+      select: { id: true },
+    });
+
+    if (!paciente) {
+      return reply.code(403).send({ error: "Acesso negado" });
+    }
+
+    const sessao = await app.prisma.sessao.findUnique({
+      where: { id: params.id },
+      select: { id: true, pacienteId: true, status: true },
+    });
+
+    if (!sessao) {
+      return reply.code(404).send({ error: "Sessao nao encontrada" });
+    }
+
+    if (sessao.pacienteId !== paciente.id) {
+      return reply.code(403).send({ error: "Sessao nao pertence ao paciente" });
+    }
+
+    if (sessao.status !== "agendada") {
+      return reply.code(400).send({ error: "Sessao nao pode ser confirmada" });
+    }
+
+    const atualizada = await app.prisma.sessao.update({
+      where: { id: params.id },
+      data: { status: "confirmada" },
+    });
+
+    return reply.send(atualizada);
+  });
+
   app.post("/sessoes/:id/pagar", async (request, reply) => {
     const params = z.object({ id: z.string().uuid() }).parse(request.params);
     const updated = await app.prisma.sessao.update({

@@ -45,6 +45,36 @@ type MockDiario = {
   pacienteId: string;
 };
 
+type MockAnamnese = {
+  id: string;
+  pacienteId: string;
+  motivoConsulta?: string;
+  expectativas?: string;
+  historicoSaudeMental?: string;
+  experienciasTraumaticas?: string;
+  sintomasAtuais?: string;
+  rotinaDiaria?: string;
+  habitosSono?: string;
+  dietaExercicio?: string;
+  usoSubstancias?: string;
+  dinamicaFamiliar?: string;
+  apoioSocial?: string;
+  indicadoresRisco?: string;
+  consentimento?: boolean;
+  abordagensRecomendadas?: string[];
+  respostasPsicanalise?: Record<string, string>;
+  respostasBehaviorismo?: Record<string, string>;
+  respostasHumanismo?: Record<string, string>;
+  respostasCognitivismo?: Record<string, string>;
+  respostasPsicPositiva?: Record<string, string>;
+  respostasNeuropsicologia?: Record<string, string>;
+  respostasSistemica?: Record<string, string>;
+  respostasTranspessoal?: Record<string, string>;
+  status?: 'pendente' | 'parte1' | 'triagem' | 'parte2' | 'concluida';
+  criadoEm: string;
+  atualizadoEm: string;
+};
+
 type MockAlerta = {
   id: string;
   pacienteId: string;
@@ -248,6 +278,8 @@ const diarios: MockDiario[] = [
   },
 ];
 
+const anamnesesByPacienteId: Record<string, MockAnamnese> = {};
+
 const alertas: MockAlerta[] = [
   {
     id: 'alerta-1',
@@ -377,6 +409,12 @@ const getUserFromToken = () => {
   return usersByToken[token] ?? null;
 };
 
+const getPacienteLogado = () => {
+  const user = getUserFromToken();
+  if (!user || user.tipo !== 'paciente') return null;
+  return pacientes.find((item) => item.userId === user.id) ?? null;
+};
+
 const withSnakeCase = (data: MockAlerta | MockDiario) => {
   if ('dataCriacao' in data) {
     const alerta = data as MockAlerta;
@@ -468,6 +506,74 @@ export async function mockApiRequest<T>(
       user.idiomaPreferido = body.idiomaPreferido as 'pt' | 'en';
     }
     return { status: 'ok' } as T;
+  }
+
+  if (method === 'GET' && normalizedPath === '/anamnese') {
+    const paciente = getPacienteLogado();
+    if (!paciente) {
+      throw new Error('Paciente nao encontrado');
+    }
+    return (anamnesesByPacienteId[paciente.id] ?? null) as T;
+  }
+
+  if (method === 'POST' && normalizedPath === '/anamnese') {
+    const paciente = getPacienteLogado();
+    if (!paciente) {
+      throw new Error('Paciente nao encontrado');
+    }
+
+    const now = new Date().toISOString();
+    const atual = anamnesesByPacienteId[paciente.id];
+    const next: MockAnamnese = {
+      ...(atual ?? {
+        id: `anamnese-${paciente.id}`,
+        pacienteId: paciente.id,
+        criadoEm: now,
+        atualizadoEm: now,
+      }),
+      ...(body ?? {}),
+      pacienteId: paciente.id,
+      criadoEm: atual?.criadoEm ?? now,
+      atualizadoEm: now,
+    };
+
+    anamnesesByPacienteId[paciente.id] = next;
+    return next as T;
+  }
+
+  if (method === 'PATCH' && normalizedPath === '/anamnese/triagem') {
+    const paciente = getPacienteLogado();
+    if (!paciente) {
+      throw new Error('Paciente nao encontrado');
+    }
+
+    const abordagensRecomendadas = Array.isArray(body?.abordagensRecomendadas)
+      ? body?.abordagensRecomendadas.map(String).slice(0, 2)
+      : [];
+
+    if (!abordagensRecomendadas.length) {
+      throw new Error('abordagensRecomendadas obrigatorio');
+    }
+
+    const now = new Date().toISOString();
+    const atual = anamnesesByPacienteId[paciente.id];
+
+    const next: MockAnamnese = {
+      ...(atual ?? {
+        id: `anamnese-${paciente.id}`,
+        pacienteId: paciente.id,
+        criadoEm: now,
+        atualizadoEm: now,
+      }),
+      pacienteId: paciente.id,
+      abordagensRecomendadas,
+      status: 'triagem',
+      criadoEm: atual?.criadoEm ?? now,
+      atualizadoEm: now,
+    };
+
+    anamnesesByPacienteId[paciente.id] = next;
+    return next as T;
   }
 
   if (method === 'GET' && normalizedPath.startsWith('/analytics/')) {

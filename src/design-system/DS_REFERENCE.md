@@ -1,6 +1,38 @@
-# DS Reference � PersonApp
+﻿# DS Reference — PersonApp
 > Leia este arquivo ANTES de qualquer missao visual.
 > E a fonte unica de verdade para cores, tokens e componentes.
+
+## ⚡ DS v3 — Ativo desde 2026-03-28
+
+### Tipografia v3
+- Titulos/numeros: font-sora
+- Corpo/UI: font-manrope
+- Roboto mantido como alias v2
+
+### Novos tokens disponiveis
+- brand.* — cores primarias
+- surface.* — fundos
+- accent.* — pasteis (mint, sky, peach, lemon, lavender)
+- status.* — semanticas
+- text.* — hierarquia textual
+- radius.* — bordas
+- shadow.* — elevacoes (ds-sm, ds-md, ds-lg, ds-card)
+- motion.* — duracoes (fast 120ms, normal 200ms, slow 320ms)
+
+### Primitivos decorativos
+import { ShapeBlob, LineAbstract, DotGrid } from '@/design-system/decorations'
+
+### Classes Tailwind novas
+- font-sora, font-manrope
+- ds-brand, ds-surface-page, ds-surface-card, ds-surface-dark
+- ds-text-primary, ds-text-secondary
+- ds-accent-mint, ds-accent-sky, ds-accent-peach,
+  ds-accent-lemon, ds-accent-lavender
+- shadow-ds-sm, shadow-ds-md, shadow-ds-lg, shadow-ds-card
+
+### Colors v2 (aliases — continuam funcionando)
+colors.primary, colors.neutral, colors.surface,
+colors.semantic, colors.approach, colors.moodBackground
 
 ## Status de implementacao
 
@@ -27,7 +59,7 @@
 | ApproachCard | SIM | SIM | SIM |
 
 ## Tokens de cor corretos (fonte: src/design-system/tokens.ts)
-> Spacing: usar xl2/xl3 ou 2xl/3xl � ambos funcionam
+> Spacing: usar xl2/xl3 ou 2xl/3xl — ambos funcionam
 ```ts
 export const colors = {
   primary: {
@@ -150,12 +182,14 @@ import { ConsultDarkCard, ApproachCard } from '@/design-system/components'
 - Varios componentes listados na doc 2.0 (AlertBanner, ProfessionalCard, ConsultationRoom, TimerDisplay, etc.) nao existem em src/design-system/components.
 
 ## Regras obrigatorias para qualquer missao visual
-1. NUNCA usar hex hardcoded � sempre usar token do tokens.ts
+1. NUNCA usar hex hardcoded — sempre usar token do tokens.ts
 2. NUNCA importar de @/components/ui nas telas PersonApp
 3. SEMPRE usar font-roboto nas telas PersonApp
 4. SEMPRE usar AppHeader no topo das telas personapp/
 5. SOSButton NUNCA recebe disabled, NUNCA opacity < 1
 6. Cores por abordagem vem de colors.approach[key] do tokens.ts
+
+
 
 
 
