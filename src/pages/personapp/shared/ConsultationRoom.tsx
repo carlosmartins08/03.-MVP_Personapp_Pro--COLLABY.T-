@@ -63,19 +63,19 @@ const ConsultationRoomPage = () => {
   }
 
   return (
-    <div className="flex flex-col gap-5 max-w-lg mx-auto px-4 pb-24 font-manrope">
-      <div className="-mx-4">
+    <div className="min-h-screen bg-white font-manrope">
+      <div className="lg:max-w-2xl lg:mx-auto">
         <AppHeader
           variant="minimal"
           title="Sala de consulta"
           onBack={() => navigate(-1)}
+          className="lg:px-8"
         />
-      </div>
-
-      <div className="flex flex-col gap-3">
+        <div className="flex flex-col gap-5 px-4 pb-28 lg:px-8">
+          <div className="flex flex-col gap-3">
         <div className="flex items-center justify-between">
           <div>
-            <p className="text-xs font-manrope font-semibold uppercase tracking-wide text-neutral-300">
+            <p className="text-xs font-manrope font-semibold uppercase tracking-widest text-neutral-300">
               Consulta #{id ?? "--"}
             </p>
             <h1 className="text-lg font-sora font-semibold text-neutral-500">Atendimento online</h1>
@@ -97,19 +97,25 @@ const ConsultationRoomPage = () => {
         </div>
 
         {roomState === "waiting" && (
-          <Card variant="default" className="p-5 rounded-3xl border border-neutral-100 shadow-ds-card transition-all duration-200 hover:shadow-ds-md">
+          <Card
+            variant="default"
+            className="p-5 rounded-3xl border border-neutral-100 shadow-ds-card transition-all duration-200 hover:shadow-ds-md"
+          >
             <p className="text-sm font-manrope text-neutral-400 leading-relaxed">
               {user?.tipo === "paciente"
                 ? "Aguardando profissional entrar na sala."
                 : "Aguardando paciente entrar na sala."}
             </p>
             <div className="mt-4 flex flex-wrap gap-2">
-              <Button className="rounded-2xl font-manrope font-semibold transition-all duration-200" onClick={handleStart}>
+              <Button
+                className="rounded-2xl h-12 font-manrope font-semibold shadow-ds-sm transition-all duration-200"
+                onClick={handleStart}
+              >
                 Iniciar chamada
               </Button>
               <Button
                 variant="ghost"
-                className="rounded-2xl font-manrope font-semibold transition-all duration-200"
+                className="rounded-2xl h-12 font-manrope font-semibold shadow-ds-sm transition-all duration-200"
                 onClick={() => setRoomState("ended")}
               >
                 Cancelar
@@ -149,7 +155,7 @@ const ConsultationRoomPage = () => {
                   isMuted && "border border-ds-primary"
                 )}
               >
-                {isMuted ? "Ativar audio" : "Silenciar"}
+                {isMuted ? "Ativar áudio" : "Silenciar"}
               </Button>
               <Button
                 variant="ghost"
@@ -159,7 +165,7 @@ const ConsultationRoomPage = () => {
                   isCameraOff && "border border-ds-primary"
                 )}
               >
-                {isCameraOff ? "Ligar camera" : "Desligar camera"}
+                {isCameraOff ? "Ligar câmera" : "Desligar câmera"}
               </Button>
               <Button
                 variant="ghost"
@@ -183,15 +189,21 @@ const ConsultationRoomPage = () => {
         )}
 
         {roomState === "ending" && (
-          <Card variant="default" className="p-5 rounded-3xl border border-neutral-100 shadow-ds-card transition-all duration-200 hover:shadow-ds-md">
+          <Card
+            variant="default"
+            className="p-5 rounded-3xl border border-neutral-100 shadow-ds-card transition-all duration-200 hover:shadow-ds-md"
+          >
             <p className="text-sm font-manrope text-neutral-400">Encerrando atendimento...</p>
             <div className="mt-4 flex gap-2">
-              <Button className="rounded-2xl font-manrope font-semibold transition-all duration-200" onClick={() => setRoomState("ended")}>
+              <Button
+                className="rounded-2xl h-12 font-manrope font-semibold shadow-ds-sm transition-all duration-200"
+                onClick={() => setRoomState("ended")}
+              >
                 Finalizar agora
               </Button>
               <Button
                 variant="ghost"
-                className="rounded-2xl font-manrope font-semibold transition-all duration-200"
+                className="rounded-2xl h-12 font-manrope font-semibold shadow-ds-sm transition-all duration-200"
                 onClick={() => setRoomState("active")}
               >
                 Voltar
@@ -201,25 +213,36 @@ const ConsultationRoomPage = () => {
         )}
 
         {roomState === "ended" && (
-          <Card variant="default" className="p-5 rounded-3xl border border-neutral-100 shadow-ds-card transition-all duration-200 hover:shadow-ds-md">
+          <Card
+            variant="default"
+            className="p-5 rounded-3xl border border-neutral-100 shadow-ds-card transition-all duration-200 hover:shadow-ds-md"
+          >
             <p className="text-sm font-manrope text-neutral-400 leading-relaxed">
-              Consulta encerrada. O registro ficara disponivel no prontuario.
+              Consulta encerrada. O registro ficará disponível no prontuário.
             </p>
             <div className="mt-4 flex gap-2">
-              <Button className="rounded-2xl font-manrope font-semibold transition-all duration-200" onClick={() => navigate(agendaPath)}>
+              <Button
+                className="rounded-2xl h-12 font-manrope font-semibold shadow-ds-sm transition-all duration-200"
+                onClick={() => navigate(agendaPath)}
+              >
                 Voltar para agenda
               </Button>
             </div>
           </Card>
         )}
-      </div>
+          </div>
 
-      <Card variant="default" className="p-4 rounded-3xl border border-neutral-100 shadow-ds-card transition-all duration-200 hover:shadow-ds-md">
-        <p className="text-xs font-manrope font-semibold uppercase tracking-wider text-neutral-300">Sala</p>
-        <p className="text-sm font-manrope text-neutral-400">{roomUrl ?? "Criando sala..."}</p>
-        <p className="mt-2 text-xs font-manrope font-semibold uppercase tracking-wider text-neutral-300">Token</p>
-        <p className="text-sm font-manrope text-neutral-400 break-all">{token ?? "Gerando token..."}</p>
-      </Card>
+          <Card
+          variant="default"
+          className="p-4 rounded-3xl border border-neutral-100 shadow-ds-card transition-all duration-200 hover:shadow-ds-md"
+        >
+          <p className="text-xs font-manrope font-semibold uppercase tracking-widest text-neutral-300">Sala</p>
+          <p className="text-sm font-manrope text-neutral-400">{roomUrl ?? "Criando sala..."}</p>
+          <p className="mt-2 text-xs font-manrope font-semibold uppercase tracking-widest text-neutral-300">Token</p>
+          <p className="text-sm font-manrope text-neutral-400 break-all">{token ?? "Gerando token..."}</p>
+          </Card>
+        </div>
+      </div>
     </div>
   )
 }

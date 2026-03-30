@@ -142,7 +142,7 @@ const MoodCheckInPage = () => {
     <>
       <AppHeader variant="minimal" />
       <div className="min-h-[calc(100dvh-64px)] bg-ds-surface-dark font-manrope">
-        <div className="mx-auto flex w-full max-w-lg flex-col gap-4 px-4 pb-10">
+        <div className="mx-auto flex w-full flex-col gap-4 px-4 pb-28 lg:max-w-2xl lg:mx-auto lg:px-8">
           <div className="flex items-center justify-between pt-6">
             <div className="text-sm font-manrope text-white/70">Passo {step} de 3</div>
             <DotGrid

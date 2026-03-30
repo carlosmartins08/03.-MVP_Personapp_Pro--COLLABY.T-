@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Button } from '@/components/ui/button';
+import { Button } from '@/design-system/components';
 import { FileText } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { Paciente, Sessao } from '@/types';
@@ -57,8 +57,8 @@ const ProntuarioExportButton = ({ paciente, sessoes }: ProntuarioExportButtonPro
 
   return (
     <Button
-      variant="outline"
-      className="bg-azul-light text-azul-dark hover:bg-azul-light/80"
+      variant="secondary"
+      className="rounded-2xl font-manrope font-medium transition-all duration-200"
       onClick={handleExport}
     >
       <FileText className="mr-2" />

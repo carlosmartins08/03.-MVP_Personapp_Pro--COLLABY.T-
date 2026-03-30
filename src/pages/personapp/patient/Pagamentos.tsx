@@ -1,6 +1,7 @@
 import { CheckCircle, CreditCard } from "lucide-react"
 import { useNavigate } from "react-router-dom"
 
+import { ExportReciboButton } from "@/components/personapp/ExportReciboButton"
 import { AppHeader, Badge, Button, EmptyState, Skeleton } from "@/design-system/components"
 import { DotGrid } from "@/design-system/decorations"
 import { type Pagamento, useCriarPagamento, usePagamentos } from "@/hooks/usePagamentos"
@@ -59,20 +60,23 @@ function PagamentoCard({ pagamento, onPagar, destaque = false }: PagamentoCardPr
           <Button
             variant="primary"
             size="sm"
-            className="rounded-2xl font-manrope font-semibold transition-all duration-200"
+            className="h-12 rounded-2xl font-manrope font-semibold shadow-ds-sm transition-all duration-200"
             onClick={onPagar}
           >
             Pagar via boleto
           </Button>
         )}
+      </div>
 
-        {pagamento.status === "pago" && (
+      {pagamento.status === "pago" && (
+        <div className="flex items-center gap-2 mt-2">
           <div className="flex items-center gap-1 text-ds-success">
             <CheckCircle className="w-4 h-4" />
-            <span className="text-xs font-manrope font-medium">Confirmado</span>
+            <span className="text-xs font-medium">Confirmado</span>
           </div>
-        )}
-      </div>
+          <ExportReciboButton pagamento={pagamento} />
+        </div>
+      )}
 
       {pagamento.boletoUrl && pagamento.status === "pendente" && (
         <a
@@ -117,79 +121,84 @@ const PagamentosPage = () => {
   }
 
   return (
-    <div className="max-w-lg mx-auto px-4 pb-24 font-manrope">
-      <div className="-mx-4">
+    <div className="min-h-screen bg-white font-manrope">
+      <div className="lg:max-w-3xl lg:mx-auto">
         <AppHeader
           variant="patient"
           title="Pagamentos"
           onBack={() => navigate("/app/paciente/dashboard")}
+          className="lg:px-8"
         />
-      </div>
 
-      <div className="relative overflow-hidden bg-ds-surface-dark rounded-3xl p-5 text-white mt-4 shadow-ds-lg">
-        <DotGrid
-          color="currentColor"
-          opacity={0.06}
-          cols={6}
-          rows={3}
-          className="absolute top-2 right-2 pointer-events-none text-white"
-        />
-        <p className="relative z-10 text-xs font-manrope font-medium uppercase tracking-wider opacity-60">
-          Historico financeiro
-        </p>
-        <div className="relative z-10 flex items-end justify-between mt-2">
-          <div>
-            <p className="text-3xl font-sora font-bold">{formatCurrency(totalPago)}</p>
-            <p className="text-sm font-manrope opacity-75">total pago</p>
-          </div>
-          <div className="text-right">
-            <p className="text-lg font-sora font-semibold text-ds-warning">{formatCurrency(totalPendente)}</p>
-            <p className="text-xs font-manrope opacity-60">pendente</p>
-          </div>
-        </div>
-      </div>
-
-      <div className="mt-4">
-        {isLoading &&
-          [1, 2, 3].map((item) => <Skeleton key={item} className="h-24 rounded-3xl mb-3" />)}
-
-        {!isLoading && pendentes.length > 0 && (
-          <>
-            <p className="text-xs font-manrope font-semibold uppercase tracking-wider text-neutral-300 mt-2 mb-3">
-              Aguardando pagamento
+        <div className="px-4 pb-28 lg:px-8">
+          <div className="relative overflow-hidden bg-ds-surface-dark rounded-3xl p-5 text-white mt-4 shadow-ds-lg">
+            <DotGrid
+              color="currentColor"
+              opacity={0.06}
+              cols={6}
+              rows={3}
+              className="absolute top-2 right-2 pointer-events-none text-white"
+            />
+            <p className="relative z-10 text-xs font-manrope font-medium uppercase tracking-widest opacity-60">
+              Histórico financeiro
             </p>
-            {pendentes.map((pagamento) => (
-              <PagamentoCard
-                key={pagamento.id}
-                pagamento={pagamento}
-                onPagar={() => handlePagar(pagamento)}
-                destaque
-              />
-            ))}
-          </>
-        )}
-
-        {!isLoading && (
-          <>
-            <p className="text-xs font-manrope font-semibold uppercase tracking-wider text-neutral-300 mt-6 mb-3">
-              Historico
-            </p>
-
-            {historico.length === 0 && (
-              <div className="bg-ds-accent-sky/30 rounded-3xl p-6">
-                <EmptyState
-                  icon={<CreditCard className="w-8 h-8" />}
-                  title="Nenhum pagamento ainda"
-                  description="Seus pagamentos de sessoes aparecerao aqui."
-                />
+            <div className="relative z-10 flex items-end justify-between mt-2">
+              <div>
+                <p className="text-3xl font-sora font-bold">{formatCurrency(totalPago)}</p>
+                <p className="text-sm font-manrope opacity-75">total pago</p>
               </div>
+              <div className="text-right">
+                <p className="text-lg font-sora font-semibold text-ds-warning">
+                  {formatCurrency(totalPendente)}
+                </p>
+                <p className="text-xs font-manrope opacity-60">pendente</p>
+              </div>
+            </div>
+          </div>
+
+          <div className="mt-4">
+            {isLoading &&
+              [1, 2, 3].map((item) => <Skeleton key={item} className="h-24 rounded-3xl mb-3" />)}
+
+            {!isLoading && pendentes.length > 0 && (
+              <>
+                <p className="text-xs font-manrope font-semibold uppercase tracking-widest text-neutral-300 mt-2 mb-3">
+                  Aguardando pagamento
+                </p>
+                {pendentes.map((pagamento) => (
+                  <PagamentoCard
+                    key={pagamento.id}
+                    pagamento={pagamento}
+                    onPagar={() => handlePagar(pagamento)}
+                    destaque
+                  />
+                ))}
+              </>
             )}
 
-            {historico.map((pagamento) => (
-              <PagamentoCard key={pagamento.id} pagamento={pagamento} />
-            ))}
-          </>
-        )}
+            {!isLoading && (
+              <>
+                <p className="text-xs font-manrope font-semibold uppercase tracking-widest text-neutral-300 mt-6 mb-3">
+                  Histórico
+                </p>
+
+                {historico.length === 0 && (
+                  <div className="bg-ds-accent-sky/30 rounded-3xl p-6">
+                    <EmptyState
+                      icon={<CreditCard className="w-8 h-8" />}
+                      title="Nenhum pagamento ainda"
+                      description="Seus pagamentos de sessões aparecerão aqui."
+                    />
+                  </div>
+                )}
+
+                {historico.map((pagamento) => (
+                  <PagamentoCard key={pagamento.id} pagamento={pagamento} />
+                ))}
+              </>
+            )}
+          </div>
+        </div>
       </div>
     </div>
   )

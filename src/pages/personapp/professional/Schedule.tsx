@@ -1,9 +1,12 @@
 import { useMemo, useState } from "react"
+import { useQuery } from "@tanstack/react-query"
 import { useNavigate } from "react-router-dom"
 import { ChevronLeft, ChevronRight, Video } from "lucide-react"
 
 import { AppHeader, Avatar, Badge, Button, EmptyState } from "@/design-system/components"
 import { DotGrid, ShapeBlob } from "@/design-system/decorations"
+import { useAuthContext } from "@/contexts/AuthContext"
+import { api } from "@/lib/api"
 import { useProfessionalDashboard } from "@/hooks/personapp/useProfessionalDashboard"
 import { useProfessionalSchedule } from "@/hooks/personapp/useProfessionalSchedule"
 
@@ -11,7 +14,7 @@ const DIAS_ABREV = ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sab"]
 const MESES = [
   "janeiro",
   "fevereiro",
-  "marco",
+  "março",
   "abril",
   "maio",
   "junho",
@@ -54,11 +57,19 @@ function iniciais(nome: string) {
 
 const ScheduleProfessionalPage = () => {
   const navigate = useNavigate()
+  const { user } = useAuthContext()
   const hoje = new Date()
   hoje.setHours(0, 0, 0, 0)
 
   const [semanaBase, setSemanaBase] = useState<Date>(() => segundaFeira(hoje))
   const [diaSelecionado, setDiaSelecionado] = useState<string>(isoDate(hoje))
+
+  const { data: profissional } = useQuery({
+    queryKey: ["profissional-perfil", user?.id],
+    enabled: Boolean(user?.id),
+    queryFn: () => api.get<{ id: string; nome: string }>(`/profissionais/user/${user!.id}`),
+    staleTime: 10 * 60 * 1000,
+  })
 
   const { nextSession, isLoadingNextSession } = useProfessionalDashboard()
   const { sessoes, isLoading: isLoadingSessoes } = useProfessionalSchedule()
@@ -81,10 +92,15 @@ const ScheduleProfessionalPage = () => {
   const mes = MESES[diaAtual.getMonth()]
 
   return (
-    <div className="max-w-lg mx-auto font-manrope px-4 pb-24">
-      <div className="-mx-4">
-        <AppHeader variant="professional" title="Agenda" name="Rafael" />
-      </div>
+    <div className="min-h-screen bg-white font-manrope">
+      <div className="lg:max-w-3xl lg:mx-auto">
+        <AppHeader
+          variant="professional"
+          title="Agenda"
+          name={profissional?.nome ?? ""}
+          className="lg:px-8"
+        />
+        <div className="px-4 pb-28 lg:px-8">
 
       {!isLoadingNextSession && nextSession && (
         <div className="relative overflow-hidden bg-ds-primary rounded-3xl p-4 text-white mt-4 shadow-ds-lg">
@@ -96,13 +112,13 @@ const ScheduleProfessionalPage = () => {
           />
           <div className="relative z-10 flex items-center justify-between">
             <div>
-              <p className="text-xs font-manrope opacity-70 uppercase tracking-wider">Proxima sessao</p>
+              <p className="text-xs font-manrope opacity-70 uppercase tracking-widest">Próxima sessão</p>
               <p className="font-sora font-semibold mt-0.5">{nextSession.patientName}</p>
               <p className="text-xs font-manrope opacity-80 mt-0.5">{nextSession.timeLabel}</p>
             </div>
             <Button
               variant="ghost"
-              className="text-white border border-white/30 rounded-2xl px-3 py-1.5 text-xs font-manrope font-semibold transition-all duration-200"
+              className="text-white border border-white/30 rounded-2xl h-10 px-4 text-xs font-manrope font-semibold shadow-ds-sm transition-all duration-200"
               onClick={() => navigate(`/app/profissional/sala/${nextSession.title}`)}
             >
               <Video className="w-3.5 h-3.5 mr-1" />
@@ -136,7 +152,7 @@ const ScheduleProfessionalPage = () => {
             setSemanaBase(next)
           }}
           className="w-8 h-8 flex items-center justify-center rounded-full bg-neutral-100 text-neutral-400 transition-all duration-200 hover:bg-neutral-200"
-          aria-label="Proxima semana"
+          aria-label="Próxima semana"
         >
           <ChevronRight className="w-4 h-4" />
         </button>
@@ -171,7 +187,7 @@ const ScheduleProfessionalPage = () => {
         })}
       </div>
 
-      <p className="text-xs font-manrope font-semibold uppercase tracking-wider text-neutral-300 mt-6 mb-3">
+      <p className="text-xs font-manrope font-semibold uppercase tracking-widest text-neutral-300 mt-6 mb-3">
         {nomeDia}, {numeroDia} de {mes}
       </p>
 
@@ -227,7 +243,7 @@ const ScheduleProfessionalPage = () => {
                   {(sessao.status === "agendada" || sessao.status === "confirmada") && (
                     <Button
                       variant="primary"
-                      className="rounded-2xl h-11 font-manrope font-semibold transition-all duration-200 shadow-ds-sm hover:shadow-ds-md"
+                      className="rounded-2xl h-12 font-manrope font-semibold transition-all duration-200 shadow-ds-sm hover:shadow-ds-md"
                       onClick={() => navigate(`/app/profissional/sala/${sessao.id}`)}
                     >
                       Iniciar
@@ -241,11 +257,13 @@ const ScheduleProfessionalPage = () => {
       ) : (
         <div className="bg-ds-accent-sky/30 rounded-3xl p-6">
           <EmptyState
-            title="Nenhuma sessao neste dia"
-            description="Voce nao tem sessoes agendadas para esta data."
+            title="Nenhuma sessão neste dia"
+            description="Você não tem sessões agendadas para esta data."
           />
         </div>
       )}
+        </div>
+      </div>
     </div>
   )
 }

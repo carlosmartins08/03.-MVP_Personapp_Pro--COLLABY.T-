@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Button } from '@/components/ui/button';
+import { Button } from '@/design-system/components';
 import { FileText } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { Paciente, Sessao } from '@/types';
@@ -77,8 +77,8 @@ const ExportEvolucaoButton = ({
   return (
     <Button
       onClick={handleExport}
-      variant="outline"
-      className="bg-azul-light text-azul-dark hover:bg-azul-light/80"
+      variant="secondary"
+      className="rounded-2xl font-manrope font-medium transition-all duration-200"
     >
       <FileText className="mr-2" />
       Exportar Relatório

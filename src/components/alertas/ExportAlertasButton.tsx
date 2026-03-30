@@ -94,7 +94,7 @@ export const ExportAlertasButton: React.FC<ExportAlertasButtonProps> = ({
       <Button
         onClick={() => isFromCentral ? setOpen(true) : handleExport()}
         variant="secondary"
-        className="bg-azul-light text-azul-dark hover:bg-azul-light/80"
+        className="rounded-2xl font-manrope font-medium transition-all duration-200"
       >
         <File className="mr-2 h-4 w-4" />
         Exportar Relatório de Alertas

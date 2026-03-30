@@ -122,7 +122,7 @@ const TelaPerfilPaciente = () => {
   if (isLoading) {
     return (
       <div className="container py-6">
-        <PageHeader title="Paciente" subtitle="Carregando informaÃƒÂ§ÃƒÂµes..." />
+        <PageHeader title="Paciente" subtitle="Carregando informações..." />
         <p className="text-center py-10 text-muted-foreground">Buscando dados do paciente...</p>
       </div>
     );
@@ -131,8 +131,8 @@ const TelaPerfilPaciente = () => {
   if (!paciente) {
     return (
       <EmptyState
-        title="Paciente nÃƒÂ£o encontrado"
-        description="O paciente que vocÃƒÂª estÃƒÂ¡ procurando nÃƒÂ£o existe ou foi removido."
+        title="Paciente não encontrado"
+        description="O paciente que você está procurando não existe ou foi removido."
         icon={<User size={48} />}
         action={
           <Button variant="secondary" size="sm" onClick={() => navigate('/pacientes')}>
@@ -145,7 +145,7 @@ const TelaPerfilPaciente = () => {
 
   const dataNascimento = paciente.dataNascimento
     ? format(new Date(paciente.dataNascimento), 'dd/MM/yyyy')
-    : 'NÃƒÂ£o informado';
+    : 'Não informado';
   const dataCadastro = paciente.criadoEm
     ? format(new Date(paciente.criadoEm), 'dd/MM/yyyy')
     : 'Sem registro';
@@ -231,9 +231,9 @@ const TelaPerfilPaciente = () => {
         {/* Main Content Tabs */}
         <Tabs defaultValue="info" className="w-full">
           <TabsList className="w-full overflow-x-auto flex gap-1 mb-4">
-            <TabsTrigger value="info" className="flex-shrink-0 min-w-[120px]">InformaÃƒÂ§ÃƒÂµes</TabsTrigger>
-            <TabsTrigger value="sessoes" className="flex-shrink-0 min-w-[120px]">SessÃƒÂµes</TabsTrigger>
-            <TabsTrigger value="prontuario" className="flex-shrink-0 min-w-[120px]">ProntuÃƒÂ¡rio</TabsTrigger>
+            <TabsTrigger value="info" className="flex-shrink-0 min-w-[120px]">Informações</TabsTrigger>
+            <TabsTrigger value="sessoes" className="flex-shrink-0 min-w-[120px]">Sessões</TabsTrigger>
+            <TabsTrigger value="prontuario" className="flex-shrink-0 min-w-[120px]">Prontuário</TabsTrigger>
             <TabsTrigger value="mensagens" className="flex-shrink-0 min-w-[120px]">Mensagens</TabsTrigger>
             <TabsTrigger value="insights" className="flex-shrink-0 min-w-[120px]">Insights</TabsTrigger>
           </TabsList>
@@ -243,10 +243,10 @@ const TelaPerfilPaciente = () => {
             <Card variant="default">
               <div className="flex items-center gap-2 border-b border-gray-100 pb-3 mb-3">
                 <FileText size={18} className="text-lavanda" />
-                <h3 className="text-lg font-semibold">ObservaÃƒÂ§ÃƒÂµes</h3>
+                <h3 className="text-lg font-semibold">Observações</h3>
               </div>
               <p className="text-sm">
-                {paciente.observacoes || "Nenhuma observaÃƒÂ§ÃƒÂ£o registrada."}
+                {paciente.observacoes || "Nenhuma observação registrada."}
               </p>
             </Card>
             
@@ -265,7 +265,7 @@ const TelaPerfilPaciente = () => {
                 className="flex-1"
               >
                 <Calendar size={16} className="mr-2" />
-                Nova SessÃƒÂ£o
+                Nova Sessão
               </Button>
             </div>
           </TabsContent>
@@ -274,7 +274,7 @@ const TelaPerfilPaciente = () => {
           <TabsContent value="sessoes" className="mt-0">
             <h3 className="text-md font-semibold mb-3 flex items-center">
               <Calendar size={18} className="mr-2 text-lavanda" />
-              PrÃƒÂ³ximas SessÃƒÂµes
+              Próximas Sessões
             </h3>
             
             {proxSessoes.length > 0 ? (
@@ -313,7 +313,7 @@ const TelaPerfilPaciente = () => {
               </div>
             ) : (
               <Card variant="default" className="text-center bg-muted/20 border-dashed mb-6">
-                <p className="text-muted-foreground">Nenhuma sessÃƒÂ£o agendada</p>
+                <p className="text-muted-foreground">Nenhuma sessão agendada</p>
               </Card>
             )}
             
@@ -323,7 +323,7 @@ const TelaPerfilPaciente = () => {
               className="w-full"
             >
               <Calendar size={16} className="mr-2" />
-              Agendar Nova SessÃƒÂ£o
+              Agendar Nova Sessão
             </Button>
           </TabsContent>
           
@@ -332,7 +332,7 @@ const TelaPerfilPaciente = () => {
             <div className="flex justify-between items-center mb-4">
               <h3 className="text-md font-semibold flex items-center">
                 <FileText size={18} className="mr-2 text-lavanda" />
-                HistÃƒÂ³rico ClÃƒÂ­nico
+                Histórico Clínico
               </h3>
               <ProntuarioExportButton paciente={paciente} sessoes={sessoesPaciente} />
             </div>
@@ -381,7 +381,7 @@ const TelaPerfilPaciente = () => {
                           <div className="flex items-start justify-between mb-3">
                             <div className="flex items-center space-x-2">
                               <span className="text-lg font-medium">{dataFormatada}</span>
-                              <span className="text-sm text-muted-foreground">ÃƒÂ s {horaFormatada}</span>
+                              <span className="text-sm text-muted-foreground">às {horaFormatada}</span>
                             </div>
                             <div className="flex items-center space-x-2">
                               {statusIcon}
@@ -405,7 +405,7 @@ const TelaPerfilPaciente = () => {
                               <p className="whitespace-pre-wrap">{sessao.anotacoes}</p>
                             ) : (
                               <p className="text-muted-foreground italic">
-                                Sem anotaÃƒÂ§ÃƒÂµes clÃƒÂ­nicas registradas.
+                                Sem anotações clínicas registradas.
                               </p>
                             )}
                           </div>
@@ -420,7 +420,7 @@ const TelaPerfilPaciente = () => {
             {Object.keys(sessoesPorMes).length === 0 && (
               <Card variant="default" className="text-center bg-muted/20 border-dashed">
                 <p className="text-muted-foreground">
-                  Nenhuma sessÃƒÂ£o registrada no prontuÃƒÂ¡rio.
+                  Nenhuma sessão registrada no prontuário.
                 </p>
               </Card>
             )}
@@ -430,7 +430,7 @@ const TelaPerfilPaciente = () => {
           <TabsContent value="mensagens">
             <h3 className="text-md font-semibold mb-3 flex items-center">
               <Mail size={18} className="mr-2 text-lavanda" />
-              HistÃƒÂ³rico de Mensagens
+              Histórico de Mensagens
             </h3>
             <ListaMensagens pacienteId={paciente.id} />
           </TabsContent>

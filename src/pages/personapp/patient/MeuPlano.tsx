@@ -10,23 +10,23 @@ const MeuPlanoPage = () => {
   const { data: plano, isLoading } = useMeuPlano()
 
   return (
-    <div className="max-w-lg mx-auto px-4 pb-24 font-manrope">
-      <div className="-mx-4">
-        <AppHeader
-          variant="patient"
-          title="Meu Plano"
-          action={
-            <Button
-              variant="ghost"
-              size="sm"
-              className="text-white border border-white/30 h-8 px-2 rounded-2xl font-manrope font-semibold transition-all duration-200"
-              onClick={() => navigate("/app/paciente/dashboard")}
-            >
-              Voltar
-            </Button>
-          }
-        />
-      </div>
+    <div className="min-h-screen bg-white font-manrope lg:max-w-2xl lg:mx-auto">
+      <AppHeader
+        variant="patient"
+        title="Meu plano"
+        action={
+          <Button
+            variant="ghost"
+            size="sm"
+            className="h-12 px-3 rounded-2xl font-manrope font-semibold shadow-ds-sm transition-all duration-200"
+            onClick={() => navigate("/app/paciente/dashboard")}
+          >
+            Voltar
+          </Button>
+        }
+      />
+
+      <div className="px-4 pb-28">
 
       {isLoading && <Skeleton className="h-48 rounded-3xl mt-4" />}
 
@@ -34,8 +34,8 @@ const MeuPlanoPage = () => {
         <div className="mt-6 bg-ds-accent-sky/30 rounded-3xl p-6">
           <EmptyState
             icon={<ClipboardList className="w-8 h-8" />}
-            title="Plano ainda nao criado"
-            description="Seu profissional criara um plano personalizado apos a primeira sessao."
+            title="Plano ainda não criado"
+            description="Seu profissional criará um plano personalizado após a primeira sessão."
           />
         </div>
       )}
@@ -57,17 +57,17 @@ const MeuPlanoPage = () => {
               className="absolute -bottom-6 -right-6 pointer-events-none text-white"
             />
             <p className="relative z-10 text-xs font-manrope uppercase tracking-wider opacity-60">
-              Seu plano terapeutico
+              Seu plano terapêutico
             </p>
             <p className="relative z-10 text-xl font-sora font-bold mt-1">{plano.abordagem}</p>
             <div className="relative z-10 flex items-center gap-4 mt-3">
               <div>
-                <p className="text-xs font-manrope opacity-60">Frequencia</p>
+                <p className="text-xs font-manrope opacity-60">Frequência</p>
                 <p className="text-sm font-manrope font-medium">{plano.frequencia}</p>
               </div>
               {plano.duracaoPrevista && (
                 <div>
-                  <p className="text-xs font-manrope opacity-60">Duracao prevista</p>
+                  <p className="text-xs font-manrope opacity-60">Duração prevista</p>
                   <p className="text-sm font-manrope font-medium">{plano.duracaoPrevista}</p>
                 </div>
               )}
@@ -78,8 +78,8 @@ const MeuPlanoPage = () => {
           </div>
 
           {[
-            { label: "Objetivos terapeuticos", value: plano.objetivos },
-            { label: "Tecnicas planejadas", value: plano.tecnicas },
+            { label: "Objetivos terapêuticos", value: plano.objetivos },
+            { label: "Técnicas planejadas", value: plano.tecnicas },
             { label: "Como medir seu progresso", value: plano.indicadores },
           ]
             .filter((secao) => Boolean(secao.value))
@@ -88,7 +88,7 @@ const MeuPlanoPage = () => {
                 key={secao.label}
                 className="bg-white rounded-3xl p-4 border border-neutral-100 mt-3 shadow-ds-card transition-all duration-200 hover:shadow-ds-md"
               >
-                <p className="text-xs font-manrope font-semibold uppercase tracking-wider text-neutral-300 mb-2">
+                <p className="text-xs font-manrope font-semibold uppercase tracking-widest text-neutral-300 mb-2">
                   {secao.label}
                 </p>
                 <p className="text-sm font-manrope text-neutral-400 leading-relaxed whitespace-pre-wrap">
@@ -98,6 +98,7 @@ const MeuPlanoPage = () => {
             ))}
         </>
       )}
+      </div>
     </div>
   )
 }

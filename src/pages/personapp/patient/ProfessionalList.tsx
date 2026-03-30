@@ -142,14 +142,13 @@ const ProfessionalListPage = () => {
   }
 
   return (
-    <div className="flex flex-col gap-4 max-w-lg mx-auto px-4 pb-24 font-manrope">
-      <div className="-mx-4">
+    <div className="min-h-screen bg-white font-manrope">
+      <div className="px-4 pb-28 flex flex-col gap-4 lg:max-w-3xl lg:mx-auto lg:px-8">
         <AppHeader
           variant="minimal"
-          title="Encontrar Psicologo"
+          title="Encontrar psicólogo"
           onBack={() => navigate(-1)}
         />
-      </div>
 
       {vinculoAtivo && (
         <div className="relative overflow-hidden bg-ds-primary rounded-3xl p-4 text-white mt-1 shadow-ds-lg">
@@ -181,8 +180,8 @@ const ProfessionalListPage = () => {
       )}
 
       {vinculoAtivo && (
-        <p className="text-xs font-manrope font-semibold uppercase tracking-wider text-neutral-300">
-          Outros profissionais disponiveis
+        <p className="text-xs font-manrope font-semibold uppercase tracking-widest text-neutral-300">
+          Outros profissionais disponíveis
         </p>
       )}
 
@@ -298,13 +297,13 @@ const ProfessionalListPage = () => {
                     <Button
                       variant="ghost"
                       size="sm"
-                      className="w-full sm:w-auto rounded-2xl font-manrope font-semibold transition-all duration-200"
+                      className="w-full sm:w-auto h-12 rounded-2xl font-manrope font-semibold shadow-ds-sm transition-all duration-200"
                     >
                       Ver perfil
                     </Button>
                     <Button
                       size="sm"
-                      className="w-full sm:w-auto rounded-2xl font-manrope font-semibold transition-all duration-200 shadow-ds-sm hover:shadow-ds-md"
+                      className="w-full sm:w-auto h-12 rounded-2xl font-manrope font-semibold transition-all duration-200 shadow-ds-sm hover:shadow-ds-md"
                       loading={selectingProfessionalId === professional.id}
                       onClick={() => handleSelecionarProfissional(professional.id)}
                     >
@@ -316,6 +315,7 @@ const ProfessionalListPage = () => {
             </Card>
           )
         })}
+      </div>
       </div>
     </div>
   )

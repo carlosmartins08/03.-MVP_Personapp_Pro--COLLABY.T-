@@ -37,10 +37,10 @@ const dataRelativa = (iso: string) => {
   const d = Math.floor(diff / 86400000);
 
   if (min < 1) return "agora";
-  if (min < 60) return `hÃ¡ ${min}min`;
-  if (h < 24) return `hÃ¡ ${h}h`;
+  if (min < 60) return `há ${min}min`;
+  if (h < 24) return `há ${h}h`;
   if (d === 1) return "ontem";
-  return `hÃ¡ ${d} dias`;
+  return `há ${d} dias`;
 };
 
 export const Notificacoes = () => {
@@ -66,12 +66,13 @@ export const Notificacoes = () => {
       : "/app/paciente/dashboard";
 
   return (
-    <div className="max-w-lg mx-auto px-4 pb-24 font-manrope">
-      <div className="-mx-4">
+    <div className="min-h-screen bg-white font-manrope">
+      <div className="lg:max-w-3xl lg:mx-auto">
         <AppHeader
           variant={variant}
-          title="Notificacoes"
+          title="Notificações"
           onBack={() => navigate(backPath)}
+          className="lg:px-8"
           action={
             naoLidas > 0 ? (
               <button
@@ -88,9 +89,8 @@ export const Notificacoes = () => {
             ) : undefined
           }
         />
-      </div>
 
-      <div className="mt-4">
+        <div className="mt-4 px-4 pb-28 lg:px-8">
         {isLoading && [1, 2, 3].map((item) => (
           <Skeleton key={item} className="h-20 rounded-3xl mb-3" />
         ))}
@@ -143,13 +143,13 @@ export const Notificacoes = () => {
           <div className="bg-ds-accent-sky/30 rounded-3xl p-6">
             <EmptyState
               icon={<Bell className="w-8 h-8" />}
-              title="Nenhuma notificacao"
-              description="Voce esta em dia. Novas notificacoes aparecerao aqui."
+              title="Nenhuma notificação"
+              description="Você está em dia. Novas notificações aparecerão aqui."
             />
           </div>
         )}
+        </div>
       </div>
     </div>
   );
 };
-

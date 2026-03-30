@@ -543,7 +543,7 @@ const AnamnesisPage = () => {
       })
 
       await api.post("/anamnese", payload)
-      setSuccessMessage("Anamnese concluida e enviada.")
+      setSuccessMessage("Anamnese concluída e enviada.")
       setEtapa(4)
     } catch (error) {
       setErrorMessage(toMensagemErro(error))
@@ -554,19 +554,22 @@ const AnamnesisPage = () => {
 
   if (isLoadingInicial) {
     return (
-      <div className="mx-auto max-w-lg px-4 pb-24 font-manrope">
-        <AppHeader variant="patient" title="Anamnese" />
-        <Card variant="default" className="mt-4 rounded-3xl border border-neutral-100 p-5 shadow-ds-card">
-          <p className="text-sm font-manrope text-neutral-400">Carregando anamnese...</p>
-        </Card>
+      <div className="min-h-screen bg-white font-manrope">
+        <div className="px-4 pb-28 lg:max-w-2xl lg:mx-auto lg:px-8">
+          <AppHeader variant="patient" title="Anamnese" />
+          <Card variant="default" className="mt-4 rounded-3xl border border-neutral-100 p-5 shadow-ds-card">
+            <p className="text-sm font-manrope text-neutral-400">Carregando anamnese...</p>
+          </Card>
+        </div>
       </div>
     )
   }
 
   return (
-    <div className="mx-auto max-w-lg px-4 pb-36 font-manrope">
+    <div className="min-h-screen bg-white font-manrope">
+      <div className="px-4 pb-28 lg:max-w-2xl lg:mx-auto lg:px-8">
       <AppHeader variant="patient" title="Anamnese">
-        <p className="text-xs font-manrope font-semibold uppercase tracking-wider text-white/80">
+        <p className="text-xs font-manrope font-semibold uppercase tracking-widest text-white/80">
           {subtitulo}
         </p>
       </AppHeader>
@@ -895,7 +898,7 @@ const AnamnesisPage = () => {
         <div className="pb-8">
           <p className="mt-4 text-sm font-manrope leading-relaxed text-neutral-400">
             Responda as perguntas da sua triagem. Quanto mais contexto, melhor para o plano
-            terapeutico.
+            terapêutico.
           </p>
 
           {abordagensSelecionadas.map((abordagem) => {
@@ -946,9 +949,9 @@ const AnamnesisPage = () => {
           <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-ds-accent-mint">
             <CheckCircle2 className="h-8 w-8 text-ds-success" />
           </div>
-          <p className="text-xl font-sora font-bold text-neutral-500">Anamnese concluida</p>
+          <p className="text-xl font-sora font-bold text-neutral-500">Anamnese concluída</p>
           <p className="mt-2 text-sm font-manrope leading-relaxed text-neutral-400">
-            Obrigado por responder. Seu psicologo ja pode acessar suas informacoes para preparar o
+            Obrigado por responder. Seu psicólogo já pode acessar suas informações para preparar o
             acompanhamento.
           </p>
           <Button
@@ -962,7 +965,7 @@ const AnamnesisPage = () => {
 
       {etapa !== 4 && (
         <div className="fixed bottom-[calc(64px+env(safe-area-inset-bottom,0px))] left-0 right-0 z-20 border-t border-neutral-100 bg-white py-4">
-          <div className="mx-auto w-full max-w-lg px-4">
+          <div className="mx-auto w-full px-4 lg:max-w-2xl lg:px-8">
             {etapa === 1 && (
               <Button
                 variant="primary"
@@ -998,6 +1001,7 @@ const AnamnesisPage = () => {
           </div>
         </div>
       )}
+      </div>
     </div>
   )
 }

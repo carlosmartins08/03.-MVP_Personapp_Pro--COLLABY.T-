@@ -70,7 +70,7 @@ Docker:
 | RF025 | Agendamento                   | ✅ CONCLUÍDO  |
 | RF027 | Notificações                  | ✅ CONCLUÍDO  |
 | Chat  | Mensagens em tempo real       | ✅ CONCLUÍDO  |
-| RF020 | PDF — fluxo PersonApp         | 🟡 PARCIAL   |
+| RF020 | Gera??o de documentos PDF | ? SIM | ? SIM | ? CONCLU?DO |
 
 ---
 
@@ -107,13 +107,13 @@ Cadastro → Anamnese → Vínculo → Agendamento
 ## Pendências abertas
 
 ### 🟡 Funcional
-- [ ] RF020 — PDF fechar fluxo PersonApp ponta a ponta
+- [x] RF020 ? PDF fluxo PersonApp conclu?do
 - [ ] UX pagamentos — erros, boleto expirado, reprocessamento
 - [ ] Webhook Pagar.me para conciliação automática
 
 ### 🟢 Técnico
-- [ ] npm audit — 6 vulnerabilidades
-- [ ] browserslist — atualizar caniuse-lite
+- [x] npm audit ? 0 cr?ticas/altas (2 moderadas esbuild/vite ? sem a??o)
+- [x] browserslist ? atualizado
 - [ ] Prisma 5.22 → 7.6 (major upgrade)
 
 ### 🎨 Visual (próxima grande entrega)

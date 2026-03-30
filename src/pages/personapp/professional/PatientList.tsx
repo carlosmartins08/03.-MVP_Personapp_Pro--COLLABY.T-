@@ -3,6 +3,7 @@ import { useQuery } from "@tanstack/react-query"
 import { useNavigate } from "react-router-dom"
 import { Search } from "lucide-react"
 
+import { ExportProntuarioButton } from "@/components/personapp/ExportProntuarioButton"
 import { useAuthContext } from "@/contexts/AuthContext"
 import { AppHeader, Avatar, Badge, Button, Card } from "@/design-system/components"
 import { useVinculosProfissional } from "@/hooks/useVinculo"
@@ -23,6 +24,7 @@ const dataRelativa = (iso: string) => {
 
 type ProfissionalResumo = {
   id: string
+  nome: string
 }
 
 type PacienteApi = {
@@ -35,16 +37,17 @@ const PatientListPage = () => {
   const { user } = useAuthContext()
   const [busca, setBusca] = useState("")
 
-  const { data: profissionalId, isLoading: isLoadingProfissionalId } = useQuery({
-    queryKey: ["profissional-id", user?.id],
+  const { data: profissional, isLoading: isLoadingProfissionalId } = useQuery({
+    queryKey: ["profissional-perfil", user?.id],
     enabled: Boolean(user?.id),
     queryFn: async () => {
       if (!user?.id) return null
-      const profissional = await api.get<ProfissionalResumo>(`/profissionais/user/${user.id}`)
-      return profissional.id
+      return api.get<ProfissionalResumo>(`/profissionais/user/${user.id}`)
     },
     staleTime: 5 * 60 * 1000,
   })
+
+  const profissionalId = profissional?.id
 
   const { data: vinculos = [], isLoading: isLoadingVinculos } = useVinculosProfissional(
     profissionalId ?? undefined
@@ -98,10 +101,11 @@ const PatientListPage = () => {
     || (uniquePacienteIds.length > 0 && isLoadingPacientes)
 
   return (
-    <div className="max-w-lg mx-auto font-manrope pb-24">
-      <AppHeader variant="professional" title="Pacientes" name="Rafael" />
+    <div className="min-h-screen bg-white font-manrope">
+      <div className="px-4 pb-28 lg:max-w-3xl lg:mx-auto lg:px-8">
+        <AppHeader variant="professional" title="Pacientes" name={profissional?.nome ?? ""} />
 
-      <div className="px-4 mt-4">
+      <div className="mt-4">
         <div className="relative mb-4">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-200" />
           <input
@@ -141,20 +145,24 @@ const PatientListPage = () => {
                   <Button
                     variant="ghost"
                     size="sm"
-                    className="h-8 px-3 rounded-2xl font-manrope font-medium transition-all duration-200"
+                    className="h-12 px-4 rounded-2xl font-manrope font-semibold shadow-ds-sm transition-all duration-200"
                     onClick={() => navigate(`/app/profissional/plano/${paciente.pacienteId}`)}
                   >
                     Ver plano
                   </Button>
+                  <ExportProntuarioButton
+                    pacienteId={paciente.pacienteId}
+                    nomePaciente={paciente.nome}
+                  />
                 </div>
               </div>
             ))}
           </Card>
         )}
       </div>
+      </div>
     </div>
   )
 }
 
 export default PatientListPage
-

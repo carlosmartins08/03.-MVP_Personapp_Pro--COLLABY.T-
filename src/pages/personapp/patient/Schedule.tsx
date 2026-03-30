@@ -13,7 +13,7 @@ const DIAS_ABREV = ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sab"]
 const MESES = [
   "janeiro",
   "fevereiro",
-  "marco",
+  "março",
   "abril",
   "maio",
   "junho",
@@ -115,18 +115,26 @@ const SchedulePage = () => {
 
   if (isLoading) {
     return (
-      <div className="max-w-lg mx-auto px-4 pb-24 font-manrope">
-        <AppHeader variant="patient" title="Agenda" />
-        <div className="mt-8 text-center text-neutral-300 text-sm font-manrope">Carregando agenda...</div>
+      <div className="min-h-screen bg-white font-manrope">
+        <div className="lg:max-w-3xl lg:mx-auto">
+          <AppHeader variant="patient" title="Agenda" className="lg:px-8" />
+          <div className="px-4 pb-28 lg:px-8">
+            <div className="mt-8 text-center text-neutral-300 text-sm font-manrope">
+              Carregando agenda...
+            </div>
+          </div>
+        </div>
       </div>
     )
   }
 
   return (
-    <div className="max-w-lg mx-auto px-4 pb-24 font-manrope">
-      <AppHeader variant="patient" title="Agenda" />
+    <div className="min-h-screen bg-white font-manrope">
+      <div className="lg:max-w-3xl lg:mx-auto">
+        <AppHeader variant="patient" title="Agenda" className="lg:px-8" />
 
-      <div className="flex items-center justify-between mt-4 mb-1">
+        <div className="px-4 pb-28 lg:px-8">
+          <div className="flex items-center justify-between mt-4 mb-1">
         <button
           type="button"
           onClick={() => {
@@ -150,7 +158,7 @@ const SchedulePage = () => {
             setSemanaBase(proxima)
           }}
           className="w-8 h-8 flex items-center justify-center rounded-full bg-neutral-100 text-neutral-400 transition-all duration-200 hover:bg-neutral-200"
-          aria-label="Proxima semana"
+          aria-label="Próxima semana"
         >
           <ChevronRight className="w-4 h-4" />
         </button>
@@ -191,7 +199,7 @@ const SchedulePage = () => {
         })}
       </div>
 
-      <p className="text-xs font-manrope font-semibold uppercase tracking-wider text-neutral-300 mt-6 mb-3">
+      <p className="text-xs font-manrope font-semibold uppercase tracking-widest text-neutral-300 mt-6 mb-3">
         {nomeDia}, {numeroDia} de {mes}
       </p>
 
@@ -236,21 +244,21 @@ const SchedulePage = () => {
                 {sessao.status === "agendada" && (
                   <Button
                     variant="secondary"
-                    className="w-full mt-3 rounded-2xl h-11 font-manrope font-semibold transition-all duration-200"
+                    className="w-full mt-3 h-12 rounded-2xl font-manrope font-semibold shadow-ds-sm transition-all duration-200"
                     onClick={() => confirmarSessao.mutate(sessao.id)}
                     disabled={confirmarSessao.isPending}
                   >
-                    {confirmandoSessaoAtual ? "Confirmando..." : "Confirmar presenca"}
+                    {confirmandoSessaoAtual ? "Confirmando..." : "Confirmar presença"}
                   </Button>
                 )}
 
                 {sessao.status === "confirmada" && isHoje(diaSelecionado) && (
                   <Button
                     variant="primary"
-                    className="w-full mt-3 rounded-2xl h-11 font-manrope font-semibold transition-all duration-200 shadow-ds-sm hover:shadow-ds-md"
+                    className="w-full mt-3 h-12 rounded-2xl font-manrope font-semibold transition-all duration-200 shadow-ds-sm hover:shadow-ds-md"
                     onClick={() => navigate(`/app/paciente/consulta/${sessao.id}`)}
                   >
-                    Entrar na sessao
+                    Entrar na sessão
                   </Button>
                 )}
               </div>
@@ -261,15 +269,15 @@ const SchedulePage = () => {
         <div className="bg-ds-accent-sky/50 rounded-3xl p-6 mt-2">
           <EmptyState
             icon={<Calendar className="w-8 h-8" />}
-            title="Nenhuma sessao neste dia"
-            description="Voce nao tem sessoes agendadas para esta data."
+            title="Nenhuma sessão neste dia"
+            description="Você não tem sessões agendadas para esta data."
             action={
               <Button
                 variant="secondary"
-                className="font-manrope transition-all duration-200"
+                className="h-12 rounded-2xl font-manrope font-semibold shadow-ds-sm transition-all duration-200"
                 onClick={() => navigate("/app/paciente/profissionais")}
               >
-                Agendar sessao
+                Agendar sessão
               </Button>
             }
           />
@@ -280,11 +288,13 @@ const SchedulePage = () => {
         type="button"
         onClick={() => navigate("/app/paciente/profissionais")}
         className="fixed bottom-20 right-4 z-10 bg-ds-primary text-white w-14 h-14 rounded-full shadow-ds-lg flex items-center justify-center transition-all duration-200 hover:shadow-ds-lg hover:scale-105 active:scale-95"
-        aria-label="Agendar nova sessao"
+        aria-label="Agendar nova sessão"
       >
         <Plus className="w-6 h-6" />
       </button>
     </div>
+    </div>
+  </div>
   )
 }
 

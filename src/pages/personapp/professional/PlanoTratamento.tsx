@@ -1,6 +1,7 @@
 ﻿import { useEffect, useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useNavigate, useParams } from "react-router-dom";
+import { ExportProntuarioButton } from "@/components/personapp/ExportProntuarioButton";
 
 import {
   AppHeader,
@@ -22,6 +23,11 @@ import { api } from "@/lib/api";
 
 type AnamneseResumo = {
   abordagensRecomendadas?: string[];
+};
+
+type PacienteResumo = {
+  id: string;
+  nome: string;
 };
 
 const abordagemLabels: Record<string, string> = {
@@ -51,6 +57,15 @@ const PlanoTratamentoPage = () => {
   const navigate = useNavigate();
   const { pacienteId } = useParams();
   const { data: plano, isLoading: isLoadingPlano } = usePlanoPaciente(pacienteId);
+  const { data: paciente } = useQuery<PacienteResumo | null>({
+    queryKey: ["paciente", pacienteId],
+    queryFn: async () => {
+      if (!pacienteId) return null;
+      return api.get<PacienteResumo>(`/pacientes/${pacienteId}`);
+    },
+    enabled: Boolean(pacienteId),
+    staleTime: 5 * 60 * 1000,
+  });
   const { data: anamnese } = useQuery<AnamneseResumo | null>({
     queryKey: ["anamnese", "paciente", pacienteId],
     queryFn: async () => {
@@ -66,6 +81,7 @@ const PlanoTratamentoPage = () => {
   const atualizarPlano = useAtualizarPlano();
   const [modoEdicao, setModoEdicao] = useState(false);
   const [form, setForm] = useState(emptyForm);
+  const nomePaciente = paciente?.nome;
 
   useEffect(() => {
     if (plano) {
@@ -132,14 +148,22 @@ const PlanoTratamentoPage = () => {
         variant="professional"
         title="Plano de Tratamento"
         action={
-          <Button
-            variant="ghost"
-            size="sm"
-            className="h-8 px-2 rounded-2xl font-manrope font-semibold transition-all duration-200"
-            onClick={() => navigate("/app/profissional/pacientes")}
-          >
-            Voltar
-          </Button>
+          <div className="flex items-center gap-2">
+            {pacienteId && (
+              <ExportProntuarioButton
+                pacienteId={pacienteId}
+                nomePaciente={nomePaciente ?? "Paciente"}
+              />
+            )}
+            <Button
+              variant="ghost"
+              size="sm"
+              className="h-8 px-2 rounded-2xl font-manrope font-semibold transition-all duration-200"
+              onClick={() => navigate("/app/profissional/pacientes")}
+            >
+              Voltar
+            </Button>
+          </div>
         }
       />
 
@@ -179,7 +203,7 @@ const PlanoTratamentoPage = () => {
                     </p>
                     <p className="text-xs font-manrope text-neutral-300 mt-1">
                       {plano.frequencia}
-                      {plano.duracaoPrevista ? ` Â· ${plano.duracaoPrevista}` : ""}
+                      {plano.duracaoPrevista ? ` · ${plano.duracaoPrevista}` : ""}
                     </p>
                   </div>
                   <Button
@@ -195,7 +219,7 @@ const PlanoTratamentoPage = () => {
 
               <Card className="rounded-3xl p-4 border border-neutral-100 shadow-ds-card transition-all duration-200 hover:shadow-ds-md">
                 <p className="text-xs font-manrope font-semibold uppercase tracking-wider text-neutral-300 mb-2">
-                  Objetivos terapeuticos
+                  Objetivos terapêuticos
                 </p>
                 <p className="text-sm font-manrope text-neutral-400 leading-relaxed whitespace-pre-wrap">{plano.objetivos}</p>
               </Card>
@@ -237,7 +261,7 @@ const PlanoTratamentoPage = () => {
             <div className="mt-4 pb-24">
               <Card className="rounded-3xl p-4 border border-neutral-100 shadow-ds-card">
                 <p className="text-xs font-manrope font-semibold uppercase tracking-wider text-neutral-300 mb-3">
-                  Objetivos terapeuticos
+                  Objetivos terapêuticos
                 </p>
                 <Label htmlFor="objetivos" className="text-xs font-manrope font-semibold uppercase tracking-wider text-neutral-300">
                   O que voce espera alcancar com este paciente?

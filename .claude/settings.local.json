@@ -2,7 +2,9 @@
   "permissions": {
     "allow": [
       "Bash(npx tsc:*)",
-      "Bash(curl -s http://localhost:3001/health)"
+      "Bash(curl -s http://localhost:3001/health)",
+      "Bash(node -e \":*)",
+      "Bash(npm run:*)"
     ]
   }
 }

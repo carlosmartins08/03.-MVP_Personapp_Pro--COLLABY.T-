@@ -1,4 +1,5 @@
 import React from "react"
+import { useQuery } from "@tanstack/react-query"
 import { useNavigate } from "react-router-dom"
 
 import {
@@ -14,6 +15,8 @@ import {
   SkeletonText,
 } from "@/design-system/components"
 import { DotGrid, ShapeBlob } from "@/design-system/decorations"
+import { useAuthContext } from "@/contexts/AuthContext"
+import { api } from "@/lib/api"
 import { useProfessionalDashboard } from "@/hooks/personapp/useProfessionalDashboard"
 
 const getInitials = (name: string) => {
@@ -28,6 +31,15 @@ const getInitials = (name: string) => {
 
 const DashboardPage = () => {
   const navigate = useNavigate()
+  const { user } = useAuthContext()
+
+  const { data: profissional } = useQuery({
+    queryKey: ["profissional-perfil", user?.id],
+    enabled: Boolean(user?.id),
+    queryFn: () => api.get<{ id: string; nome: string }>(`/profissionais/user/${user!.id}`),
+    staleTime: 10 * 60 * 1000,
+  })
+
   const {
     metrics,
     approachCards,
@@ -40,10 +52,9 @@ const DashboardPage = () => {
   } = useProfessionalDashboard()
 
   return (
-    <div className="flex flex-col gap-6 max-w-lg mx-auto px-4 pb-24 font-manrope">
-      <div className="-mx-4">
-        <AppHeader variant="professional" name="Rafael Souza">
-          <div className="grid gap-3 px-4 pb-2 md:grid-cols-3">
+    <div className="min-h-screen bg-white font-manrope lg:max-w-2xl lg:mx-auto">
+      <AppHeader variant="professional" name={profissional?.nome ?? ""}>
+        <div className="grid gap-3 px-4 pb-2 md:grid-cols-3">
             {isLoadingMetrics ? (
               Array.from({ length: 3 }).map((_, index) => (
                 <SkeletonCard key={`metric-${index}`} className="h-24 rounded-3xl" />
@@ -54,7 +65,7 @@ const DashboardPage = () => {
                   variant="default"
                   className="rounded-3xl p-4 border border-neutral-100 shadow-ds-card transition-all duration-200 hover:shadow-ds-md cursor-pointer"
                 >
-                  <p className="text-xs font-manrope font-semibold uppercase tracking-wider text-neutral-300">
+                  <p className="text-xs font-manrope font-semibold uppercase tracking-widest text-neutral-300">
                     Total pacientes
                   </p>
                   <p className="mt-2 text-4xl font-sora font-bold text-neutral-500">
@@ -65,8 +76,8 @@ const DashboardPage = () => {
                   variant="default"
                   className="rounded-3xl p-4 border border-neutral-100 shadow-ds-card transition-all duration-200 hover:shadow-ds-md cursor-pointer"
                 >
-                  <p className="text-xs font-manrope font-semibold uppercase tracking-wider text-neutral-300">
-                    Sessoes esta semana
+                  <p className="text-xs font-manrope font-semibold uppercase tracking-widest text-neutral-300">
+                    Sessões esta semana
                   </p>
                   <p className="mt-2 text-4xl font-sora font-bold text-neutral-500">
                     {metrics.sessionsThisWeek}
@@ -76,8 +87,8 @@ const DashboardPage = () => {
                   variant="default"
                   className="rounded-3xl p-4 border border-neutral-100 shadow-ds-card transition-all duration-200 hover:shadow-ds-md cursor-pointer"
                 >
-                  <p className="text-xs font-manrope font-semibold uppercase tracking-wider text-neutral-300">
-                    Sessoes hoje
+                  <p className="text-xs font-manrope font-semibold uppercase tracking-widest text-neutral-300">
+                    Sessões hoje
                   </p>
                   <p className="mt-2 text-4xl font-sora font-bold text-neutral-500">
                     {metrics.sessionsToday}
@@ -85,90 +96,90 @@ const DashboardPage = () => {
                 </Card>
               </>
             )}
-          </div>
-        </AppHeader>
-      </div>
+        </div>
+      </AppHeader>
 
-      <section className="flex flex-col gap-3">
-        <div className="flex items-center justify-between">
-          <h2 className="text-xs font-manrope font-semibold uppercase tracking-wider text-neutral-300">
+      <div className="px-4 pb-28 flex flex-col gap-6">
+        <section className="flex flex-col gap-3">
+          <div className="flex items-center justify-between">
+            <h2 className="text-xs font-manrope font-semibold uppercase tracking-widest text-neutral-300">
             Abordagens
-          </h2>
-        </div>
-        <div className="flex gap-3 overflow-x-auto pb-2">
-          {isLoadingApproaches
-            ? Array.from({ length: 3 }).map((_, index) => (
-                <SkeletonCard key={`approach-${index}`} className="h-24 w-48 rounded-3xl" />
-              ))
-            : approachCards.map((item) => (
-                <ApproachCard
-                  key={item.approach}
-                  approach={item.approach}
-                  patientsCount={item.patientsCount}
-                  size="sm"
-                  className="min-w-[180px]"
-                />
-              ))}
-        </div>
-      </section>
-
-      <section className="flex flex-col gap-3">
-        <h2 className="text-xs font-manrope font-semibold uppercase tracking-wider text-neutral-300">
-          Proxima sessao
-        </h2>
-        {isLoadingNextSession ? (
-          <SkeletonCard className="h-36 rounded-3xl" />
-        ) : nextSession ? (
-          <div className="relative overflow-hidden bg-ds-primary rounded-3xl shadow-ds-lg">
-            <ShapeBlob
-              color="currentColor"
-              size={150}
-              opacity={0.06}
-              className="absolute -top-8 -right-8 z-20 pointer-events-none text-white"
-            />
-            <DotGrid
-              color="currentColor"
-              opacity={0.08}
-              cols={6}
-              rows={3}
-              className="absolute bottom-2 right-3 z-20 pointer-events-none text-white"
-            />
-            <ConsultDarkCard
-              status={nextSession.status}
-              title={nextSession.title}
-              patientName={nextSession.patientName}
-              timeLabel={nextSession.timeLabel}
-              dateLabel={nextSession.dateLabel}
-              onAction={() => navigate("/app/profissional/agenda")}
-              className="relative z-10 rounded-3xl shadow-none"
-            />
+            </h2>
           </div>
-        ) : (
-          <Card
-            variant="default"
-            className="rounded-3xl p-4 border border-neutral-100 shadow-ds-card transition-all duration-200 hover:shadow-ds-md cursor-pointer"
-          >
-            <p className="text-sm font-manrope text-neutral-400 leading-relaxed">
-              Nenhuma sessao agendada.
-            </p>
-          </Card>
-        )}
-      </section>
+          <div className="flex gap-3 overflow-x-auto pb-2">
+            {isLoadingApproaches
+              ? Array.from({ length: 3 }).map((_, index) => (
+                  <SkeletonCard key={`approach-${index}`} className="h-24 w-48 rounded-3xl" />
+                ))
+              : approachCards.map((item) => (
+                  <ApproachCard
+                    key={item.approach}
+                    approach={item.approach}
+                    patientsCount={item.patientsCount}
+                    size="sm"
+                    className="min-w-[180px]"
+                  />
+                ))}
+          </div>
+        </section>
 
-      <section className="flex flex-col gap-3">
-        <div className="flex items-center justify-between">
-          <h2 className="text-xs font-manrope font-semibold uppercase tracking-wider text-neutral-300">
-            Pacientes recentes
+        <section className="flex flex-col gap-3">
+          <h2 className="text-xs font-manrope font-semibold uppercase tracking-widest text-neutral-300">
+            Próxima sessão
           </h2>
-          <Button
-            variant="ghost"
-            size="sm"
-            className="rounded-2xl h-11 font-manrope font-medium transition-all duration-200"
-            onClick={() => navigate("/app/profissional/pacientes")}
-          >
-            Ver todos
-          </Button>
-        </div>
+          {isLoadingNextSession ? (
+            <SkeletonCard className="h-36 rounded-3xl" />
+          ) : nextSession ? (
+            <div className="relative overflow-hidden bg-ds-primary rounded-3xl shadow-ds-lg">
+              <ShapeBlob
+                color="currentColor"
+                size={150}
+                opacity={0.06}
+                className="absolute -top-8 -right-8 z-20 pointer-events-none text-white"
+              />
+              <DotGrid
+                color="currentColor"
+                opacity={0.08}
+                cols={6}
+                rows={3}
+                className="absolute bottom-2 right-3 z-20 pointer-events-none text-white"
+              />
+              <ConsultDarkCard
+                status={nextSession.status}
+                title={nextSession.title}
+                patientName={nextSession.patientName}
+                timeLabel={nextSession.timeLabel}
+                dateLabel={nextSession.dateLabel}
+                onAction={() => navigate("/app/profissional/agenda")}
+                className="relative z-10 rounded-3xl shadow-none"
+              />
+            </div>
+          ) : (
+            <Card
+              variant="default"
+              className="rounded-3xl p-4 border border-neutral-100 shadow-ds-card transition-all duration-200 hover:shadow-ds-md cursor-pointer"
+            >
+              <p className="text-sm font-manrope text-neutral-400 leading-relaxed">
+                Nenhuma sessão agendada.
+              </p>
+            </Card>
+          )}
+        </section>
+
+        <section className="flex flex-col gap-3">
+          <div className="flex items-center justify-between">
+            <h2 className="text-xs font-manrope font-semibold uppercase tracking-widest text-neutral-300">
+              Pacientes recentes
+            </h2>
+            <Button
+              variant="ghost"
+              size="sm"
+              className="h-12 rounded-2xl font-manrope font-semibold shadow-ds-sm transition-all duration-200"
+              onClick={() => navigate("/app/profissional/pacientes")}
+            >
+              Ver todos
+            </Button>
+          </div>
 
         <Card
           variant="default"
@@ -207,7 +218,8 @@ const DashboardPage = () => {
             </div>
           )}
         </Card>
-      </section>
+        </section>
+      </div>
     </div>
   )
 }

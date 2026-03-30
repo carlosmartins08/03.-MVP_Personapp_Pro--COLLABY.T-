@@ -70,10 +70,11 @@ const DiaryPage = () => {
 
   return (
     <>
-      <div className="max-w-lg mx-auto px-4 pb-24 font-manrope">
+      <div className="bg-white min-h-screen">
+        <div className="px-4 pb-28 font-manrope lg:max-w-2xl lg:mx-auto">
         <AppHeader
           variant="patient"
-          title="Diario"
+          title="Diário"
           action={
             <button
               type="button"
@@ -125,7 +126,7 @@ const DiaryPage = () => {
           </div>
         </div>
 
-        <p className="text-xs font-manrope font-semibold uppercase tracking-wider text-neutral-300 mt-6 mb-3">
+        <p className="text-xs font-manrope font-semibold uppercase tracking-widest text-neutral-300 mt-6 mb-3">
           Registros recentes
         </p>
 
@@ -175,7 +176,7 @@ const DiaryPage = () => {
             action={
               <Button
                 variant="primary"
-                className="font-manrope transition-all duration-200"
+                className="h-12 rounded-2xl font-manrope font-semibold shadow-ds-sm transition-all duration-200"
                 onClick={() => setModoEscrita(true)}
               >
                 Fazer primeiro registro
@@ -183,6 +184,7 @@ const DiaryPage = () => {
             }
           />
         )}
+        </div>
       </div>
 
       {modoEscrita && (

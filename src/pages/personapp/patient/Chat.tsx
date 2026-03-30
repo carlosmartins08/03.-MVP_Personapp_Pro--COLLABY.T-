@@ -124,7 +124,7 @@ const ChatPage = () => {
   };
 
   return (
-    <div className="flex flex-col h-[100dvh] max-w-lg mx-auto font-manrope">
+    <div className="flex flex-col min-h-screen bg-white font-manrope lg:max-w-xl lg:mx-auto lg:h-screen">
       <div className="flex-shrink-0">
         <AppHeader variant="patient" title="Chat" />
         <div className="bg-white border-b border-neutral-100 px-4 py-3 flex items-center gap-3 shadow-ds-sm">
@@ -139,13 +139,17 @@ const ChatPage = () => {
       </div>
 
       {!vinculoId && (
-        <div className="flex-1 flex items-center justify-center bg-neutral-50 px-4">
+        <div className="flex-1 flex items-center justify-center bg-white px-4">
           <EmptyState
             icon={<MessageCircle className="w-8 h-8" />}
             title="Nenhum profissional vinculado"
             description="Vincule-se a um profissional para iniciar a conversa."
             action={
-              <Button variant="primary" onClick={() => navigate("/app/paciente/profissionais")}>
+              <Button
+                variant="primary"
+                className="h-12 rounded-2xl font-manrope font-semibold shadow-ds-sm"
+                onClick={() => navigate("/app/paciente/profissionais")}
+              >
                 Encontrar profissional
               </Button>
             }
@@ -154,14 +158,14 @@ const ChatPage = () => {
       )}
 
       {vinculoId && isLoading && (
-        <div className="flex-1 flex items-center justify-center bg-neutral-50">
+        <div className="flex-1 flex items-center justify-center bg-white">
           <Skeleton className="w-full h-20 rounded-3xl mx-4" />
         </div>
       )}
 
       {vinculoId && !isLoading && (
         <>
-          <div className="flex-1 overflow-y-auto px-4 py-4 pb-2 flex flex-col gap-3 bg-neutral-50">
+          <div className="flex-1 overflow-y-auto px-4 py-4 pb-2 flex flex-col gap-3 bg-white">
             {mensagens.map((mensagem) => {
               const isPaciente =
                 mensagem.autor?.id === user?.id || mensagem.autor?.tipo === "paciente";
@@ -202,7 +206,7 @@ const ChatPage = () => {
                 onChange={(event) => setTexto(event.target.value)}
                 onKeyDown={handleKeyDown}
                 placeholder="Escreva uma mensagem..."
-                className="flex-1 resize-none rounded-2xl border border-neutral-100 bg-neutral-50 px-4 py-2.5 text-sm font-manrope text-neutral-500 placeholder:text-neutral-200 focus:outline-none focus:border-ds-primary max-h-28 transition-all duration-200"
+                className="flex-1 resize-none rounded-2xl border border-neutral-100 bg-white px-4 py-2.5 text-sm font-manrope text-neutral-500 placeholder:text-neutral-200 focus:outline-none focus:border-ds-primary max-h-28 transition-all duration-200"
               />
               <Button
                 variant="primary"
